@@ -503,22 +503,22 @@ function shortName(n){n=n.replace(/[（(][^）)]*[）)]/g,'').trim();const cj=n.
 const CT=new Proxy({},{get:(o,k)=>[T().ct[k]]});
 const CO=['zh','jp','kr','west','asia','cafe','bake','bar'];
 const col=r=>CL[r];
-let yOn=null, rOn=new Set(RO), cOn=null, pOn=null, q='', view='map';
+let yOn=null, rOn=new Set(RO), cOn=null, pOn=new Set(), q='', view='map';
 const $=s=>document.querySelector(s);
 const PX=d=>d.p+(d.pe?(LANG==='en'?' (est.)':'（估）'):'');
 const PB=[['a',0,30],['b',30,60],['c',60,120],['d',120,1e9]];const pBk=d=>{for(const[k,lo,hi]of PB)if(d.p>lo&&d.p<=hi)return k;return 'a'};
 const NS='http://www.w3.org/2000/svg';
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function match(d){return (!yOn||d.dt.startsWith(yOn))&&rOn.has(d.r)&&(!cOn||d.c===cOn)&&(!pOn||pBk(d)===pOn)&&(!q||(d.n+d.a+d.t+d.d+d.i+d.ne+d.ae+d.te+d.de+d.ie).toLowerCase().includes(q))}
+function match(d){return (!yOn||d.dt.startsWith(yOn))&&rOn.has(d.r)&&(!cOn||d.c===cOn)&&(!pOn.size||pOn.has(pBk(d)))&&(!q||(d.n+d.a+d.t+d.d+d.i+d.ne+d.ae+d.te+d.de+d.ie).toLowerCase().includes(q))}
 function chips(){
   $('#rates').innerHTML=RO.map(r=>`<button class="chip ${rOn.has(r)?'':'off'}" data-r="${r}"><span class="stars" style="color:${col(r)}">${'★'.repeat(NS_(r))}</span><span class="n">${D.filter(d=>d.r===r).length}</span></button>`).join('');
-  $('#prices').innerHTML=`<button class="chip cat ${pOn?'':'on'}" data-p="">${T().pall}</button>`+PB.map(([k])=>`<button class="chip cat ${pOn===k?'on':''}" data-p="${k}">${T().pb[k]}<span class="n">${D.filter(d=>pBk(d)===k).length}</span></button>`).join('');
+  $('#prices').innerHTML=`<button class="chip cat ${pOn.size?'':'on'}" data-p="">${T().pall}</button>`+PB.map(([k])=>`<button class="chip cat ${pOn.has(k)?'on':''}" data-p="${k}">${T().pb[k]}<span class="n">${D.filter(d=>pBk(d)===k).length}</span></button>`).join('');
   $('#cats').innerHTML=`<button class="chip cat ${cOn?'':'on'}" data-c="">${T().all}</button>`+CO.map(c=>`<button class="chip cat ${cOn===c?'on':''}" data-c="${c}">${CT[c][0]}<span class="n">${D.filter(d=>d.c===c).length}</span></button>`).join('');
   if(0)$('#years').innerHTML=[['','两年全部'],['2026','2026'],['2025','2025']].map(([y,l])=>`<button class="chip cat ${(yOn||'')===y?'on':''}" data-y="${y}">${l}<span class="n">${y?D.filter(d=>d.dt.startsWith(y)).length:D.length}</span></button>`).join('');
 }
 $('#rates').onclick=e=>{const b=e.target.closest('[data-r]');if(!b)return;const r=b.dataset.r;
   if(rOn.size===RO.length){rOn=new Set([r])}else if(rOn.has(r)){rOn.delete(r);if(!rOn.size)rOn=new Set(RO)}else rOn.add(r);render()};
-$('#prices').onclick=e=>{const b=e.target.closest('[data-p]');if(!b)return;pOn=b.dataset.p||null;render()};
+$('#prices').onclick=e=>{const b=e.target.closest('[data-p]');if(!b)return;const k=b.dataset.p;if(!k)pOn.clear();else{pOn.has(k)?pOn.delete(k):pOn.add(k);if(pOn.size===PB.length)pOn.clear()}render()};
 $('#cats').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;cOn=b.dataset.c||null;render()};
 if(0)$('#years').onclick=e=>{const b=e.target.closest('[data-y]');if(!b)return;yOn=b.dataset.y||null;render()};
 $('#search').oninput=e=>{q=e.target.value.trim().toLowerCase();render()};
@@ -795,8 +795,8 @@ swDeck();swLang();
 const BRT={zh:{price:'价位',cnt:n=>`符合条件 ${n} 家`,tab:'大乱斗',t1s:'悉尼美食',t2s:'大乱斗',t1:'悉尼美食大乱斗',t2:'SYDNEY FOOD BRAWL',mode:'模式',mk:'淘汰赛',mkd:'两两对决，胜者晋级下一轮，直到决出冠军',mh:'擂台赛',mhd:'胜者留在擂台，迎战下一位随机挑战者',size:'参赛人数',cat:'菜系',all:'全部',go:'开 始',press:'选好就开打',rn:{64:'64强',32:'32强',16:'16强',8:'8强',4:'半决赛',2:'决赛'},p1:'1P',p2:'2P',def:'擂主',chal:'挑战者',ko:'K.O.',adv:'晋级!',hold:'守擂',pw:'战力',wins:n=>`已胜 ${n} 场`,streak:n=>`连胜 ${n}`,clear:'本轮结束',adv2:n=>`晋级${n}`,next:'下一轮',fight:k=>`第 ${k} 战`,champ:'冠军',winner:'WINNER',beat:'击败',det:'看详情',again:'再来一局',bk:'对阵图',map:'在地图上看',pp:'人均 $',ws:'胜场',st:'星级'},
  en:{price:'PRICE',cnt:n=>`${n} places match`,tab:'BRAWL',t1s:'SYDNEY FOOD',t2s:'BRAWL',t1:'SYDNEY FOOD BRAWL',t2:'悉尼美食大乱斗',mode:'MODE',mk:'Knockout',mkd:'Head to head. Winners advance to the next round until one is left',mh:'King of the hill',mhd:'The winner holds the stage and faces the next random challenger',size:'FIGHTERS',cat:'CUISINE',all:'All',go:'START',press:'PICK AND FIGHT',rn:{64:'ROUND OF 64',32:'ROUND OF 32',16:'ROUND OF 16',8:'QUARTERS',4:'SEMIS',2:'FINAL'},p1:'1P',p2:'2P',def:'CHAMPION',chal:'CHALLENGER',ko:'K.O.',adv:'WINNER!',hold:'DEFENDS',pw:'POWER',wins:n=>`${n} WIN${n>1?'S':''}`,streak:n=>`STREAK ${n}`,clear:'ROUND CLEAR',adv2:n=>`TO ${n}`,next:'NEXT ROUND',fight:k=>`FIGHT ${k}`,champ:'CHAMPION',winner:'WINNER',beat:'DEFEATED',det:'Details',again:'Play again',bk:'Bracket',map:'Show on map',pp:'$',ws:'WINS',st:'STARS'}};
 const BX=()=>BRT[LANG];
-const BR={pr:null,mode:'ko',size:16,cat:null,cur:[],next:[],idx:0,busy:false,stage:'start',wins:{},matches:[]};
-function brPool(){return D.map((d,i)=>i).filter(i=>D[i].r!=='X'&&(!BR.cat||D[i].c===BR.cat)&&(!BR.pr||pBk(D[i])===BR.pr))}
+const BR={pr:new Set(),mode:'ko',size:16,cat:null,cur:[],next:[],idx:0,busy:false,stage:'start',wins:{},matches:[]};
+function brPool(){return D.map((d,i)=>i).filter(i=>D[i].r!=='X'&&(!BR.cat||D[i].c===BR.cat)&&(!BR.pr.size||BR.pr.has(pBk(D[i]))))}
 function brStart(){const pool=brPool();let n=BR.size;while(n>2&&n>pool.length)n/=2;if(pool.length<2)return;
   const p=pool.map(i=>[i,Math.random()]).sort((a,b)=>a[1]-b[1]).slice(0,n).map(x=>x[0]);
   BR.cel=0;BR.wins={};BR.matches=[];BR.idx=0;BR.next=[];
@@ -816,9 +816,9 @@ function brRender(){const x=BX(),R=$('#brIn');
     <div class="br-sec">${x.mode}</div><div class="br-modes" id="brMd"><button class="br-mode ${BR.mode==='ko'?'on':''}" data-m="ko"><b>${x.mk}</b><span>${x.mkd}</span></button><button class="br-mode ${BR.mode==='king'?'on':''}" data-m="king"><b>${x.mh}</b><span>${x.mhd}</span></button></div>
     <div class="br-sec">${x.size}</div><div class="br-chips" id="brSz">${sizes.map(s=>`<button data-s="${s}" class="${s===BR.size?'on':''}">${s}</button>`).join('')}</div>
     <div class="br-sec">${x.cat}</div><div class="br-chips" id="brCt"><button data-c="" class="${!BR.cat?'on':''}">${x.all}</button>${CO.map(c=>`<button data-c="${c}" class="${BR.cat===c?'on':''}">${EMO[c]} ${esc(T().ct[c])}</button>`).join('')}</div>
-    <div class="br-sec">${x.price}</div><div class="br-chips" id="brPr"><button data-p="" class="${!BR.pr?'on':''}">${T().pall}</button>${PB.map(([k])=>`<button data-p="${k}" class="${BR.pr===k?'on':''}">${T().pb[k]}</button>`).join('')}</div>
+    <div class="br-sec">${x.price}</div><div class="br-chips" id="brPr"><button data-p="" class="${!BR.pr.size?'on':''}">${T().pall}</button>${PB.map(([k])=>`<button data-p="${k}" class="${BR.pr.has(k)?'on':''}">${T().pb[k]}</button>`).join('')}</div>
     <div class="br-cnt">${x.cnt(brPool().length)}</div><button class="br-go" id="brGo">${x.go}</button>`;
-    $('#brPr').onclick=e=>{const b=e.target.closest('button');if(!b)return;BR.pr=b.dataset.p||null;brRender();try{tone(660,.05,'square',.03)}catch(e){}};
+    $('#brPr').onclick=e=>{const b=e.target.closest('button');if(!b)return;const k=b.dataset.p;if(!k)BR.pr.clear();else{BR.pr.has(k)?BR.pr.delete(k):BR.pr.add(k);if(BR.pr.size===PB.length)BR.pr.clear()}brRender();try{tone(660,.05,'square',.03)}catch(e){}};
     $('#brMd').onclick=e=>{const b=e.target.closest('button');if(!b)return;BR.mode=b.dataset.m;brRender();tone(660,.05,'square',.03)};
     $('#brSz').onclick=e=>{const b=e.target.closest('button');if(!b)return;BR.size=+b.dataset.s;brRender();tone(660,.05,'square',.03)};
     $('#brCt').onclick=e=>{const b=e.target.closest('button');if(!b)return;BR.cat=b.dataset.c||null;brRender();tone(660,.05,'square',.03)};
