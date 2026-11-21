@@ -71,6 +71,22 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 #sheet .body{font:400 16px/1.85 var(--serif);margin:14px 0 0;color:var(--ink)}
 #sheet .must{margin-top:14px;font:400 16px/1.85 var(--serif);color:var(--ink)}
 .go{display:block;text-align:center;margin-top:20px;padding:12px;background:var(--red);color:#fff;text-decoration:none;font:400 15px var(--serif)}
+
+.search2{display:none}
+@media (min-width:1000px){
+  body{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+  .tabs{display:none}
+  #main{flex:1;min-height:0;display:flex}
+  #mapWrap{flex:1;height:auto;min-height:0}
+  #side{width:420px;flex:none;border-left:2px solid var(--ink);overflow-y:auto;background:#fff}
+  #list{display:block!important;padding:0 20px 48px}
+  .search2{display:block;width:calc(100% - 40px);margin:14px 20px 0;padding:9px 12px;border:1px solid var(--ink);font:400 14px var(--serif);background:#fff;box-sizing:border-box}
+  #search{display:none!important}
+  #sheet{left:auto;right:0;top:0;bottom:0;width:440px;max-height:none;border-top:none;border-left:3px solid var(--ink);transform:translateX(105%)}
+  #sheet.on{transform:none}
+  #mask{background:rgba(0,0,0,.12)}
+  .note{right:auto;max-width:460px}
+}
 </style>
 </head>
 <body>
@@ -81,10 +97,11 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
   <div class="row" id="rates"></div>
   <input id="search" placeholder="搜索店名、区域或菜" style="display:none">
 </div>
+<div id="main">
 <div id="mapWrap">
   <svg id="map" xmlns="http://www.w3.org/2000/svg">
     <rect x="-2000" y="-2000" width="5000" height="5000" fill="#ffffff"/>
-    <path class="wat" d="M1000.0,0.0 L973.7,0.0 L978.9,158.4 L963.2,285.2 L939.5,339.0 L963.2,364.4 L973.7,405.6 L944.7,418.3 L894.7,373.9 L873.7,386.6 L842.1,364.4 L821.1,348.6 L842.1,386.6 L857.9,459.5 L834.2,510.2 L810.5,469.0 L794.7,500.7 L768.4,475.3 L750.0,510.2 L736.8,503.8 L721.1,503.8 L705.3,481.6 L671.1,481.6 L631.6,459.5 L578.9,462.6 L513.2,443.6 L460.5,430.9 L421.1,418.3 L368.4,411.9 L289.5,405.6 L184.2,396.1 L157.9,402.4 L157.9,411.9 L289.5,421.4 L373.7,430.9 L389.5,475.3 L400.0,443.6 L442.1,453.1 L468.4,491.1 L478.9,459.5 L539.5,475.3 L547.4,526.0 L565.8,481.6 L605.3,500.7 L597.4,564.0 L626.3,519.7 L652.6,510.2 L665.8,529.2 L671.1,557.7 L678.9,583.0 L692.1,557.7 L705.3,538.7 L710.5,576.7 L718.4,545.0 L731.6,522.8 L739.5,538.7 L747.4,526.0 L755.3,545.0 L765.8,532.3 L768.4,564.0 L781.6,557.7 L786.8,576.7 L807.9,557.7 L823.7,583.0 L847.4,554.5 L873.7,576.7 L900.0,538.7 L921.1,494.3 L931.6,462.6 L942.1,491.1 L928.9,586.2 L915.8,636.9 L889.5,681.3 L865.8,732.0 L863.2,817.5 L828.9,903.1 L815.8,966.4 L784.2,998.1 L710.5,1029.8 L631.6,1109.0 L578.9,1140.7 L1000.0,1140.7Z" fill="#e9eef0" stroke="#c4ccd0" stroke-width="1"/>
+    <path class="wat" d="M4394.7,-2503.3 L973.7,-2503.3 L973.7,0.0 L978.9,158.4 L963.2,285.2 L939.5,339.0 L963.2,364.4 L973.7,405.6 L944.7,418.3 L894.7,373.9 L873.7,386.6 L842.1,364.4 L821.1,348.6 L842.1,386.6 L857.9,459.5 L834.2,510.2 L810.5,469.0 L794.7,500.7 L768.4,475.3 L750.0,510.2 L736.8,503.8 L721.1,503.8 L705.3,481.6 L671.1,481.6 L631.6,459.5 L578.9,462.6 L513.2,443.6 L460.5,430.9 L421.1,418.3 L368.4,411.9 L289.5,405.6 L184.2,396.1 L157.9,402.4 L157.9,411.9 L289.5,421.4 L373.7,430.9 L389.5,475.3 L400.0,443.6 L442.1,453.1 L468.4,491.1 L478.9,459.5 L539.5,475.3 L547.4,526.0 L565.8,481.6 L605.3,500.7 L597.4,564.0 L626.3,519.7 L652.6,510.2 L665.8,529.2 L671.1,557.7 L678.9,583.0 L692.1,557.7 L705.3,538.7 L710.5,576.7 L718.4,545.0 L731.6,522.8 L739.5,538.7 L747.4,526.0 L755.3,545.0 L765.8,532.3 L768.4,564.0 L781.6,557.7 L786.8,576.7 L807.9,557.7 L823.7,583.0 L847.4,554.5 L873.7,576.7 L900.0,538.7 L921.1,494.3 L931.6,462.6 L942.1,491.1 L928.9,586.2 L915.8,636.9 L889.5,681.3 L865.8,732.0 L863.2,817.5 L828.9,903.1 L815.8,966.4 L784.2,998.1 L710.5,1029.8 L631.6,1109.0 L578.9,1140.7 L578.9,2883.5 L4394.7,2883.5Z" fill="#e9eef0" stroke="#c4ccd0" stroke-width="1"/>
     <path class="wat" d="M500.0,887.2 L578.9,830.2 L684.2,842.9 L750.0,871.4 L828.9,903.1 L815.8,966.4 L710.5,982.3 L578.9,998.1 L473.7,950.6Z" fill="#e9eef0" stroke="#c4ccd0" stroke-width="1"/>
     <g id="labs"></g>
     <g id="pins"></g>
@@ -93,7 +110,8 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
   <div class="ctrl"><button id="zin">+</button><button id="zout">−</button><button id="zreset" style="font-size:14px">⟲</button></div>
   <div class="jump" id="jump"></div><div class="note" id="note">示意地图：位置按区域近似标注。双指缩放，点圆点看介绍。</div>
 </div>
-<div id="list"></div>
+<div id="side"><input id="search2" class="search2"><div id="list"></div></div>
+</div>
 <div id="mask"></div>
 <div id="sheet"><div class="grab"></div><button class="x" id="close">关闭</button><div id="sc"></div></div>
 <script>
@@ -197,7 +215,7 @@ function open(i){window._openI=i;const d=D[i];const g='https://www.google.com/ma
 function close(){$('#sheet').classList.remove('on');$('#mask').classList.remove('on')}
 $('#close').onclick=close;$('#mask').onclick=close;
 function setView(v){view=v;$('#tMap').classList.toggle('on',v==='map');$('#tList').classList.toggle('on',v==='list');
-  $('#mapWrap').style.display=v==='map'?'':'none';$('#list').style.display=v==='list'?'block':'none';$('#search').style.display=v==='list'?'block':'none';
+  const DT=matchMedia('(min-width:1000px)').matches;$('#mapWrap').style.display=(v==='map'||DT)?'':'none';$('#list').style.display=v==='list'?'block':'none';$('#search').style.display=v==='list'?'block':'none';
   if(v==='map')setVB();render();try{location.hash=v==='list'?'list':''}catch(e){}}
 $('#tMap').onclick=()=>setView('map');$('#tList').onclick=()=>setView('list');
 window.addEventListener('resize',()=>{if(view==='map')setVB()});
@@ -208,11 +226,13 @@ $('#jump').onclick=e=>{const b=e.target.closest('[data-g]');if(!b)return;const g
   const a=P(g[0],g[2]),c=P(g[1],g[3]);const r=wrap.getBoundingClientRect();let w=c[0]-a[0],h=c[1]-a[1];const cx=(a[0]+c[0])/2,cy=(a[1]+c[1])/2;
   if(w/h<r.width/r.height)w=h*r.width/r.height;else h=w*r.height/r.width;vb={x:cx-w/2,y:cy-h/2,w,h};setVB()};
 setTimeout(()=>{const n=$('#note');if(n)n.style.opacity=0;setTimeout(()=>n&&n.remove(),700)},7000);
-render();fit();if(location.hash==='#list')setView('list');
+render();fit();if(location.hash==='#list'&&!matchMedia('(min-width:1000px)').matches)setView('list');
+$('#search2').oninput=e=>{q=e.target.value.trim().toLowerCase();render()};
+matchMedia('(min-width:1000px)').addEventListener('change',()=>{setView(view);fit()});
 
 function applyLang(){const x=T();document.documentElement.lang=LANG==='en'?'en':'zh-CN';document.title=x.title;
   $('#h1').innerHTML=x.h1;$('#lang').textContent=x.sw;$('#tMap').textContent=x.map;$('#tList').textContent=x.list;
-  $('#search').placeholder=x.ph;const n=$('#note');if(n)n.textContent=x.note;const c=$('#close');if(c)c.textContent=x.close;
+  $('#search').placeholder=x.ph;$('#search2').placeholder=x.ph;const n=$('#note');if(n)n.textContent=x.note;const c=$('#close');if(c)c.textContent=x.close;
   pins.forEach(([g,d])=>{const t=g.querySelector('.pl');if(!t)return;const L=shortName(F.n(d));t.setAttribute('y',L.length>1?-3:4);
     t.innerHTML=L.map((s,j)=>`<tspan x="10" dy="${j?13:0}">${esc(s)}</tspan>`).join('')});
   jumpBtns();render();if(view==='map')setVB();const sh=$('#sheet');if(sh&&sh.classList.contains('on')&&window._openI!=null)open(window._openI)}
