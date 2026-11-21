@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>悉尼吃喝地图</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;900&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700;6..72,800&family=Noto+Serif+SC:wght@400;600;900&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#141414;--sub:#6b6b6b;--line:#141414;--hair:#dcdcdc;--red:#b42a1f;
---S:#b42a1f;--R:#141414;--N:#9b9b9b;--X:#ffffff;--serif:"Noto Serif SC","Songti SC",serif;--sans:"Noto Sans SC","PingFang SC",sans-serif}
+--S:#b42a1f;--R:#141414;--N:#9b9b9b;--X:#ffffff;--serif:"Newsreader","Noto Serif SC","Songti SC",serif;--sans:"Noto Sans SC","PingFang SC",sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:#fff;color:var(--ink);font:15px/1.6 var(--sans)}
 header{text-align:center;padding:18px 14px 6px}
@@ -523,14 +523,14 @@ if(0)$('#years').onclick=e=>{const b=e.target.closest('[data-y]');if(!b)return;y
 $('#search').oninput=e=>{q=e.target.value.trim().toLowerCase();render()};
 // labels
 LAB.forEach(l=>{const t=document.createElementNS(NS,'text');t.setAttribute('x',l.xy[0]);t.setAttribute('y',l.xy[1]-16);t.textContent=l.t;
-  t.setAttribute('text-anchor','middle');t.setAttribute('fill','#8a8a8a');t.setAttribute('font-weight','500');t.setAttribute('font-family','Noto Serif SC,serif');t.classList.add('lab');if(l.m)t.dataset.m='1';t.setAttribute('stroke','#ffffff');t.setAttribute('stroke-width','3');t.setAttribute('paint-order','stroke');$('#labs').appendChild(t)});
+  t.setAttribute('text-anchor','middle');t.setAttribute('fill','#8a8a8a');t.setAttribute('font-weight','500');t.setAttribute('font-family','Newsreader,Noto Serif SC,serif');t.classList.add('lab');if(l.m)t.dataset.m='1';t.setAttribute('stroke','#ffffff');t.setAttribute('stroke-width','3');t.setAttribute('paint-order','stroke');$('#labs').appendChild(t)});
 // pins
 const pins=[];
 D.forEach((d,i)=>{if(!d.xy)return;const g=document.createElementNS(NS,'g');g.dataset.i=i;
   const big=d.r==='5'?7.5:d.r==='4'?6.5:d.r==='3'?5.5:5;
   const mk=d.r==='X'?`<circle r="4.8" fill="#fff" stroke="#a8a8a8" stroke-width="2.2"/>`:`<circle r="${big}" fill="${col(d.r)}" stroke="#fff" stroke-width="1.5"/>`;
   const L=shortName(F.n(d));
-  g.innerHTML=`<circle r="12" fill="transparent"/>${mk}<text class="pl" x="10" y="${L.length>1?-3:4}" font-size="11.5" font-weight="${+d.r>=4?700:500}" fill="${d.r==='X'?'#555':'#141414'}" stroke="#fff" stroke-width="3" paint-order="stroke" font-family="Noto Serif SC,serif">${L.map((s,j)=>`<tspan x="10" dy="${j?13:0}">${esc(s)}</tspan>`).join('')}</text>`;
+  g.innerHTML=`<circle r="12" fill="transparent"/>${mk}<text class="pl" x="10" y="${L.length>1?-3:4}" font-size="11.5" font-weight="${+d.r>=4?700:500}" fill="${d.r==='X'?'#555':'#141414'}" stroke="#fff" stroke-width="3" paint-order="stroke" font-family="Newsreader,Noto Serif SC,serif">${L.map((s,j)=>`<tspan x="10" dy="${j?13:0}">${esc(s)}</tspan>`).join('')}</text>`;
   $('#pins').appendChild(g);pins.push([g,d])});
 // order: worse first, best on top
 pins.sort((a,b)=>RO.indexOf(b[1].r)-RO.indexOf(a[1].r)).forEach(p=>$('#pins').appendChild(p[0]));
