@@ -19,7 +19,7 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 .tabs{display:flex;justify-content:center;gap:28px;margin:10px 0 0;border-top:1px solid var(--line);padding-top:8px}
 .tabs button{border:0;background:none;padding:2px 0 6px;font:500 12px var(--sans);letter-spacing:.2em;color:var(--sub);border-bottom:2px solid transparent}
 .tabs button.on{color:var(--ink);border-bottom-color:var(--red)}
-.filters{border-bottom:3px double var(--line);padding:2px 0 6px}
+.filters{border-bottom:1px solid var(--line);padding:2px 0 6px}
 .row{display:flex;overflow-x:auto;padding:4px 10px;scrollbar-width:none;align-items:center}
 .row::-webkit-scrollbar{display:none}
 #cats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:0 4px;margin-top:4px}
@@ -36,7 +36,7 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 #years .chip.cat.on{box-shadow:none;color:var(--ink);text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:4px}
 #years{border-top:1px solid var(--hair)}
 #search{margin:6px 14px 2px;width:calc(100% - 28px);border:0;border-bottom:1px solid var(--line);padding:8px 2px;font:15px var(--serif);background:none;border-radius:0}
-#mapWrap{position:relative;height:calc(100dvh - 215px);min-height:380px;overflow:hidden;background:#e9eef0;touch-action:none}
+#mapWrap{position:relative;height:calc(100dvh - 178px);min-height:380px;overflow:hidden;background:#e9eef0;touch-action:none}
 #map{width:100%;height:100%;display:block;user-select:none}
 .ctrl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column}
 .ctrl button{width:36px;height:36px;border:1px solid var(--ink);background:#fff;font-size:18px;color:var(--ink);margin-top:-1px}
@@ -198,7 +198,7 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 .tray{margin:14px 10px 0;height:30px;border-radius:0 0 40px 40px/0 0 26px 26px;background:linear-gradient(#000,#2a2d31 70%,#7d838a);box-shadow:0 0 0 3px #c9ced4,0 0 0 4px #4a4d52,inset 0 6px 10px #000}
 /* ===== swipe ===== */
 #swipe{display:none;position:relative;background:#f3f3f5;min-height:calc(100vh - 106px);padding:10px 10px 16px}
-.sw-app{position:relative;max-width:430px;margin:0 auto;height:calc(100vh - 132px);min-height:560px;max-height:860px;display:flex;flex-direction:column}
+.sw-app{position:relative;max-width:430px;margin:0 auto;height:calc(100vh - 92px);min-height:560px;max-height:860px;display:flex;flex-direction:column}
 .sw-top{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 10px;font:600 13px var(--sans);color:#7c8591}
 .sw-likes{border:0;border-radius:999px;padding:7px 14px;background:#fff;color:#21262e;font:700 13px var(--sans);box-shadow:0 2px 8px rgba(0,0,0,.08);cursor:pointer}
 .sw-likes b{color:#fd267a}
@@ -266,7 +266,7 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 .sl-t{flex:1;min-width:0}.sl-t b{display:block;font:700 15px var(--sans);color:#21262e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sl-t span{font:400 13px var(--sans);color:#7c8591}
 .sl-x{border:0;background:none;color:#c3c8cf;font-size:18px;cursor:pointer;padding:6px}
 .sl-0{padding:40px 20px;text-align:center;color:#7c8591;font:500 14px/1.7 var(--sans)}
-@media (min-width:1000px){#swipe{flex:1;overflow-y:auto;min-height:0}.sw-app{height:calc(100vh - 140px)}}
+@media (min-width:1000px){#swipe{flex:1;overflow-y:auto;min-height:0}.sw-app{height:calc(100vh - 100px)}}
 
 /* ===== brawl ===== */
 #brawl{display:none;position:relative;overflow:hidden;min-height:calc(100vh - 106px);color:#fff;
@@ -406,11 +406,23 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 .sp-empty{font:500 14px/1.7 var(--serif);color:#fff;text-align:center;border:1px dashed var(--neon);border-radius:14px;padding:18px;box-shadow:0 0 20px -6px var(--neon)}
 @media (min-width:1000px){.tabs{display:flex}#tList{display:none}#spin{flex:1;overflow-y:auto;min-height:0}.sp-in{max-width:700px}.win{height:204px}.face{font-size:18px}.face.sm{font-size:15px}.face.st{font-size:20px;letter-spacing:1px}#spT{font-size:50px}#spT.en{font-size:44px}.lev{width:56px}.lev .ball{width:52px;height:52px;margin-left:-26px;top:-42px}.lev .track{width:24px;margin-left:-12px}.lev .hub{width:48px;height:52px;margin-left:-24px}.lev .arm{width:12px;margin-left:-6px;bottom:52px}}
 @media (prefers-reduced-motion:reduce){.rays,#pull::after,.bulbs i{animation:none!important}}
+
+.menu{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:38px;height:34px;border:0;background:none;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:0 8px}
+.menu i{display:block;height:2px;background:var(--ink)}
+#nav{position:fixed;left:0;top:0;bottom:0;width:250px;z-index:90;background:#fff;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);padding:22px 0 0}
+#nav.on{transform:none;box-shadow:10px 0 40px rgba(0,0,0,.15)}
+#navMask{position:fixed;inset:0;z-index:89;background:rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .28s}
+#navMask.on{opacity:1;pointer-events:auto}
+.nav-h{font:900 26px var(--serif);padding:0 24px 16px;border-bottom:1px solid var(--line)}.nav-h i{font-style:normal;color:var(--red)}
+#nav .tabs{display:flex!important;flex-direction:column;gap:0;margin:0;border:0;padding:8px 0}
+#nav .tabs button{display:block!important;text-align:left;padding:15px 24px;font:500 16px var(--serif);letter-spacing:.2em;color:var(--sub);border:0;border-left:3px solid transparent;cursor:pointer}
+#nav .tabs button.on{color:var(--ink);border-left-color:var(--red);background:#faf7f5}
+@media (min-width:1000px){#nav #tList{display:none!important}}
 </style>
 </head>
 <body>
-<header><h1 id="h1">悉尼<i>吃喝</i></h1><button id="lang" class="lang">EN</button></header>
-<div class="tabs"><button id="tMap" class="on">地 图</button><button id="tList">食 单</button><button id="tSpin">转一转</button><button id="tSwipe">刷一刷</button><button id="tBrawl">大乱斗</button></div>
+<header><button id="menu" class="menu" aria-label="menu"><i></i><i></i><i></i></button><h1 id="h1">悉尼<i>吃喝</i></h1><button id="lang" class="lang">EN</button></header>
+
 <div class="filters">
   <div class="row" id="cats"></div>
   <div class="row" id="rates"></div>
@@ -465,6 +477,7 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 <div id="swMatch"></div>
 <div id="brawl"><div class="br-in" id="brIn"></div></div>
 <canvas id="fx"></canvas>
+<div id="navMask"></div><nav id="nav"><div class="nav-h">悉尼<i>吃喝</i></div><div class="tabs"><button id="tMap" class="on">地 图</button><button id="tList">食 单</button><button id="tSpin">转一转</button><button id="tSwipe">刷一刷</button><button id="tBrawl">大乱斗</button></div></nav>
 <div id="mask"></div>
 <div id="sheet"><div class="grab"></div><button class="x" id="close">关闭</button><div id="sc"></div></div>
 <script>
@@ -583,6 +596,7 @@ function setView(v){try{spClose()}catch(e){}if(v==='list'&&isDT())v='map';view=v
   const sp=v==='spin'||v==='swipe'||v==='brawl',DT=isDT();$('#main').style.display=sp?'none':'';$('.filters').style.display=sp?'none':'';$('#spin').style.display=v==='spin'?'block':'none';$('#swipe').style.display=v==='swipe'?'block':'none';$('#brawl').style.display=v==='brawl'?'block':'none';if(v!=='swipe'){try{swList(false)}catch(e){}}
   if(!sp){$('#mapWrap').style.display=(v==='map'||DT)?'':'none';$('#list').style.display=(v==='list'||DT)?'block':'none';$('#search').style.display=v==='list'?'block':'none'}
   if(v==='map')setVB();render();try{history.replaceState(null,'',v==='map'?location.pathname+location.search:'#'+v)}catch(e){}}
+const navT=o=>{$('#nav').classList.toggle('on',o);$('#navMask').classList.toggle('on',o)};$('#menu').onclick=()=>navT(true);$('#navMask').onclick=()=>navT(false);$('#nav .tabs').addEventListener('click',()=>navT(false));
 $('#tMap').onclick=()=>setView('map');$('#tList').onclick=()=>setView('list');$('#tSpin').onclick=()=>setView('spin');$('#tSwipe').onclick=()=>setView('swipe');$('#tBrawl').onclick=()=>setView('brawl');
 window.addEventListener('resize',()=>{if(view==='map')setVB()});
 const RG=[['全图',null],['市区CBD',[-33.861,-33.893,151.183,151.232]],['东区海湾',[-33.838,-33.895,151.205,151.29]],['北岸',[-33.79,-33.86,151.15,151.255]],['Eastwood/Epping',[-33.765,-33.80,151.065,151.13]],['Rhodes/Ryde',[-33.80,-33.84,151.07,151.115]],['Burwood/Lidcombe',[-33.84,-33.885,151.03,151.115]],['山区Hills',[-33.70,-33.745,150.94,151.11]],['Lidcombe/Parramatta',[-33.80,-33.88,150.99,151.07]],['南区',[-33.90,-34.045,151.06,151.21]]];
