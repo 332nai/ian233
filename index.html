@@ -196,16 +196,21 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 #pull:disabled{filter:saturate(.5) brightness(.75)}
 .tray{margin:14px 10px 0;height:30px;border-radius:0 0 40px 40px/0 0 26px 26px;background:linear-gradient(#000,#2a2d31 70%,#7d838a);box-shadow:0 0 0 3px #c9ced4,0 0 0 4px #4a4d52,inset 0 6px 10px #000}
 /* lever */
-.lev{position:relative;flex:none;width:54px;height:330px;margin-left:-4px;perspective:520px;perspective-origin:50% 60%;cursor:grab;touch-action:none;--a:0}
+.mid{display:flex;gap:6px;align-items:stretch;margin-top:14px}
+.mid .bay{flex:1;min-width:0;margin-top:0}
+.lev{position:relative;z-index:6;flex:none;width:44px;perspective:480px;perspective-origin:50% 70%;cursor:grab;touch-action:none;--a:0}
 .lev:active{cursor:grabbing}
-.lev .brk{position:absolute;left:0;top:226px;width:30px;height:34px;border-radius:0 6px 6px 0;background:linear-gradient(#f2f4f6,#8a8f96 55%,#c9ced4);box-shadow:0 3px 6px rgba(0,0,0,.6)}
-.lev .hub{position:absolute;left:12px;top:220px;width:42px;height:46px;border-radius:12px;z-index:3;
+.lev .track{position:absolute;left:50%;width:20px;margin-left:-10px;top:36px;bottom:20px;border-radius:10px;background:linear-gradient(90deg,#000,#1d0a06 50%,#000);
+  box-shadow:inset 0 2px 6px #000,0 0 0 2px #c9ced4,0 0 0 3px #4a4d52,0 1px 0 4px rgba(255,255,255,.08)}
+.lev .hub{position:absolute;left:50%;bottom:26px;width:40px;height:44px;margin-left:-20px;border-radius:11px;z-index:3;
   background:radial-gradient(ellipse at 50% 50%,#2a2d31 0 22%,transparent 24%),radial-gradient(ellipse at 40% 30%,#ffffff,#c2c7cd 35%,#6d7279 75%,#3a3d42);box-shadow:0 4px 8px rgba(0,0,0,.7),inset 0 -3px 4px rgba(0,0,0,.4)}
-.lev .arm{position:absolute;left:33px;top:66px;width:12px;height:177px;margin-left:-6px;transform-origin:50% 100%;transform-style:preserve-3d;transform:rotateX(calc(var(--a) * 1deg));z-index:2}
-.lev .rod{position:absolute;inset:0;border-radius:6px;background:linear-gradient(90deg,#3d4045,#d9dde1 30%,#ffffff 45%,#a9aeb4 65%,#4a4d52)}
-.lev .ball{position:absolute;left:50%;top:-40px;width:50px;height:50px;margin-left:-25px;border-radius:50%;transform:rotateX(calc(var(--a) * -1deg));
+.lev .arm{position:absolute;left:50%;top:42px;bottom:48px;width:10px;margin-left:-5px;transform-origin:50% 100%;transform-style:preserve-3d;transform:rotateX(calc(var(--a) * 1deg));z-index:2}
+.lev.front .arm{z-index:4}
+.lev .rod{position:absolute;inset:0;border-radius:5px;background:linear-gradient(90deg,#3d4045,#d9dde1 30%,#ffffff 45%,#a9aeb4 65%,#4a4d52)}
+.lev .ball{position:absolute;left:50%;top:-34px;width:42px;height:42px;margin-left:-21px;border-radius:50%;transform:rotateX(calc(var(--a) * -1deg));
   background:radial-gradient(circle at 34% 28%,#fff 0 5%,#ffb0a4 11%,#ff3a24 30%,#c4120a 58%,#5a0301 90%);box-shadow:0 6px 14px rgba(0,0,0,.6),0 0 22px rgba(255,59,47,.55)}
-.lev .collar{position:absolute;left:-3px;right:-3px;top:-4px;height:10px;border-radius:3px;background:linear-gradient(90deg,#3d4045,#fff 45%,#6d7279)}
+.lev .collar{position:absolute;left:-3px;right:-3px;top:-4px;height:9px;border-radius:3px;background:linear-gradient(90deg,#3d4045,#fff 45%,#6d7279)}
+.stage{display:block}.cab{margin:0 auto;max-width:560px}
 /* result */
 #spRes{margin-top:30px;perspective:900px}
 .sp-card{position:relative;border-radius:18px;padding:26px 20px 18px;background:linear-gradient(180deg,#1d1410,#120c09);color:#f4efe6;
@@ -226,8 +231,7 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 .sp-btns button:hover{background:rgba(216,178,90,.12)}
 .sp-btns button.pri{background:linear-gradient(180deg,#ffe39a,#d8a23a);color:#1a0f00;border-color:transparent;box-shadow:0 0 16px rgba(255,207,74,.4)}
 .sp-empty{font:500 14px/1.7 var(--serif);color:#fff;text-align:center;border:1px dashed var(--neon);border-radius:14px;padding:18px;box-shadow:0 0 20px -6px var(--neon)}
-@media (min-width:1000px){.tabs{display:flex}#tList{display:none}#spin{flex:1;overflow-y:auto;min-height:0}.sp-in{max-width:700px}.win{height:204px}.face{font-size:18px}.face.sm{font-size:15px}.face.st{font-size:20px;letter-spacing:1px}#spT{font-size:50px}#spT.en{font-size:44px}
-  .lev{width:64px;height:380px}.lev .arm{left:38px;top:76px;height:207px}.lev .hub{top:260px;left:14px;width:48px;height:52px}.lev .brk{top:266px}.lev .ball{width:58px;height:58px;margin-left:-29px;top:-46px}}
+@media (min-width:1000px){.tabs{display:flex}#tList{display:none}#spin{flex:1;overflow-y:auto;min-height:0}.sp-in{max-width:700px}.win{height:204px}.face{font-size:18px}.face.sm{font-size:15px}.face.st{font-size:20px;letter-spacing:1px}#spT{font-size:50px}#spT.en{font-size:44px}.lev{width:56px}.lev .ball{width:52px;height:52px;margin-left:-26px;top:-42px}.lev .track{width:24px;margin-left:-12px}.lev .hub{width:48px;height:52px;margin-left:-24px}.lev .arm{width:12px;margin-left:-6px;bottom:52px}}
 @media (prefers-reduced-motion:reduce){.rays,#pull::after,.bulbs i{animation:none!important}}
 </style>
 </head>
@@ -258,17 +262,17 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
  <div class="stage">
  <div class="cab" id="cab"><div class="cab-in"><i class="tube l"></i><i class="tube r"></i>
   <div class="sign"><div class="bulbs"></div><h2 id="spT"></h2><div class="bulbs"></div></div>
-  <div class="bay"><div class="reels">
+  <div class="mid"><div class="bay"><div class="reels">
     <div class="reel" data-k="g"><div class="rl" id="lg"></div><div class="win"><div class="drum"></div></div><button class="lock" data-k="g"></button></div>
     <div class="reel" data-k="c"><div class="rl" id="lc"></div><div class="win"><div class="drum"></div></div><button class="lock" data-k="c"></button></div>
     <div class="reel" data-k="r"><div class="rl" id="lr"></div><div class="win"><div class="drum"></div></div><button class="lock" data-k="r"></button></div>
     <i class="arw l"></i><i class="arw r"></i><div class="glass"></div>
   </div></div>
+  <div class="lev" id="lever"><div class="track"></div><div class="arm"><div class="rod"></div><div class="ball"></div><div class="collar"></div></div><div class="hub"></div></div></div>
   <div class="led" id="led"><span id="ledT"></span><button id="snd" class="snd" aria-label="sound"></button></div>
   <div class="pb"><button id="pull"></button></div>
   <div class="tray"></div>
  </div></div>
- <div class="lev" id="lever"><div class="brk"></div><div class="arm"><div class="rod"></div><div class="ball"></div><div class="collar"></div></div><div class="hub"></div></div>
  </div>
  <div id="spRes"></div>
 </div></div>
