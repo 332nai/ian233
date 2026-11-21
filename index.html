@@ -195,6 +195,78 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 #pull:active{transform:translateY(5px);box-shadow:0 1px 0 #4e0703}
 #pull:disabled{filter:saturate(.5) brightness(.75)}
 .tray{margin:14px 10px 0;height:30px;border-radius:0 0 40px 40px/0 0 26px 26px;background:linear-gradient(#000,#2a2d31 70%,#7d838a);box-shadow:0 0 0 3px #c9ced4,0 0 0 4px #4a4d52,inset 0 6px 10px #000}
+/* ===== swipe ===== */
+#swipe{display:none;position:relative;background:#f3f3f5;min-height:calc(100vh - 106px);padding:10px 10px 16px}
+.sw-app{position:relative;max-width:430px;margin:0 auto;height:calc(100vh - 132px);min-height:560px;max-height:860px;display:flex;flex-direction:column}
+.sw-top{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 10px;font:600 13px var(--sans);color:#7c8591}
+.sw-likes{border:0;border-radius:999px;padding:7px 14px;background:#fff;color:#21262e;font:700 13px var(--sans);box-shadow:0 2px 8px rgba(0,0,0,.08);cursor:pointer}
+.sw-likes b{color:#fd267a}
+.sw-deck{position:relative;flex:1;min-height:0}
+.sw-card{position:absolute;inset:0;border-radius:14px;overflow:hidden;background:#222;box-shadow:0 6px 22px rgba(0,0,0,.18);touch-action:none;user-select:none;-webkit-user-select:none;will-change:transform;cursor:grab}
+.sw-card:active{cursor:grabbing}
+.sw-card.n1{transform:scale(.95) translateY(10px);filter:brightness(.92)}.sw-card.n2{transform:scale(.9) translateY(20px);filter:brightness(.85)}
+.sw-ph{position:absolute;inset:0}
+.sw-ph::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 20%,rgba(255,255,255,.35),transparent 45%),repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 2px,transparent 2px 14px)}
+.sw-emo{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%);font-size:150px;line-height:1;filter:drop-shadow(0 18px 30px rgba(0,0,0,.35))}
+.sw-big{position:absolute;left:20px;right:20px;top:16%;font:900 30px/1.2 var(--serif);color:rgba(255,255,255,.95);text-shadow:0 4px 18px rgba(0,0,0,.35);text-align:left}
+.sw-bars{position:absolute;left:8px;right:8px;top:8px;display:flex;gap:4px;z-index:3}
+.sw-bars i{flex:1;height:4px;border-radius:2px;background:rgba(0,0,0,.25)}.sw-bars i.on{background:#fff}
+.sw-shade{position:absolute;left:0;right:0;bottom:0;height:62%;background:linear-gradient(transparent,rgba(0,0,0,.55) 35%,rgba(0,0,0,.92));pointer-events:none}
+.sw-info{position:absolute;left:0;right:0;bottom:0;padding:18px 58px 20px 18px;color:#fff;z-index:2}
+.sw-name{font:800 28px/1.15 var(--sans);margin:0 50px 6px 0;text-shadow:0 2px 6px rgba(0,0,0,.3)}
+.sw-name small{font:500 20px var(--sans);opacity:.95;margin-left:8px;white-space:nowrap}
+.sw-row{font:500 15px/1.5 var(--sans);opacity:.92;display:flex;align-items:center;gap:6px;margin-top:2px}
+.sw-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.sw-chips span{font:600 13px var(--sans);padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.18);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.25)}
+.sw-txt{font:400 15px/1.65 var(--serif);opacity:.95;margin-top:8px;display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+.sw-hd{font:700 12px var(--sans);letter-spacing:.14em;opacity:.75;margin-top:4px}
+.sw-i{position:absolute;right:16px;bottom:22px;width:34px;height:34px;border-radius:50%;border:2px solid #fff;background:rgba(0,0,0,.2);color:#fff;font:700 17px Georgia,serif;cursor:pointer;z-index:4}
+.stamp{position:absolute;top:46px;z-index:5;padding:4px 12px;border:5px solid;border-radius:10px;font:900 40px/1 var(--sans);letter-spacing:.04em;opacity:0;pointer-events:none}
+.stamp.like{left:26px;color:#2fe08f;border-color:#2fe08f;transform:rotate(-20deg)}
+.stamp.nope{right:26px;color:#ff4458;border-color:#ff4458;transform:rotate(20deg)}
+.stamp.sup{left:50%;top:auto;bottom:34%;transform:translateX(-50%) rotate(-8deg);color:#2fb4ff;border-color:#2fb4ff;font-size:32px;white-space:nowrap}
+.sw-btns{display:flex;align-items:center;justify-content:center;gap:16px;padding:14px 0 2px}
+.sw-btns button{border:0;border-radius:50%;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,.12);transition:transform .12s}
+.sw-btns button:active{transform:scale(.88)}
+.sw-btns .b-s{width:48px;height:48px;font-size:20px}.sw-btns .b-l{width:62px;height:62px;font-size:28px}
+.b-rw{color:#f5b748}.b-no{color:#ff4458}.b-su{color:#2fb4ff}.b-lk{color:#2fe08f}
+.sw-btns svg{width:55%;height:55%}
+.sw-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#7c8591;font:500 15px/1.7 var(--sans);gap:14px;padding:30px}
+.sw-empty .pulse{width:90px;height:90px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 0 0 0 rgba(253,38,122,.5);animation:pls 1.8s infinite}
+@keyframes pls{70%{box-shadow:0 0 0 36px rgba(253,38,122,0)}100%{box-shadow:0 0 0 0 rgba(253,38,122,0)}}
+.sw-empty button{border:0;border-radius:999px;padding:11px 22px;font:700 14px var(--sans);color:#fff;background:linear-gradient(90deg,#fd267a,#ff7854);cursor:pointer}
+/* match */
+#swMatch{position:fixed;inset:0;z-index:70;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:30px;
+  background:linear-gradient(160deg,rgba(253,38,122,.92),rgba(255,120,84,.9) 55%,rgba(20,10,30,.95))}
+#swMatch.on{display:flex;animation:fin .3s}
+.mt-t{font:italic 900 46px/1.1 var(--serif);letter-spacing:.02em;text-shadow:0 4px 24px rgba(0,0,0,.25);animation:mt 0.6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes mt{from{transform:scale(.2) rotate(-12deg);opacity:0}}
+.mt-s{font:500 15px/1.6 var(--sans);margin:10px 0 26px;opacity:.95}
+.mt-av{display:flex;gap:0;margin-bottom:26px}
+.mt-av div{width:116px;height:116px;border-radius:50%;border:4px solid #fff;display:flex;align-items:center;justify-content:center;font-size:58px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.mt-av div:first-child{background:#fff4e6;transform:translateX(10px) rotate(-6deg);animation:avl .6s cubic-bezier(.2,1.4,.4,1)}
+.mt-av div:last-child{transform:translateX(-10px) rotate(6deg);animation:avr .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes avl{from{transform:translateX(-120px)}}@keyframes avr{from{transform:translateX(120px)}}
+.mt-b{width:100%;max-width:320px;display:flex;flex-direction:column;gap:12px}
+.mt-b button{border-radius:999px;padding:14px;font:800 15px var(--sans);cursor:pointer;letter-spacing:.04em}
+.mt-b .p{border:0;background:#fff;color:#fd267a}.mt-b .s{border:2px solid #fff;background:transparent;color:#fff}
+.hearts i{position:absolute;bottom:-40px;font-size:24px;animation:hrt 3s linear infinite;opacity:.8;font-style:normal}
+@keyframes hrt{to{transform:translateY(-110vh) rotate(30deg);opacity:0}}
+/* liked panel */
+#swList{position:absolute;inset:0;z-index:20;background:#fff;border-radius:14px;display:none;flex-direction:column;box-shadow:0 6px 22px rgba(0,0,0,.18)}
+#swList.on{display:flex;animation:slup .3s ease}@keyframes slup{from{transform:translateY(30px);opacity:0}}
+.sl-h{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #eee;font:800 17px var(--sans);color:#21262e}
+.sl-h button{border:0;background:none;font-size:20px;cursor:pointer;color:#7c8591}
+.sl-b{flex:1;overflow-y:auto;padding:6px 0}
+.sl-i{display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer}
+.sl-i:hover{background:#f7f7f9}
+.sl-av{position:relative;width:52px;height:52px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:26px}
+.sl-av em{position:absolute;right:-3px;bottom:-3px;width:20px;height:20px;border-radius:50%;background:#2fb4ff;color:#fff;font:700 11px/20px var(--sans);text-align:center;font-style:normal;border:2px solid #fff}
+.sl-t{flex:1;min-width:0}.sl-t b{display:block;font:700 15px var(--sans);color:#21262e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sl-t span{font:400 13px var(--sans);color:#7c8591}
+.sl-x{border:0;background:none;color:#c3c8cf;font-size:18px;cursor:pointer;padding:6px}
+.sl-0{padding:40px 20px;text-align:center;color:#7c8591;font:500 14px/1.7 var(--sans)}
+@media (min-width:1000px){#swipe{flex:1;overflow-y:auto;min-height:0}.sw-app{height:calc(100vh - 140px)}}
+
 /* lever */
 .mid{display:flex;gap:6px;align-items:stretch;margin-top:14px}
 .mid .bay{flex:1;min-width:0;margin-top:0}
@@ -237,7 +309,7 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 </head>
 <body>
 <header><h1 id="h1">悉尼<i>吃喝</i></h1><button id="lang" class="lang">EN</button></header>
-<div class="tabs"><button id="tMap" class="on">地 图</button><button id="tList">食 单</button><button id="tSpin">转一转</button></div>
+<div class="tabs"><button id="tMap" class="on">地 图</button><button id="tList">食 单</button><button id="tSpin">转一转</button><button id="tSwipe">刷一刷</button></div>
 <div class="filters">
   <div class="row" id="cats"></div>
   <div class="row" id="rates"></div>
@@ -277,6 +349,18 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
  <div id="spRes"></div>
 </div></div>
 <div id="spm"><div class="spm-bg"></div><div class="spm-wrap"><div class="spm-rays"></div><div id="spmC"></div></div></div><div id="flash"></div>
+<div id="swipe"><div class="sw-app">
+ <div class="sw-top"><span id="swLeft"></span><button class="sw-likes" id="swLikes">💗 <span id="swLikesL"></span> <b id="swLikeN">0</b></button></div>
+ <div class="sw-deck" id="swDeck"></div>
+ <div class="sw-btns">
+  <button class="b-s b-rw" id="swRw" aria-label="rewind"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6H4c0 4.4 3.6 8 8 8s8-3.6 8-8-3.6-8-8-8z"/></svg></button>
+  <button class="b-l b-no" id="swNo" aria-label="nope"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.3 5.7a1.5 1.5 0 0 0-2.1 0L12 9.9 7.8 5.7a1.5 1.5 0 1 0-2.1 2.1L9.9 12l-4.2 4.2a1.5 1.5 0 1 0 2.1 2.1l4.2-4.2 4.2 4.2a1.5 1.5 0 1 0 2.1-2.1L14.1 12l4.2-4.2a1.5 1.5 0 0 0 0-2.1z"/></svg></button>
+  <button class="b-s b-su" id="swSu" aria-label="super like"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></button>
+  <button class="b-l b-lk" id="swLk" aria-label="like"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 4.3 2.4h2c.7-1.2 2.2-2.4 4.3-2.4 3.7 0 5.8 3.9 4.3 7.2C19.5 16.4 12 21 12 21z"/></svg></button>
+ </div>
+ <div id="swList"></div>
+</div></div>
+<div id="swMatch"></div>
 <div id="mask"></div>
 <div id="sheet"><div class="grab"></div><button class="x" id="close">关闭</button><div id="sc"></div></div>
 <script>
@@ -387,11 +471,11 @@ function open(i){window._openI=i;const d=D[i];const g='https://www.google.com/ma
   $('#sheet').classList.add('on');$('#mask').classList.add('on');$('#sheet').scrollTop=0}
 function close(){$('#sheet').classList.remove('on');$('#mask').classList.remove('on')}
 $('#close').onclick=close;$('#mask').onclick=close;
-function setView(v){try{spClose()}catch(e){}if(v==='list'&&isDT())v='map';view=v;['tMap','tList','tSpin'].forEach(id=>$('#'+id).classList.toggle('on',id==='t'+v[0].toUpperCase()+v.slice(1)));
-  const sp=v==='spin',DT=isDT();$('#main').style.display=sp?'none':'';$('.filters').style.display=sp?'none':'';$('#spin').style.display=sp?'block':'none';
+function setView(v){try{spClose()}catch(e){}if(v==='list'&&isDT())v='map';view=v;['tMap','tList','tSpin','tSwipe'].forEach(id=>$('#'+id).classList.toggle('on',id==='t'+v[0].toUpperCase()+v.slice(1)));
+  const sp=v==='spin'||v==='swipe',DT=isDT();$('#main').style.display=sp?'none':'';$('.filters').style.display=sp?'none':'';$('#spin').style.display=v==='spin'?'block':'none';$('#swipe').style.display=v==='swipe'?'block':'none';if(v!=='swipe'){try{swList(false)}catch(e){}}
   if(!sp){$('#mapWrap').style.display=(v==='map'||DT)?'':'none';$('#list').style.display=(v==='list'||DT)?'block':'none';$('#search').style.display=v==='list'?'block':'none'}
   if(v==='map')setVB();render();try{history.replaceState(null,'',v==='map'?location.pathname+location.search:'#'+v)}catch(e){}}
-$('#tMap').onclick=()=>setView('map');$('#tList').onclick=()=>setView('list');$('#tSpin').onclick=()=>setView('spin');
+$('#tMap').onclick=()=>setView('map');$('#tList').onclick=()=>setView('list');$('#tSpin').onclick=()=>setView('spin');$('#tSwipe').onclick=()=>setView('swipe');
 window.addEventListener('resize',()=>{if(view==='map')setVB()});
 const RG=[['全图',null],['市区CBD',[-33.861,-33.893,151.183,151.232]],['东区海湾',[-33.838,-33.895,151.205,151.29]],['北岸',[-33.79,-33.86,151.15,151.255]],['Eastwood/Epping',[-33.765,-33.80,151.065,151.13]],['Rhodes/Ryde',[-33.80,-33.84,151.07,151.115]],['Burwood/Lidcombe',[-33.84,-33.885,151.03,151.115]],['山区Hills',[-33.70,-33.745,150.94,151.11]],['Lidcombe/Parramatta',[-33.80,-33.88,150.99,151.07]],['南区',[-33.90,-34.045,151.06,151.21]]];
 function P(lat,lon){return[(lon-150.93)/0.38*VW,(-33.69-lat)/0.36*VH]}
@@ -400,7 +484,7 @@ $('#jump').onclick=e=>{const b=e.target.closest('[data-g]');if(!b)return;const g
   const a=P(g[0],g[2]),c=P(g[1],g[3]);const r=wrap.getBoundingClientRect();let w=c[0]-a[0],h=c[1]-a[1];const cx=(a[0]+c[0])/2,cy=(a[1]+c[1])/2;
   if(w/h<r.width/r.height)w=h*r.width/r.height;else h=w*r.height/r.width;vb={x:cx-w/2,y:cy-h/2,w,h};setVB()};
 setTimeout(()=>{const n=$('#note');if(n)n.style.opacity=0;setTimeout(()=>n&&n.remove(),700)},7000);
-render();fit();if(location.hash==='#spin')setView('spin');else if(location.hash==='#list'&&!matchMedia('(min-width:1000px)').matches)setView('list');
+render();fit();if(location.hash==='#spin')setView('spin');else if(location.hash==='#swipe')setView('swipe');else if(location.hash==='#list'&&!matchMedia('(min-width:1000px)').matches)setView('list');
 $('#search2').oninput=e=>{q=e.target.value.trim().toLowerCase();render()};
 matchMedia('(min-width:1000px)').addEventListener('change',()=>{setView(view);fit()});
 
@@ -409,7 +493,7 @@ function applyLang(){const x=T();document.documentElement.lang=LANG==='en'?'en':
   $('#search').placeholder=x.ph;$('#search2').placeholder=x.ph;const n=$('#note');if(n)n.textContent=x.note;const c=$('#close');if(c)c.textContent=x.close;
   pins.forEach(([g,d])=>{const t=g.querySelector('.pl');if(!t)return;const L=shortName(F.n(d));t.setAttribute('y',L.length>1?-3:4);
     t.innerHTML=L.map((s,j)=>`<tspan x="10" dy="${j?13:0}">${esc(s)}</tspan>`).join('')});
-  jumpBtns();spinLang();render();if(view==='map')setVB();const sh=$('#sheet');if(sh&&sh.classList.contains('on')&&window._openI!=null)open(window._openI)}
+  jumpBtns();spinLang();swLang();render();if(view==='map')setVB();const sh=$('#sheet');if(sh&&sh.classList.contains('on')&&window._openI!=null)open(window._openI)}
 
 // ===== spin =====
 const SP={lock:{g:null,c:null,r:null},cur:null,busy:false,vis:{}};
@@ -514,6 +598,77 @@ let _sh=0;window.addEventListener('devicemotion',e=>{if(view!=='spin')return;con
 function spinLang(){const x=T();$('#tSpin').textContent=x.spin;$('#spT').textContent=x.spT;$('#spT').classList.toggle('en',LANG==='en');$('#lg').textContent=x.rg2;$('#lc').textContent=x.ct2;$('#lr').textContent=x.rt2;$('#pull').textContent=x.pull;sndBtn();if(!SP.busy)led(x.ledIdle,'');
   ['g','c','r'].forEach(k=>{const v=SP.cur?SP.cur[k]:spOpts(k)[Math.floor(Math.random()*spOpts(k).length)];spSet(k,v,false)});spLocks();if($('#spm').classList.contains('on')&&window._spI!=null)spShow(window._spI)}
 spinLang();
+// ===== swipe =====
+const SWT={zh:{tab:'刷一刷',left:n=>`还剩 ${n} 家`,likes:'心动',like:'喜欢',nope:'不要',sup:'超级喜欢',reco:'推荐菜',about:'介绍',pp:'人均 $',empty:'附近的餐厅都被你刷完了',reset:'重新开始',mt:'配对成功！',mts:n=>`你和「${n}」互相心动`,go:'看详情',keep:'继续刷',lt:'我的心动',l0:'还没有心动的餐厅，往右滑一家试试。',me:'🙋'},
+ en:{tab:'SWIPE',left:n=>`${n} left`,likes:'Likes',like:'LIKE',nope:'NOPE',sup:'SUPER LIKE',reco:'MUST ORDER',about:'ABOUT',pp:'$',empty:'You have swiped every place around',reset:'Start over',mt:'It\'s a Date!',mts:n=>`You and ${n} liked each other`,go:'View details',keep:'Keep swiping',lt:'My likes',l0:'No likes yet. Swipe right on one.',me:'🙋'}};
+const SWX=()=>SWT[LANG];
+const EMO={zh:'🥟',jp:'🍣',kr:'🍲',west:'🍝',asia:'🌮',cafe:'☕',bake:'🥐',bar:'🍸'};
+const GR={zh:['#ff512f','#dd2476'],jp:['#ff9a8b','#ff6a88'],kr:['#f7971e','#e94057'],west:['#8e2de2','#4a00e0'],asia:['#11998e','#38ef7d'],cafe:['#b6862c','#5c3d1e'],bake:['#f857a6','#ffb347'],bar:['#1f1c2c','#928dab']};
+const SW={seen:new Set(),like:[],deck:[],hist:[],page:0,busy:false};
+try{SW.seen=new Set(JSON.parse(localStorage.getItem('swSeen')||'[]'));SW.like=JSON.parse(localStorage.getItem('swLike')||'[]')}catch(e){}
+function swSave(){try{localStorage.setItem('swSeen',JSON.stringify([...SW.seen]));localStorage.setItem('swLike',JSON.stringify(SW.like))}catch(e){}}
+const SWW={'5':5,'4':4,'3':2.5,'2':1};
+function swDeck(){SW.deck=D.map((d,i)=>[d,i]).filter(([d])=>d.r!=='X'&&!SW.seen.has(d.n)).map(([d,i])=>[i,-Math.log(Math.random())/SWW[d.r]]).sort((a,b)=>a[1]-b[1]).map(x=>x[0])}
+const swGrad=c=>`linear-gradient(160deg,${GR[c][0]},${GR[c][1]})`;
+function swDish(d){const s=(F.d?F.d(d):d.d)||'';return s.split(/[、，,;；]/).map(x=>x.replace(/[（(].*?[）)]/g,'').trim()).filter(Boolean).slice(0,6)}
+function swInfo(d,pg){const x=SWX(),n=d.r==='X'?1:+d.r;
+  if(pg===1){const ch=swDish(d);return `<div class="sw-name">${esc(F.n(d))}</div><div class="sw-hd">${x.reco}</div><div class="sw-chips">${ch.length?ch.map(c=>`<span>${esc(c)}</span>`).join(''):`<span>${esc(F.t(d))}</span>`}</div>`}
+  if(pg===2)return `<div class="sw-name">${esc(F.n(d))}</div><div class="sw-hd">${x.about}</div><div class="sw-txt">${esc(F.i(d))}</div>`;
+  return `<div class="sw-name">${esc(F.n(d))}<small>${'★'.repeat(n)}</small></div><div class="sw-row">📍 ${esc(F.a(d))}</div><div class="sw-row">🍽 ${esc(F.t(d))}${d.p?' · '+x.pp+d.p:''}</div>`}
+function swCardHTML(i,k){const d=D[i],x=SWX();return `<div class="sw-card n${k}" data-i="${i}"><div class="sw-ph" style="background:${swGrad(d.c)}"></div><div class="sw-emo">${EMO[d.c]}</div>
+  <div class="sw-bars"><i class="on"></i><i></i><i></i></div><div class="sw-shade"></div>
+  <div class="stamp like">${x.like}</div><div class="stamp nope">${x.nope}</div><div class="stamp sup">${x.sup}</div>
+  <div class="sw-info">${swInfo(d,0)}</div><button class="sw-i" data-a="i">i</button></div>`}
+function swRender(){const dk=$('#swDeck'),x=SWX();$('#swLeft').textContent=x.left(SW.deck.length);$('#swLikeN').textContent=SW.like.length;
+  if(!SW.deck.length){dk.innerHTML=`<div class="sw-empty"><div class="pulse">${EMO.zh}</div><div>${x.empty}</div><button id="swReset">${x.reset}</button></div>`;$('#swReset').onclick=()=>{SW.seen.clear();SW.hist=[];swSave();swDeck();swRender()};return}
+  dk.innerHTML=SW.deck.slice(0,3).map((i,k)=>swCardHTML(i,k)).reverse().join('');SW.page=0;swBind()}
+function swTop(){return $('#swDeck .sw-card.n0')}
+function swBind(){const c=swTop();if(!c)return;const nx=$('#swDeck .sw-card.n1');let st=null;
+  const stamps=(dx,dy)=>{c.querySelector('.like').style.opacity=Math.max(0,Math.min(1,dx/90));c.querySelector('.nope').style.opacity=Math.max(0,Math.min(1,-dx/90));c.querySelector('.sup').style.opacity=Math.max(0,Math.min(1,(-dy-40)/90))*(Math.abs(dx)<70?1:0)};
+  c.onpointerdown=e=>{if(SW.busy||e.target.closest('.sw-i'))return;st={x:e.clientX,y:e.clientY,t:performance.now(),m:false};c.setPointerCapture(e.pointerId);c.style.transition='none'};
+  c.onpointermove=e=>{if(!st)return;const dx=e.clientX-st.x,dy=e.clientY-st.y;if(Math.abs(dx)+Math.abs(dy)>6)st.m=true;if(!st.m)return;
+    c.style.transform=`translate(${dx}px,${dy}px) rotate(${dx/16}deg)`;stamps(dx,dy);if(nx){const p=Math.min(1,Math.hypot(dx,dy)/160);nx.style.transition='none';nx.style.transform=`scale(${.95+.05*p}) translateY(${10-10*p}px)`;nx.style.filter=`brightness(${.92+.08*p})`}};
+  const up=e=>{if(!st)return;const s=st;st=null;const dx=e.clientX-s.x,dy=e.clientY-s.y,dt=performance.now()-s.t,vx=dx/dt;
+    if(!s.m){const r=c.getBoundingClientRect();swPage(e.clientX-r.left>r.width/2?1:-1);return}
+    if(dy<-110&&Math.abs(dx)<90)return swGo('s',dx,dy);if(dx>110||vx>.55)return swGo('l',dx,dy);if(dx<-110||vx<-.55)return swGo('n',dx,dy);
+    c.style.transition='transform .35s cubic-bezier(.2,1.5,.4,1)';c.style.transform='';stamps(0,0);if(nx){nx.style.transition='transform .3s,filter .3s';nx.style.transform='';nx.style.filter=''}};
+  c.onpointerup=up;c.onpointercancel=up;
+  c.querySelector('.sw-i').onclick=e=>{e.stopPropagation();open(+c.dataset.i)}}
+function swPage(dir){const c=swTop();if(!c)return;const p=SW.page+dir;if(p<0||p>2){c.animate([{transform:`rotateY(${dir*4}deg)`},{transform:'none'}],{duration:220});return}
+  SW.page=p;c.querySelectorAll('.sw-bars i').forEach((b,k)=>b.classList.toggle('on',k===p));c.querySelector('.sw-info').innerHTML=swInfo(D[+c.dataset.i],p);
+  c.querySelector('.sw-emo').style.opacity=p===2?.25:1}
+function swGo(kind,dx,dy){const c=swTop();if(!c||SW.busy)return;SW.busy=true;const i=+c.dataset.i,d=D[i],W=innerWidth;
+  const ex=kind==='l'?W*1.3:kind==='n'?-W*1.3:(dx||0),ey=kind==='s'?-innerHeight*1.2:(dy||0)+60,rot=kind==='s'?0:ex/18;
+  c.querySelector(kind==='l'?'.like':kind==='n'?'.nope':'.sup').style.opacity=1;
+  c.style.transition='transform .42s cubic-bezier(.3,.6,.4,1)';c.style.transform=`translate(${ex}px,${ey}px) rotate(${rot}deg)`;
+  try{kind==='n'?tone(220,.12,'triangle',.06,0,140):tone(kind==='s'?880:660,.12,'triangle',.06,0,kind==='s'?1760:990)}catch(e){}
+  SW.seen.add(d.n);SW.hist.push({i,kind});if(SW.hist.length>30)SW.hist.shift();
+  if(kind!=='n'){SW.like=SW.like.filter(o=>o.n!==d.n);SW.like.unshift({n:d.n,s:kind==='s'})}
+  swSave();
+  setTimeout(()=>{SW.deck.shift();SW.busy=false;swRender();if(kind==='s'||(kind==='l'&&(d.r==='5'||d.r==='4')&&Math.random()<.45))swMatch(i)},360)}
+function swRewind(){if(SW.busy)return;const h=SW.hist.pop();if(!h){const c=swTop();c&&c.animate([{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'none'}],{duration:260});return}
+  const d=D[h.i];SW.seen.delete(d.n);SW.like=SW.like.filter(o=>o.n!==d.n);swSave();SW.deck.unshift(h.i);swRender();
+  const c=swTop();c.style.transition='none';c.style.transform=`translate(${h.kind==='n'?-innerWidth:h.kind==='l'?innerWidth:0}px,${h.kind==='s'?-innerHeight:0}px) rotate(${h.kind==='n'?-30:h.kind==='l'?30:0}deg)`;
+  void c.offsetWidth;c.style.transition='transform .45s cubic-bezier(.2,1.3,.4,1)';c.style.transform='';try{tone(520,.1,'triangle',.05,0,330)}catch(e){}}
+function swMatch(i){const d=D[i],x=SWX(),M=$('#swMatch');
+  M.innerHTML=`<div class="hearts">${Array.from({length:14},(_,k)=>`<i style="left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;font-size:${16+Math.random()*22}px">${k%3?'💗':'💖'}</i>`).join('')}</div>
+  <div class="mt-t">${x.mt}</div><div class="mt-s">${esc(x.mts(F.n(d)))}</div>
+  <div class="mt-av"><div>${x.me}</div><div style="background:${swGrad(d.c)}">${EMO[d.c]}</div></div>
+  <div class="mt-b"><button class="p" data-a="d">${x.go}</button><button class="s" data-a="k">${x.keep}</button></div>`;
+  M.classList.add('on');try{[523,659,784,1047].forEach((f,k)=>tone(f,.25,'triangle',.07,k*.09))}catch(e){}
+  M.querySelector('.mt-b').onclick=e=>{const a=e.target.dataset.a;if(!a)return;M.classList.remove('on');if(a==='d')open(i)}}
+function swList(show){const L=$('#swList'),x=SWX();if(!show){L.classList.remove('on');return}
+  const idx=n=>D.findIndex(d=>d.n===n);
+  L.innerHTML=`<div class="sl-h">${x.lt} · ${SW.like.length}<button data-a="c">✕</button></div><div class="sl-b">${SW.like.length?SW.like.map(o=>{const i=idx(o.n);if(i<0)return'';const d=D[i];
+    return `<div class="sl-i" data-i="${i}"><div class="sl-av" style="background:${swGrad(d.c)}">${EMO[d.c]}${o.s?'<em>★</em>':''}</div><div class="sl-t"><b>${esc(F.n(d))}</b><span>${'★'.repeat(+d.r||1)} · ${esc(F.a(d))}</span></div><button class="sl-x" data-x="${esc(o.n)}">✕</button></div>`}).join(''):`<div class="sl-0">${x.l0}</div>`}</div>`;
+  L.classList.add('on');
+  L.onclick=e=>{if(e.target.dataset.a==='c')return swList(false);const xb=e.target.closest('.sl-x');if(xb){SW.like=SW.like.filter(o=>o.n!==xb.dataset.x);swSave();swList(true);$('#swLikeN').textContent=SW.like.length;return}
+    const it=e.target.closest('.sl-i');if(it)open(+it.dataset.i)}}
+$('#swNo').onclick=()=>swGo('n');$('#swLk').onclick=()=>swGo('l');$('#swSu').onclick=()=>swGo('s');$('#swRw').onclick=swRewind;$('#swLikes').onclick=()=>swList(!$('#swList').classList.contains('on'));
+document.addEventListener('keydown',e=>{if(view!=='swipe'||$('#swMatch').classList.contains('on'))return;if(e.key==='ArrowLeft')swGo('n');else if(e.key==='ArrowRight')swGo('l');else if(e.key==='ArrowUp')swGo('s');else if(e.key==='Backspace')swRewind()});
+function swLang(){const x=SWX();$('#tSwipe').textContent=x.tab;$('#swLikesL').textContent=x.likes;if($('#swList').classList.contains('on'))swList(true);if(SW.deck.length||swTop()||$('#swDeck .sw-empty')){const p=SW.page;swRender()}}
+swDeck();swLang();
+
 $('#lang').onclick=()=>{LANG=LANG==='en'?'zh':'en';try{localStorage.setItem('lang',LANG)}catch(e){}applyLang()};
 applyLang();
 </script>
