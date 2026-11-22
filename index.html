@@ -427,7 +427,7 @@ header{display:flex;align-items:center;gap:8px;padding:14px 12px;text-align:left
 .pill{height:46px;border:1px solid var(--ink);background:#fff;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.08);color:var(--ink)}
 header .menu.pill{position:static;transform:none;width:46px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:none}
 header .menu.pill i{width:17px;height:1.8px}
-header h1.pill{margin:0 auto;padding:0 22px;display:block;line-height:44px;font:900 22px/44px var(--serif);letter-spacing:.04em;animation:blurin .9s ease both;white-space:nowrap}
+header h1.pill{margin:0 auto;padding:0 22px;display:flex;align-items:center;justify-content:center;font:900 22px/1 var(--serif);letter-spacing:.04em;animation:blurin .9s ease both;white-space:nowrap}
 header .lang.pill{position:static;transform:none;width:46px;padding:0;border:1px solid var(--ink);font:500 12px var(--sans);letter-spacing:.06em;flex:none;cursor:pointer}
 .dnav{display:none}
 body[data-v=map] header{position:fixed;top:0;left:0;right:0;pointer-events:none;background:none}
@@ -466,6 +466,8 @@ body[data-v=list] #toMap{display:flex}
 #toast .row{display:flex;gap:8px;margin-top:12px}
 #toast .go2{flex:1;height:40px;border-radius:999px;border:0;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font:500 14px var(--sans);letter-spacing:.06em;cursor:pointer}
 #toast .later{display:none;height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--hair);background:#fff;font:500 13px var(--sans);color:var(--sub);cursor:pointer}
+header h1.pill span{display:block;line-height:1}
+html[lang=zh-CN] header h1.pill,html[lang=zh] header h1.pill{font-family:"Noto Serif SC","Songti SC",serif}
 /* filter sheet */
 #fmask{position:fixed;inset:0;z-index:84;background:rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:opacity .25s}#fmask.on{opacity:1;pointer-events:auto}
 #fsheet{position:fixed;z-index:85;left:0;right:0;bottom:0;max-height:86dvh;overflow-y:auto;background:#fff;border-top:1px solid var(--ink);border-radius:22px 22px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.2,1)}
@@ -483,14 +485,14 @@ body[data-v=list] #toMap{display:flex}
 .fs-c button .st{letter-spacing:0}
 .fs-go{margin-top:22px;width:100%;height:50px;border-radius:999px;border:0;background:var(--ink);color:#fff;font:500 15px var(--sans);letter-spacing:.1em;cursor:pointer;position:sticky;bottom:0}
 /* home bento */
-#home{display:none;padding:4px 14px 24px}
+#home{display:none;padding:6px 14px 24px}
 .hm-new{display:flex;justify-content:center;margin-top:-4px}
 .hm-new button{height:30px;padding:0 12px;border-radius:999px;border:1px solid var(--hair);background:#fff;display:flex;align-items:center;gap:8px;font:500 11px var(--sans);letter-spacing:.16em;color:var(--sub);cursor:pointer}
 .hm-new i{width:6px;height:6px;border-radius:50%;background:var(--red)}
 .hm-t{text-align:center;margin:28px 0 6px;font:900 56px/1 var(--serif);letter-spacing:.04em;animation:blurin 1s ease both}.hm-t i{font-style:normal;color:var(--red)}
 .hm-s{text-align:center;font:400 15px/1.6 var(--serif);color:var(--sub);animation:blurin 1s .15s ease both}
 .hm-rule{height:1px;background:var(--ink);margin:22px 0 14px}
-.bento{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(150px,auto);gap:10px}
+.bento{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:1.25fr 1fr 1fr;height:calc(100dvh - 110px);min-height:560px;gap:10px}
 .tile{position:relative;border-radius:20px;border:1px solid var(--ink);background:#fff;padding:14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;color:var(--ink);overflow:hidden;animation:fu .6s ease both;font:inherit}
 .tile .tt{font:600 18px var(--serif)}.tile .td{font:400 12px/1.5 var(--serif);color:var(--sub);margin-top:2px}
 .tile.map{grid-column:span 2;min-height:190px;padding:0}
@@ -505,7 +507,7 @@ body[data-v=home] #main{display:none!important}
 #sheet{z-index:80}#mask{z-index:79}
 @media (min-width:1000px){
   header .menu.pill{display:none}
-  header h1.pill{margin:0;height:48px;font:900 24px/46px var(--serif)}
+  header h1.pill{margin:0;height:48px;font:900 24px/1 var(--serif)}
   header .lang.pill{height:48px;width:48px}
   .dnav{display:flex;align-items:center;padding:0 6px;height:48px}
   .dnav button{border:0;background:none;padding:0 14px;font:500 13px var(--sans);letter-spacing:.12em;color:var(--sub);cursor:pointer;border-left:1px solid var(--hair);line-height:16px}
@@ -532,7 +534,7 @@ body[data-v=home] #main{display:none!important}
 </style>
 </head>
 <body>
-<header><button id="menu" class="menu pill" aria-label="menu"><i></i><i></i><i></i></button><h1 id="h1" class="pill">悉尼<i>吃喝</i></h1><div class="dnav pill" id="dnav"></div><button id="lang" class="lang pill">EN</button></header>
+<header><button id="menu" class="menu pill" aria-label="menu"><i></i><i></i><i></i></button><h1 id="h1" class="pill"><span>悉尼<i>吃喝</i></span></h1><div class="dnav pill" id="dnav"></div><button id="lang" class="lang pill">EN</button></header>
 
 <div class="filters">
   <div class="row" id="cats"></div>
@@ -761,8 +763,7 @@ setTimeout(toastOn,8000);
 // home
 function renderHome(){const x=NXT();const mx=D.reduce((a,d)=>d.dt>a?d.dt:a,'');const nn=D.filter(d=>d.dt===mx).length;const [yy,mm,dd]=mx.split('-').map(Number);
   const pinsS=[[90,58,'5'],[104,64,'4'],[80,70,'3'],[220,44,'5'],[232,52,'4'],[210,56,'3'],[70,118,'5'],[84,126,'2'],[232,118,'5'],[246,112,'4'],[240,128,'3'],[258,124,'5'],[150,90,'4'],[170,96,'3']].map(([a,b,r])=>`<circle cx="${a}" cy="${b}" r="${r==='5'?5.5:r==='4'?4.5:3.5}" fill="${CL[r]}" stroke="#fff" stroke-width="1.5"/>`).join('');
-  $('#home').innerHTML=`<div class="hm-new"><button data-h="list"><i></i>${x.nw(mm,dd,nn)}</button></div>
-  <div class="hm-t">${T().h1}</div><div class="hm-s">${x.hs(D.length)}</div><div class="hm-rule"></div>
+  $('#home').innerHTML=`
   <div class="bento">
    <button class="tile map" data-h="map" style="animation-delay:.25s"><svg viewBox="0 0 360 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="360" height="160" fill="#fff"/><path d="M0 84 C70 74 120 86 170 78 C220 70 260 56 300 52 C330 48 350 40 360 34 L360 50 C340 62 310 70 280 78 C240 88 200 96 160 96 C110 98 60 92 0 104 Z" fill="#e6ecef"/><path d="M310 0 L360 0 L360 160 L300 160 C316 120 296 90 316 60 C330 40 312 20 310 0 Z" fill="#e6ecef"/>${pinsS}</svg><div class="lb"><span>${x.mapT}</span><span class="go" style="padding:0;border:0;background:var(--ink)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6"/></svg></span></div></button>
    <button class="tile" data-h="spin" style="animation-delay:.35s"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="#141414" stroke-width="1.6" aria-hidden="true"><rect x="3" y="8" width="22" height="20" rx="3"/><path d="M10 8v20M18 8v20M29 6v12"/><circle cx="29" cy="5" r="2.5" fill="#b42a1f" stroke="#b42a1f"/></svg><div><div class="tt">${T().spin}</div><div class="td">${x.spD}</div></div></button>
@@ -794,7 +795,7 @@ $('#search2').oninput=e=>{q=e.target.value.trim().toLowerCase();render()};
 matchMedia('(min-width:1000px)').addEventListener('change',()=>{setView(view);fit()});
 
 function applyLang(){const x=T();document.documentElement.lang=LANG==='en'?'en':'zh-CN';document.title=x.title;
-  $('#h1').innerHTML=x.h1;$('#lang').textContent=x.sw;$('#tMap').textContent=x.map;$('#tList').textContent=x.list;
+  $('#h1').innerHTML='<span>'+x.h1+'</span>';$('#lang').textContent=x.sw;$('#tMap').textContent=x.map;$('#tList').textContent=x.list;
   $('#search').placeholder=x.ph;$('#search2').placeholder=x.ph;const n=$('#note');if(n)n.textContent=x.note;const c=$('#close');if(c)c.textContent=x.close;
   pins.forEach(([g,d])=>{const t=g.querySelector('.pl');if(!t)return;const L=shortName(F.n(d));t.setAttribute('y',L.length>1?-3:4);
     t.innerHTML=L.map((s,j)=>`<tspan x="10" dy="${j?13:0}">${esc(s)}</tspan>`).join('')});
