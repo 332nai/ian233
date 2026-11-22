@@ -369,6 +369,35 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 @media (min-width:760px){.bf-in{-webkit-line-clamp:7;font-size:14px}.bf-emo{font-size:120px}}
 
 .br-cnt{text-align:center;font:600 12px var(--sans);letter-spacing:.1em;color:rgba(255,255,255,.6);margin-top:22px}
+/* ===== party ===== */
+#party{display:none;padding:4px 14px 40px}
+.pt-w{max-width:480px;margin:0 auto}
+.pt-h{font:900 30px/1.2 var(--serif);margin:8px 0 4px}.pt-sub{font:400 14px/1.7 var(--serif);color:var(--sub)}
+.pt-err{margin-top:12px;padding:12px 14px;border:1px solid var(--red);border-radius:14px;color:var(--red);font:500 13px/1.6 var(--sans)}
+.pt-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px}
+.pt-code{font:700 13px var(--sans);letter-spacing:.2em;color:var(--sub)}
+.pt-share{height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--ink);background:#fff;font:500 13px var(--sans);letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;gap:8px;color:var(--ink)}
+.pt-share.p{background:var(--ink);color:#fff}
+.pt-qr{margin:12px auto 0;display:block;width:180px;height:180px;border:1px solid var(--hair);border-radius:12px;padding:8px;background:#fff}
+.pt-mem{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+.pt-mem span{height:30px;padding:0 12px;border-radius:999px;background:#f3f1ee;display:flex;align-items:center;gap:6px;font:500 12px var(--sans);color:var(--ink)}
+.pt-mem span.me{background:var(--ink);color:#fff}.pt-mem span b{font-weight:700;color:var(--red)}.pt-mem span.me b{color:#ffb4a8}
+.pt-deck{position:relative;height:min(62dvh,560px);margin-top:10px}
+.pt-deck .sw-card .sw-info{padding-right:18px}
+.pt-done{text-align:center;padding:28px 0 6px;font:600 18px var(--serif)}
+.pt-res h3{font:500 11px var(--sans);letter-spacing:.24em;color:var(--sub);margin:22px 0 8px;border-top:1px solid var(--ink);padding-top:10px}
+.pt-r{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--hair);cursor:pointer}
+.pt-r .n{flex:none;width:26px;font:700 16px var(--serif);color:var(--red)}
+.pt-r .t{flex:1;min-width:0}.pt-r .t b{display:block;font:600 16px/1.3 var(--serif)}.pt-r .t span{font:400 12px var(--sans);color:var(--sub)}
+.pt-r .v{flex:none;font:700 13px var(--sans);color:var(--ink)}
+.pt-pick{margin-top:16px;display:flex;gap:8px}.pt-pick button{flex:1}
+.pt-big{margin-top:14px;padding:18px;border-radius:20px;border:1px solid var(--ink);text-align:center;animation:fu .5s ease both}
+.pt-big .k{font:500 11px var(--sans);letter-spacing:.3em;color:var(--red)}.pt-big b{display:block;font:900 26px/1.3 var(--serif);margin:6px 0}
+.tile.party .td{max-width:140px}
+.bento{grid-template-rows:1.15fr 1fr 1fr .62fr!important}
+.tile.all{grid-column:span 2;flex-direction:row-reverse;justify-content:space-between;align-items:flex-end}
+.tile.all .bg{font-size:90px;bottom:-22px}
+
 /* lever */
 .mid{display:flex;gap:6px;align-items:stretch;margin-top:14px}
 .mid .bay{flex:1;min-width:0;margin-top:0}
@@ -543,6 +572,7 @@ body[data-v=home] #main{display:none!important}
   <input id="search" placeholder="搜索店名、区域或菜" style="display:none">
 </div>
 <div id="home"></div>
+<div id="party"></div>
 <div id="main">
 <div id="fbar"></div>
 <div id="mapWrap">
@@ -592,7 +622,7 @@ body[data-v=home] #main{display:none!important}
 <div id="swMatch"></div>
 <div id="brawl"><div class="br-in" id="brIn"></div></div>
 <canvas id="fx"></canvas>
-<div id="navMask"></div><nav id="nav"><div class="nav-h">悉尼<i>吃喝</i></div><div class="tabs"><button id="tHome">首 页</button><button id="tMap" class="on">地 图</button><button id="tList">食 单</button><button id="tSpin">转一转</button><button id="tSwipe">刷一刷</button><button id="tBrawl">大乱斗</button></div></nav>
+<div id="navMask"></div><nav id="nav"><div class="nav-h">悉尼<i>吃喝</i></div><div class="tabs"><button id="tHome">首 页</button><button id="tMap" class="on">地 图</button><button id="tList">食 单</button><button id="tSpin">转一转</button><button id="tSwipe">刷一刷</button><button id="tBrawl">大乱斗</button><button id="tParty">饭局</button></div></nav>
 <div id="fmask"></div><div id="fsheet"></div><button id="toMap" class="pill"></button>
 <div id="mask"></div>
 <div id="sheet"><div class="grab"></div><button class="x" id="close">关闭</button><div id="sc"></div></div>
@@ -708,6 +738,124 @@ function open(i){window._openI=i;const d=D[i];const g='https://www.google.com/ma
   $('#sheet').classList.add('on');$('#mask').classList.add('on');$('#sheet').scrollTop=0}
 function close(){$('#sheet').classList.remove('on');$('#mask').classList.remove('on')}
 $('#close').onclick=close;$('#mask').onclick=close;
+// ===== party (group decide) =====
+const SB_URL='https://hmipkgllqnyvabcntipb.supabase.co',SB_KEY='sb_publishable_9tEEaEglzcirAP7ZRu3DCQ_Weczqod8';
+const PTT={zh:{tab:'饭局',tD:'和朋友一起选，全员心动就开吃',h:'发起饭局',sub:'选好范围，生成链接发到群里。每个人在自己手机上刷同一组餐厅，有一家所有人都右滑就决定了。',name:'你的昵称',area:'区域',any:'不限',cat:'菜系（可多选）',price:'价位（可多选）',n:'候选数量',create:'创建饭局',creating:'创建中…',joinH:'加入饭局',joinSub:n=>`${n} 发起的饭局`,join:'加入',share:'分享链接',copied:'已复制链接',qr:'二维码',mem:'成员',left:n=>`还剩 ${n} 家`,done:'你已经刷完了，等等其他人。',lead:'当前排名',res:'结果',none:'还没有人右滑',pick:'从前三名随机定一家',det:'看详情',decided:'就吃这家',all:'全员心动！',allS:n=>`所有人都右滑了「${n}」`,keep:'继续刷',err:'连接不上饭局服务器。请确认 Supabase 已打开匿名登录并建好表。',gone:'这个饭局不存在或已过期（饭局保留 24 小时）。',few:'符合条件的餐厅太少，放宽一下范围吧。',newP:'发起新的饭局',likes:'喜欢',n2:n=>`${n} 人`},
+ en:{tab:'GROUP',tD:'Decide with friends, eat when everyone likes it',h:'Start a group',sub:'Pick the scope and share the link. Everyone swipes the same set on their own phone. The first place everyone likes wins.',name:'Your name',area:'AREA',any:'Anywhere',cat:'CUISINE (pick any)',price:'PRICE (pick any)',n:'CANDIDATES',create:'Create group',creating:'Creating…',joinH:'Join the group',joinSub:n=>`Started by ${n}`,join:'Join',share:'Share link',copied:'Link copied',qr:'QR code',mem:'MEMBERS',left:n=>`${n} left`,done:'You are done. Waiting for the others.',lead:'LEADERBOARD',res:'RESULTS',none:'No likes yet',pick:'Pick one from the top 3',det:'Details',decided:'WE ARE EATING HERE',all:'Everyone likes it!',allS:n=>`Everyone swiped right on ${n}`,keep:'Keep swiping',err:'Could not reach the group server. Check that anonymous sign in is on and the tables exist.',gone:'This group does not exist or has expired (groups last 24 hours).',few:'Too few places match. Try a wider scope.',newP:'Start a new group',likes:'likes',n2:n=>`${n}`}};
+const PX2=()=>PTT[LANG];
+const PS={sb:null,uid:null,room:null,members:[],votes:[],ch:null,stage:'new',err:'',form:{area:0,cats:new Set(),prices:new Set(),n:20},shown:new Set(),qr:false,picked:null,busy:false};
+function ptLoad(){return new Promise((res,rej)=>{if(window.supabase)return res();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';s.onload=()=>res();s.onerror=rej;document.head.appendChild(s)})}
+async function ptInit(){if(PS.sb&&PS.uid)return;await ptLoad();PS.sb=window.supabase.createClient(SB_URL,SB_KEY);
+  let {data}=await PS.sb.auth.getSession();if(!data.session){const r=await PS.sb.auth.signInAnonymously();if(r.error)throw r.error;data={session:r.data.session}}PS.uid=data.session.user.id}
+const ptName=()=>{try{return localStorage.getItem('ptName')||''}catch(e){return ''}};
+const ptIdx=n=>D.findIndex(d=>d.n===n);
+function ptRoomId(){const m=location.hash.match(/^#party=([A-Z0-9]{4,8})$/i);return m?m[1].toUpperCase():null}
+async function partyEnter(){const id=ptRoomId();PS.err='';
+  if(!id){PS.stage='new';return ptRender()}
+  PS.stage='loading';ptRender();
+  try{await ptInit();await ptOpen(id)}catch(e){PS.err=PX2().err;PS.stage=id?'join':'new';console.error(e);ptRender()}}
+async function ptOpen(id){const sb=PS.sb;const r=await sb.from('rooms').select('*').eq('id',id).maybeSingle();if(r.error)throw r.error;
+  if(!r.data){PS.stage='gone';return ptRender()}PS.room=r.data;
+  const m=await sb.from('members').select('*').eq('room_id',id);if(m.error)throw m.error;PS.members=m.data||[];
+  if(!PS.members.some(x=>x.uid===PS.uid)){PS.stage='join';return ptRender()}
+  const v=await sb.from('votes').select('*').eq('room_id',id);if(v.error)throw v.error;PS.votes=v.data||[];
+  PS.stage='room';ptSub(id);ptRender()}
+function ptSub(id){if(PS.ch)PS.sb.removeChannel(PS.ch);
+  PS.ch=PS.sb.channel('room-'+id)
+   .on('postgres_changes',{event:'*',schema:'public',table:'votes',filter:'room_id=eq.'+id},p=>{const n=p.new;if(!n||!n.item)return;PS.votes=PS.votes.filter(v=>!(v.uid===n.uid&&v.item===n.item));PS.votes.push(n);ptCheck();ptRenderLive()})
+   .on('postgres_changes',{event:'*',schema:'public',table:'members',filter:'room_id=eq.'+id},p=>{const n=p.new;if(!n||!n.uid)return;PS.members=PS.members.filter(m=>m.uid!==n.uid);PS.members.push(n);ptCheck();ptRenderLive()})
+   .subscribe()}
+function ptScores(){const sc={};PS.room.deck.forEach(it=>sc[it]={item:it,s:0,l:[],by:0});
+  PS.votes.forEach(v=>{const o=sc[v.item];if(!o)return;o.by++;if(v.vote>0){o.s+=v.vote;const m=PS.members.find(x=>x.uid===v.uid);o.l.push(m?m.name:'?')}});
+  return Object.values(sc).filter(o=>o.s>0).sort((a,b)=>b.s-a.s||b.l.length-a.l.length)}
+function ptCheck(){const n=PS.members.length;if(n<2)return;for(const it of PS.room.deck){if(PS.shown.has(it))continue;
+  const vs=PS.votes.filter(v=>v.item===it);if(vs.length>=n&&PS.members.every(m=>vs.some(v=>v.uid===m.uid&&v.vote>0))){PS.shown.add(it);ptMatch(it);break}}}
+function ptMatch(it){const i=ptIdx(it);if(i<0)return;const d=D[i],x=PX2(),M=$('#swMatch');
+  M.innerHTML=`<div class="hearts">${Array.from({length:14},(_,k)=>`<i style="left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;font-size:${16+Math.random()*22}px">${k%3?'💗':'💖'}</i>`).join('')}</div>
+  <div class="mt-t">${x.all}</div><div class="mt-s">${esc(x.allS(F.n(d)))}</div>
+  <div class="mt-av">${PS.members.slice(0,5).map((m,k)=>`<div style="width:64px;height:64px;font:700 24px var(--sans);background:${['#fff4e6','#e8f1ff','#fdeaf3','#eaf7ef','#f3eefe'][k%5]};color:#141414;margin-left:${k?-12:0}px;transform:none;animation:none">${esc((m.name||'?').slice(0,1))}</div>`).join('')}</div>
+  <div class="mt-b"><button class="p" data-a="d">${x.det}</button><button class="s" data-a="k">${x.keep}</button></div>`;
+  M.classList.add('on');try{[523,659,784,1047].forEach((f,k)=>tone(f,.25,'triangle',.07,k*.09))}catch(e){}
+  M.querySelector('.mt-b').onclick=e=>{const a=e.target.dataset.a;if(!a)return;M.classList.remove('on');if(a==='d')open(i)}}
+function ptMine(){return new Set(PS.votes.filter(v=>v.uid===PS.uid).map(v=>v.item))}
+function ptNext(){const mine=ptMine();return PS.room.deck.filter(it=>!mine.has(it)&&ptIdx(it)>=0)}
+function ptMemHTML(){const tot=PS.room.deck.length;return PS.members.sort((a,b)=>a.joined_at<b.joined_at?-1:1).map(m=>{const c=PS.votes.filter(v=>v.uid===m.uid).length;return `<span class="${m.uid===PS.uid?'me':''}">${esc(m.name)} <b>${c>=tot?'✓':c+'/'+tot}</b></span>`}).join('')}
+function ptResHTML(full){const x=PX2(),sc=ptScores();if(!sc.length)return `<div class="pt-res"><h3>${full?x.res:x.lead}</h3><div class="pt-sub">${x.none}</div></div>`;
+  const N=PS.members.length;
+  return `<div class="pt-res"><h3>${full?x.res:x.lead}</h3>${sc.slice(0,full?10:3).map((o,k)=>{const i=ptIdx(o.item),d=D[i];return `<div class="pt-r" data-i="${i}"><div class="n">${k+1}</div><div class="t"><b>${esc(F.n(d))}</b><span>${esc(o.l.join('、'))}</span></div><div class="v">${o.l.length}/${N}</div></div>`}).join('')}
+  ${full&&sc.length?`<div class="pt-pick"><button class="fs-go" data-a="pick" style="margin-top:0">${x.pick}</button></div>`:''}
+  ${PS.picked!=null?`<div class="pt-big"><div class="k">${x.decided}</div><b>${esc(F.n(D[PS.picked]))}</b><div class="pt-sub">${esc(F.t(D[PS.picked]))} · ${esc(F.a(D[PS.picked]))}</div></div>`:''}</div>`}
+function ptRenderLive(){if(PS.stage!=='room')return;const m=$('#ptMem');if(m)m.innerHTML=ptMemHTML();const r=$('#ptRes');if(r)r.innerHTML=ptResHTML(!ptNext().length)}
+function ptCard(it,k){const i=ptIdx(it);return swCardHTML(i,k)}
+function ptDeck(){const dk=$('#ptDeck');if(!dk)return;const nx=ptNext(),x=PX2();
+  if(!nx.length){dk.style.height='auto';dk.innerHTML=`<div class="pt-done">${x.done}</div>`;PS.sb.from('members').update({done:true}).eq('room_id',PS.room.id).eq('uid',PS.uid).then(()=>{});ptRenderLive();return}
+  dk.innerHTML=nx.slice(0,3).map((it,k)=>ptCard(it,k)).reverse().join('');const L=$('#ptLeft');if(L)L.textContent=x.left(nx.length);ptBind()}
+function ptBind(){const c=$('#ptDeck .sw-card.n0');if(!c)return;const nx=$('#ptDeck .sw-card.n1');let st=null;
+  const stamps=(dx,dy)=>{c.querySelector('.like').style.opacity=Math.max(0,Math.min(1,dx/90));c.querySelector('.nope').style.opacity=Math.max(0,Math.min(1,-dx/90));c.querySelector('.sup').style.opacity=Math.max(0,Math.min(1,(-dy-40)/90))*(Math.abs(dx)<70?1:0)};
+  let pg=0;
+  c.onpointerdown=e=>{if(PS.busy||e.target.closest('.sw-i'))return;st={x:e.clientX,y:e.clientY,t:performance.now(),m:false};c.setPointerCapture(e.pointerId);c.style.transition='none'};
+  c.onpointermove=e=>{if(!st)return;const dx=e.clientX-st.x,dy=e.clientY-st.y;if(Math.abs(dx)+Math.abs(dy)>6)st.m=true;if(!st.m)return;c.style.transform=`translate(${dx}px,${dy}px) rotate(${dx/16}deg)`;stamps(dx,dy);if(nx){const p=Math.min(1,Math.hypot(dx,dy)/160);nx.style.transition='none';nx.style.transform=`scale(${.95+.05*p}) translateY(${10-10*p}px)`}};
+  const up=e=>{if(!st)return;const s=st;st=null;const dx=e.clientX-s.x,dy=e.clientY-s.y,vx=dx/(performance.now()-s.t);
+    if(!s.m){const r=c.getBoundingClientRect();pg=Math.max(0,Math.min(2,pg+(e.clientX-r.left>r.width/2?1:-1)));c.querySelectorAll('.sw-bars i').forEach((b,k)=>b.classList.toggle('on',k===pg));c.querySelector('.sw-info').innerHTML=swInfo(D[+c.dataset.i],pg);c.querySelector('.sw-emo').style.opacity=pg===2?.25:1;return}
+    if(dy<-110&&Math.abs(dx)<90)return ptGo(2,dx,dy);if(dx>110||vx>.55)return ptGo(1,dx,dy);if(dx<-110||vx<-.55)return ptGo(-1,dx,dy);
+    c.style.transition='transform .35s cubic-bezier(.2,1.5,.4,1)';c.style.transform='';stamps(0,0);if(nx){nx.style.transition='transform .3s';nx.style.transform=''}};
+  c.onpointerup=up;c.onpointercancel=up;c.querySelector('.sw-i').onclick=e=>{e.stopPropagation();open(+c.dataset.i)}}
+async function ptGo(v,dx,dy){const c=$('#ptDeck .sw-card.n0');if(!c||PS.busy)return;PS.busy=true;const i=+c.dataset.i,it=D[i].n,W=innerWidth;
+  const ex=v===1?W*1.3:v===-1?-W*1.3:(dx||0),ey=v===2?-innerHeight*1.2:(dy||0)+60;
+  c.querySelector(v===1?'.like':v===-1?'.nope':'.sup').style.opacity=1;c.style.transition='transform .42s cubic-bezier(.3,.6,.4,1)';c.style.transform=`translate(${ex}px,${ey}px) rotate(${v===2?0:ex/18}deg)`;
+  try{v<0?tone(220,.12,'triangle',.06,0,140):tone(v===2?880:660,.12,'triangle',.06,0,v===2?1760:990)}catch(e){}
+  const row={room_id:PS.room.id,uid:PS.uid,item:it,vote:v,created_at:new Date().toISOString()};PS.votes=PS.votes.filter(x=>!(x.uid===PS.uid&&x.item===it));PS.votes.push(row);
+  PS.sb.from('votes').upsert({room_id:PS.room.id,item:it,vote:v},{onConflict:'room_id,uid,item'}).then(r=>{if(r.error)console.error(r.error)});
+  setTimeout(()=>{PS.busy=false;ptDeck();ptCheck();ptRenderLive()},360)}
+function ptBuildDeck(f){let pool=D.filter(d=>d.r!=='X'&&d.xy&&(!f.cats.length||f.cats.includes(d.c))&&(!f.prices.length||f.prices.includes(pBk(d)))&&(!f.area||regionOf(d)===f.area));
+  return pool.map(d=>[d.n,-Math.log(Math.random())/({'5':5,'4':4,'3':2.5,'2':1}[d.r])]).sort((a,b)=>a[1]-b[1]).slice(0,f.n).map(x=>x[0])}
+async function ptCreate(){const x=PX2(),name=($('#ptName').value||'').trim().slice(0,20);if(!name){$('#ptName').focus();return}
+  try{localStorage.setItem('ptName',name)}catch(e){}
+  const f=PS.form,deck=ptBuildDeck({area:f.area,cats:[...f.cats],prices:[...f.prices],n:f.n});if(deck.length<3){PS.err=x.few;return ptRender()}
+  const b=$('#ptGo');b.disabled=true;b.textContent=x.creating;
+  try{await ptInit();const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let id='';for(let k=0;k<6;k++)id+=A[Math.floor(Math.random()*A.length)];
+    let r=await PS.sb.from('rooms').insert({id,params:{area:f.area,cats:[...f.cats],prices:[...f.prices],host:name},deck});if(r.error)throw r.error;
+    r=await PS.sb.from('members').insert({room_id:id,name});if(r.error)throw r.error;
+    history.replaceState(null,'','#party='+id);PS.shown=new Set();PS.picked=null;await ptOpen(id)}catch(e){console.error(e);PS.err=x.err;ptRender()}}
+async function ptJoin(){const x=PX2(),name=($('#ptName').value||'').trim().slice(0,20);if(!name){$('#ptName').focus();return}
+  try{localStorage.setItem('ptName',name)}catch(e){}
+  try{const r=await PS.sb.from('members').insert({room_id:PS.room.id,name});if(r.error&&r.error.code!=='23505')throw r.error;await ptOpen(PS.room.id)}catch(e){console.error(e);PS.err=x.err;ptRender()}}
+function ptLink(){return location.origin+location.pathname+'#party='+PS.room.id}
+function ptRender(){const x=PX2(),P=$('#party');if(!P)return;const err=PS.err?`<div class="pt-err">${esc(PS.err)}</div>`:'';
+  if(PS.stage==='loading'){P.innerHTML=`<div class="pt-w"><div class="pt-sub" style="padding:40px 0;text-align:center">…</div></div>`;return}
+  if(PS.stage==='gone'){P.innerHTML=`<div class="pt-w"><div class="pt-h">${x.tab}</div><div class="pt-err">${x.gone}</div><button class="fs-go" data-a="new">${x.newP}</button></div>`;return}
+  if(PS.stage==='new'){const f=PS.form;
+    P.innerHTML=`<div class="pt-w"><div class="pt-h">${x.h}</div><div class="pt-sub">${x.sub}</div>${err}
+    <div class="fs-l" style="border-top:1px solid var(--ink);padding-top:12px">${x.name}</div><input class="fs-q" id="ptName" maxlength="20" value="${esc(ptName())}" style="margin-top:0">
+    <div class="fs-l">${x.area}</div><div class="fs-c" id="ptA">${RG.map((g,i)=>`<button data-g="${i}" class="${f.area===i?'on':''}">${i?esc(T().rg[i]):x.any}</button>`).join('')}</div>
+    <div class="fs-l">${x.cat}</div><div class="fs-c" id="ptC">${CO.map(c=>`<button data-c="${c}" class="${f.cats.has(c)?'on':''}">${esc(T().ct[c])}</button>`).join('')}</div>
+    <div class="fs-l">${x.price}</div><div class="fs-c" id="ptP">${PB.map(([k])=>`<button data-p="${k}" class="${f.prices.has(k)?'on':''}">${T().pb[k]}</button>`).join('')}</div>
+    <div class="fs-l">${x.n}</div><div class="fs-c" id="ptN">${[10,20,30].map(n=>`<button data-n="${n}" class="${f.n===n?'on':''}">${n}</button>`).join('')}</div>
+    <button class="fs-go" id="ptGo" style="position:static">${x.create}</button></div>`;
+    $('#ptGo').onclick=ptCreate;
+    P.querySelectorAll('.fs-c').forEach(g=>g.onclick=e=>{const b=e.target.closest('button');if(!b)return;const nm=$('#ptName').value;
+      if(b.dataset.g)f.area=+b.dataset.g;else if(b.dataset.c){const c=b.dataset.c;f.cats.has(c)?f.cats.delete(c):f.cats.add(c)}else if(b.dataset.p){const k=b.dataset.p;f.prices.has(k)?f.prices.delete(k):f.prices.add(k)}else if(b.dataset.n)f.n=+b.dataset.n;
+      PS.err='';ptRender();$('#ptName').value=nm});return}
+  if(PS.stage==='join'){const host=PS.room&&PS.room.params&&PS.room.params.host||'';
+    P.innerHTML=`<div class="pt-w"><div class="pt-h">${x.joinH}</div><div class="pt-sub">${PS.room?esc(x.joinSub(host))+' · '+PS.room.deck.length+(LANG==='en'?' places':' 家'):''}</div>${err}
+    ${PS.room?`<div class="pt-mem">${PS.members.map(m=>`<span>${esc(m.name)}</span>`).join('')}</div>
+    <div class="fs-l" style="border-top:1px solid var(--ink);padding-top:12px">${x.name}</div><input class="fs-q" id="ptName" maxlength="20" value="${esc(ptName())}" style="margin-top:0">
+    <button class="fs-go" id="ptJ" style="position:static">${x.join}</button>`:''}</div>`;
+    const j=$('#ptJ');if(j)j.onclick=ptJoin;return}
+  if(PS.stage==='room'){
+    P.innerHTML=`<div class="pt-w"><div class="pt-top"><div><div class="pt-h" style="margin:0">${x.tab}</div><div class="pt-code">#${PS.room.id} · <span id="ptLeft"></span></div></div>
+     <div style="display:flex;gap:6px"><button class="pt-share" data-a="qr">${x.qr}</button><button class="pt-share p" data-a="share">${x.share}</button></div></div>
+     ${PS.qr?`<img class="pt-qr" alt="QR" src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=0&data=${encodeURIComponent(ptLink())}">`:''}
+     <div class="pt-mem" id="ptMem">${ptMemHTML()}</div>
+     <div class="pt-deck" id="ptDeck"></div><div id="ptRes">${ptResHTML(!ptNext().length)}</div></div>`;
+    ptDeck();return}}
+$('#party').addEventListener('click',async e=>{const b=e.target.closest('[data-a]');const r=e.target.closest('.pt-r');if(r){open(+r.dataset.i);return}if(!b)return;const a=b.dataset.a,x=PX2();
+  if(a==='new'){history.replaceState(null,'','#party');PS.stage='new';PS.err='';ptRender()}
+  else if(a==='qr'){PS.qr=!PS.qr;ptRender()}
+  else if(a==='share'){const url=ptLink();try{if(navigator.share){await navigator.share({title:T().title,text:x.tab,url});return}}catch(_){return}
+    try{await navigator.clipboard.writeText(url);b.textContent=x.copied;setTimeout(()=>b.textContent=x.share,1800)}catch(_){prompt('',url)}}
+  else if(a==='pick'){const sc=ptScores().slice(0,3);if(!sc.length)return;let s=0;sc.forEach(o=>s+=o.s);let rr=Math.random()*s;let o=sc[0];for(const q of sc){rr-=q.s;if(rr<=0){o=q;break}}PS.picked=ptIdx(o.item);ptRenderLive();try{fanfare('4');burst('4')}catch(_){}}});
+function ptLang(){const e=$('#tParty');if(e)e.textContent=PX2().tab;if(view==='party')ptRender()}
 // ===== redesign UI =====
 const NX={zh:{filter:'筛选',clear:'清除全部',show:n=>`显示 ${n} 家`,up:'上滑看食单',inv:n=>`地图范围内 ${n} 家`,region:'区域',cat:'菜系',star:'星级',price:'价位（可多选）',search:'搜索',
   tT:'今晚不知道吃什么？',tS:'让老虎机替你决定。',tGo:'去转一转',later:'以后再说',toMap:'地图',home:'首页',
@@ -769,18 +917,19 @@ function renderHome(){const x=NXT();const mx=D.reduce((a,d)=>d.dt>a?d.dt:a,'');c
    <button class="tile" data-h="spin" style="animation-delay:.35s"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="#141414" stroke-width="1.6" aria-hidden="true"><rect x="3" y="8" width="22" height="20" rx="3"/><path d="M10 8v20M18 8v20M29 6v12"/><circle cx="29" cy="5" r="2.5" fill="#b42a1f" stroke="#b42a1f"/></svg><div><div class="tt">${T().spin}</div><div class="td">${x.spD}</div></div></button>
    <button class="tile" data-h="swipe" style="animation-delay:.42s"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="#141414" stroke-width="1.6" aria-hidden="true"><rect x="9" y="4" width="18" height="24" rx="3" transform="rotate(10 18 16)"/><rect x="6" y="6" width="18" height="24" rx="3" fill="#fff"/><path d="M12 18c0-2 3-3 3-1 0-2 3-1 3 1 0 2-3 4-3 4s-3-2-3-4z" fill="#b42a1f" stroke="#b42a1f"/></svg><div><div class="tt">${SWX().tab}</div><div class="td">${x.swD}</div></div></button>
    <button class="tile" data-h="brawl" style="animation-delay:.49s"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="#141414" stroke-width="1.6" aria-hidden="true"><path d="M6 28L22 12M22 12l4-6 2 2-6 4M28 28L12 12M12 12L8 6 6 8l6 4"/><circle cx="17" cy="20" r="2" fill="#b42a1f" stroke="#b42a1f"/></svg><div><div class="tt">${BX().tab}</div><div class="td">${x.brD}</div></div></button>
+   <button class="tile party" data-h="party" style="animation-delay:.52s"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="#141414" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="12" r="4"/><circle cx="23" cy="12" r="4"/><path d="M4 27c0-4 3-7 7-7s7 3 7 7M16 27c0-4 3-7 7-7s7 3 7 7"/><circle cx="17" cy="5" r="2.2" fill="#b42a1f" stroke="#b42a1f"/></svg><div><div class="tt">${PX2().tab}</div><div class="td">${PX2().tD}</div></div></button>
    <button class="tile all" data-h="list" style="animation-delay:.56s"><svg width="16" height="16" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6"/></svg><div class="bg">${D.length}</div><div class="tt">${x.all(D.length)}</div></button>
   </div>`}
-$('#home').onclick=e=>{const b=e.target.closest('[data-h]');if(b)setView(b.dataset.h)};
-function dnavRender(){const x=T();$('#dnav').innerHTML=[['map',x.map],['spin',x.spin],['swipe',SWX().tab],['brawl',BX().tab]].map(([v,l])=>`<button data-v="${v}" class="${view===v?'on':''}">${esc(l)}</button>`).join('')}
+$('#home').onclick=e=>{const b=e.target.closest('[data-h]');if(!b)return;if(b.dataset.h==='party')history.replaceState(null,'','#party');setView(b.dataset.h)};
+function dnavRender(){const x=T();$('#dnav').innerHTML=[['map',x.map],['spin',x.spin],['swipe',SWX().tab],['brawl',BX().tab],['party',PX2().tab]].map(([v,l])=>`<button data-v="${v}" class="${view===v?'on':''}">${esc(l)}</button>`).join('')}
 $('#toMap').innerHTML='<svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="#fff" stroke-width="1.6" aria-hidden="true"><path d="M1 3l4.5-2 5 2L15 1v10l-4.5 2-5-2L1 13z"/></svg><span>'+NXT().toMap+'</span>';$('#tHome').textContent=NXT().home;
-$('#dnav').onclick=e=>{const b=e.target.closest('[data-v]');if(b)setView(b.dataset.v)};
-function setView(v){try{spClose()}catch(e){}try{fOpen(false)}catch(e){}if((v==='list'||v==='home')&&isDT())v='map';document.body.dataset.v=v;view=v;['tHome','tMap','tList','tSpin','tSwipe','tBrawl'].forEach(id=>$('#'+id).classList.toggle('on',id==='t'+v[0].toUpperCase()+v.slice(1)));
-  const sp=v==='spin'||v==='swipe'||v==='brawl'||v==='home',DT=isDT();$('#main').style.display=sp?'none':'';$('.filters').style.display=sp?'none':'';$('#spin').style.display=v==='spin'?'block':'none';$('#swipe').style.display=v==='swipe'?'block':'none';$('#brawl').style.display=v==='brawl'?'block':'none';$('#home').style.display=v==='home'?'block':'none';if(v!=='map')$('#toast').style.display='none';try{dnavRender()}catch(e){}if(v==='home')renderHome();if(v!=='swipe'){try{swList(false)}catch(e){}}
+$('#dnav').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;if(b.dataset.v==='party')history.replaceState(null,'','#party');setView(b.dataset.v)};
+function setView(v){try{spClose()}catch(e){}try{fOpen(false)}catch(e){}if((v==='list'||v==='home')&&isDT())v='map';document.body.dataset.v=v;view=v;['tHome','tMap','tList','tSpin','tSwipe','tBrawl','tParty'].forEach(id=>$('#'+id).classList.toggle('on',id==='t'+v[0].toUpperCase()+v.slice(1)));
+  const sp=v==='spin'||v==='swipe'||v==='brawl'||v==='home'||v==='party',DT=isDT();$('#main').style.display=sp?'none':'';$('.filters').style.display=sp?'none':'';$('#spin').style.display=v==='spin'?'block':'none';$('#swipe').style.display=v==='swipe'?'block':'none';$('#brawl').style.display=v==='brawl'?'block':'none';$('#home').style.display=v==='home'?'block':'none';$('#party').style.display=v==='party'?'block':'none';if(v==='party')partyEnter();if(v!=='map')$('#toast').style.display='none';try{dnavRender()}catch(e){}if(v==='home')renderHome();if(v!=='swipe'){try{swList(false)}catch(e){}}
   if(!sp){$('#mapWrap').style.display=(v==='map'||DT)?'':'none';$('#list').style.display=(v==='list'||DT)?'block':'none';$('#search').style.display=v==='list'?'block':'none'}
-  if(v==='map'){fit();setVB()}render();window.scrollTo(0,0);try{history.replaceState(null,'',(v==='map'&&isDT())||(v==='home'&&!isDT())?location.pathname+location.search:'#'+v)}catch(e){}}
+  if(v==='map'){fit();setVB()}render();window.scrollTo(0,0);try{if(!(v==='party'&&location.hash.startsWith('#party')))history.replaceState(null,'',(v==='map'&&isDT())||(v==='home'&&!isDT())?location.pathname+location.search:'#'+v)}catch(e){}}
 const navT=o=>{$('#nav').classList.toggle('on',o);$('#navMask').classList.toggle('on',o)};$('#menu').onclick=()=>navT(true);$('#navMask').onclick=()=>navT(false);$('#nav .tabs').addEventListener('click',()=>navT(false));
-$('#tHome').onclick=()=>setView('home');$('#tMap').onclick=()=>setView('map');$('#tList').onclick=()=>setView('list');$('#tSpin').onclick=()=>setView('spin');$('#tSwipe').onclick=()=>setView('swipe');$('#tBrawl').onclick=()=>setView('brawl');
+$('#tHome').onclick=()=>setView('home');$('#tMap').onclick=()=>setView('map');$('#tList').onclick=()=>setView('list');$('#tSpin').onclick=()=>setView('spin');$('#tSwipe').onclick=()=>setView('swipe');$('#tBrawl').onclick=()=>setView('brawl');$('#tParty').onclick=()=>{history.replaceState(null,'','#party');setView('party')};
 window.addEventListener('resize',()=>{if(view==='map')setVB()});
 const RG=[['全图',null],['市区CBD',[-33.861,-33.893,151.183,151.232]],['东区海湾',[-33.838,-33.895,151.205,151.29]],['北岸',[-33.79,-33.86,151.15,151.255]],['Eastwood/Epping',[-33.765,-33.80,151.065,151.13]],['Rhodes/Ryde',[-33.80,-33.84,151.07,151.115]],['Burwood/Lidcombe',[-33.84,-33.885,151.03,151.115]],['山区Hills',[-33.70,-33.745,150.94,151.11]],['Lidcombe/Parramatta',[-33.80,-33.88,150.99,151.07]],['南区',[-33.90,-34.045,151.06,151.21]]];
 function P(lat,lon){return[(lon-150.93)/0.38*VW,(-33.69-lat)/0.36*VH]}
@@ -790,7 +939,7 @@ function jumpTo(gi){const g=RG[gi][1];if(!g)return fit();
   const a=P(g[0],g[2]),c=P(g[1],g[3]);const r=wrap.getBoundingClientRect();let w=c[0]-a[0],h=c[1]-a[1];const cx=(a[0]+c[0])/2,cy=(a[1]+c[1])/2;
   if(w/h<r.width/r.height)w=h*r.width/r.height;else h=w*r.height/r.width;vb={x:cx-w/2,y:cy-h/2,w,h};setVB()};
 setTimeout(()=>{const n=$('#note');if(n)n.style.opacity=0;setTimeout(()=>n&&n.remove(),700)},7000);
-document.body.dataset.v='map';render();fit();setTimeout(()=>{if(location.hash==='#map')setView('map');else if(location.hash==='#spin')setView('spin');else if(location.hash==='#swipe')setView('swipe');else if(location.hash==='#brawl')setView('brawl');else if(location.hash==='#list'&&!matchMedia('(min-width:1000px)').matches)setView('list');else if(!isDT())setView('home');else setView('map');},0);
+document.body.dataset.v='map';render();fit();setTimeout(()=>{if(location.hash==='#map')setView('map');else if(location.hash==='#spin')setView('spin');else if(location.hash==='#swipe')setView('swipe');else if(location.hash==='#brawl')setView('brawl');else if(location.hash.startsWith('#party'))setView('party');else if(location.hash==='#list'&&!matchMedia('(min-width:1000px)').matches)setView('list');else if(!isDT())setView('home');else setView('map');},0);
 $('#search2').oninput=e=>{q=e.target.value.trim().toLowerCase();render()};
 matchMedia('(min-width:1000px)').addEventListener('change',()=>{setView(view);fit()});
 
@@ -799,7 +948,7 @@ function applyLang(){const x=T();document.documentElement.lang=LANG==='en'?'en':
   $('#search').placeholder=x.ph;$('#search2').placeholder=x.ph;const n=$('#note');if(n)n.textContent=x.note;const c=$('#close');if(c)c.textContent=x.close;
   pins.forEach(([g,d])=>{const t=g.querySelector('.pl');if(!t)return;const L=shortName(F.n(d));t.setAttribute('y',L.length>1?-3:4);
     t.innerHTML=L.map((s,j)=>`<tspan x="10" dy="${j?13:0}">${esc(s)}</tspan>`).join('')});
-  jumpBtns();spinLang();swLang();brLang();try{dnavRender();renderF();if(view==='home')renderHome();$('#tHome').textContent=NXT().home;$('#toMap').querySelector('span').textContent=NXT().toMap;if($('#toast').style.display==='block')toastOn()}catch(e){}render();if(view==='map')setVB();const sh=$('#sheet');if(sh&&sh.classList.contains('on')&&window._openI!=null)open(window._openI)}
+  jumpBtns();spinLang();swLang();brLang();try{ptLang()}catch(e){}try{dnavRender();renderF();if(view==='home')renderHome();$('#tHome').textContent=NXT().home;$('#toMap').querySelector('span').textContent=NXT().toMap;if($('#toast').style.display==='block')toastOn()}catch(e){}render();if(view==='map')setVB();const sh=$('#sheet');if(sh&&sh.classList.contains('on')&&window._openI!=null)open(window._openI)}
 
 // ===== spin =====
 const SP={lock:{g:null,c:null,r:null},cur:null,busy:false,vis:{}};
