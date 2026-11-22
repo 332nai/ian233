@@ -419,10 +419,120 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 #nav .tabs button{display:block!important;text-align:left;padding:15px 24px;font:500 16px var(--serif);letter-spacing:.2em;color:var(--sub);border:0;border-left:3px solid transparent;cursor:pointer}
 #nav .tabs button.on{color:var(--ink);border-left-color:var(--red);background:#faf7f5}
 @media (min-width:1000px){#nav #tList{display:none!important}}
+/* ===== redesign: pills, floating UI ===== */
+@keyframes blurin{from{filter:blur(10px);opacity:0;transform:translateY(6px)}to{filter:none;opacity:1;transform:none}}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.filters{display:none!important}#search{display:none!important}
+header{display:flex;align-items:center;gap:8px;padding:14px 12px;text-align:left;position:relative;z-index:40}
+.pill{height:46px;border:1px solid var(--ink);background:#fff;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.08);color:var(--ink)}
+header .menu.pill{position:static;transform:none;width:46px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:none}
+header .menu.pill i{width:17px;height:1.8px}
+header h1.pill{margin:0 auto;padding:0 22px;display:block;line-height:44px;font:900 22px/44px var(--serif);letter-spacing:.04em;animation:blurin .9s ease both;white-space:nowrap}
+header .lang.pill{position:static;transform:none;width:46px;padding:0;border:1px solid var(--ink);font:500 12px var(--sans);letter-spacing:.06em;flex:none;cursor:pointer}
+.dnav{display:none}
+body[data-v=map] header{position:fixed;top:0;left:0;right:0;pointer-events:none;background:none}
+body[data-v=map] header>*{pointer-events:auto}
+#main{position:relative}
+body[data-v=map] #mapWrap{height:100dvh}
+#fbar{position:absolute;z-index:20;left:0;right:0;top:64px;display:flex;gap:8px;overflow-x:auto;padding:8px 12px 16px;scrollbar-width:none;animation:fu .6s .2s ease both}
+#fbar::-webkit-scrollbar{display:none}
+body[data-v=list] #fbar{position:static;padding:4px 12px 6px}
+.fb{flex:none;height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--ink);background:#fff;display:flex;align-items:center;gap:8px;font:500 13px var(--sans);color:var(--ink);box-shadow:0 6px 18px rgba(0,0,0,.06);cursor:pointer;white-space:nowrap}
+.fb.main{background:var(--ink);color:#fff;padding:0 14px 0 12px;box-shadow:0 6px 18px rgba(0,0,0,.15)}
+.fb .bd{min-width:20px;height:20px;border-radius:999px;background:var(--red);color:#fff;font:700 11px var(--sans);display:flex;align-items:center;justify-content:center;padding:0 6px}
+.fb svg{flex:none}
+.ctrl{right:12px;top:128px;border:1px solid var(--ink);border-radius:999px;overflow:hidden;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.08);z-index:5}
+.ctrl button{width:44px;height:44px;border:0;margin:0;border-top:1px solid var(--hair);font-size:19px}.ctrl button:first-child{border-top:0}
+body[data-v=map] .jump{display:none}
+.note{bottom:226px;border-radius:12px;border:1px solid var(--ink);border-left:3px solid var(--red);z-index:4}
+#peek{position:absolute;left:0;right:0;bottom:0;z-index:6;background:#fff;border-top:1px solid var(--ink);border-radius:22px 22px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.08);padding:8px 0 calc(14px + env(safe-area-inset-bottom));touch-action:pan-x}
+#peek .grab{width:40px;height:4px;border-radius:4px;background:var(--hair);margin:0 auto 8px}
+#peek .ph{display:flex;align-items:baseline;justify-content:space-between;padding:0 18px;cursor:pointer}
+#peek .ph b{font:600 16px var(--serif)}#peek .ph span{font:500 12px var(--sans);color:var(--sub);letter-spacing:.1em}
+#peek .pr{display:flex;gap:10px;overflow-x:auto;padding:12px 18px 2px;scrollbar-width:none}#peek .pr::-webkit-scrollbar{display:none}
+.pc{position:relative;flex:none;width:72%;max-width:300px;border:1px solid var(--hair);border-radius:16px;padding:12px 34px 10px 12px;background:#fff;cursor:pointer;animation:fu .5s ease both}
+.pc b{display:block;font:600 17px/1.25 var(--serif)}.pc .s{font:400 12px var(--sans);letter-spacing:1px;margin-top:3px}
+.pc .i{font:400 12.5px/1.55 var(--serif);color:#444;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pc .m{font:500 11px var(--sans);color:var(--sub);letter-spacing:.08em;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arr{position:absolute;right:12px;top:14px}
+body:not([data-v=map]) #peek{display:none}
+.card{position:relative;padding-right:28px}.card .arr{right:2px;top:20px}
+.card.fu{animation:fu .5s ease both}
+#toMap{position:fixed;z-index:30;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);display:none;align-items:center;gap:8px;padding:0 20px;font:500 14px var(--sans);letter-spacing:.1em;background:var(--ink);color:#fff;border-color:var(--ink);cursor:pointer}
+body[data-v=list] #toMap{display:flex}
+#toast{position:absolute;z-index:7;right:12px;bottom:236px;width:248px;border-radius:20px;background:#fff;border:1px solid var(--ink);padding:16px 16px 14px;box-shadow:0 14px 40px rgba(0,0,0,.16);animation:fu .6s ease both}
+#toast .t{font:600 17px/1.3 var(--serif);padding-right:20px}#toast .s{font:400 13px/1.6 var(--serif);color:var(--sub);margin-top:4px}
+#toast .x{position:absolute;right:8px;top:8px;width:32px;height:32px;border:0;background:none;cursor:pointer}
+#toast .row{display:flex;gap:8px;margin-top:12px}
+#toast .go2{flex:1;height:40px;border-radius:999px;border:0;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font:500 14px var(--sans);letter-spacing:.06em;cursor:pointer}
+#toast .later{display:none;height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--hair);background:#fff;font:500 13px var(--sans);color:var(--sub);cursor:pointer}
+/* filter sheet */
+#fmask{position:fixed;inset:0;z-index:84;background:rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:opacity .25s}#fmask.on{opacity:1;pointer-events:auto}
+#fsheet{position:fixed;z-index:85;left:0;right:0;bottom:0;max-height:86dvh;overflow-y:auto;background:#fff;border-top:1px solid var(--ink);border-radius:22px 22px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+#fsheet.on{transform:none}
+#fsheet .grab{width:40px;height:4px;border-radius:4px;background:var(--hair);margin:0 auto 12px}
+.fs-h{display:flex;justify-content:space-between;align-items:center}.fs-h b{font:900 22px var(--serif)}
+.fs-h button{border:0;background:none;font:500 13px var(--sans);color:var(--red);letter-spacing:.08em;padding:10px 0;cursor:pointer}
+.fs-q{width:100%;box-sizing:border-box;height:44px;margin-top:8px;border:1px solid var(--hair);border-radius:999px;padding:0 16px;font:400 15px var(--serif);background:#fff;outline:none}
+.fs-q:focus{border-color:var(--ink)}
+.fs-l{font:500 11px var(--sans);letter-spacing:.24em;color:var(--sub);margin:16px 0 8px}
+.fs-l:first-of-type{border-top:1px solid var(--ink);padding-top:12px}
+.fs-c{display:flex;flex-wrap:wrap;gap:8px}
+.fs-c button{height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--ink);background:#fff;color:var(--ink);font:500 13px var(--sans);letter-spacing:.04em;cursor:pointer}
+.fs-c button.on{background:var(--ink);color:#fff}
+.fs-c button .st{letter-spacing:0}
+.fs-go{margin-top:22px;width:100%;height:50px;border-radius:999px;border:0;background:var(--ink);color:#fff;font:500 15px var(--sans);letter-spacing:.1em;cursor:pointer;position:sticky;bottom:0}
+/* home bento */
+#home{display:none;padding:4px 14px 24px}
+.hm-new{display:flex;justify-content:center;margin-top:-4px}
+.hm-new button{height:30px;padding:0 12px;border-radius:999px;border:1px solid var(--hair);background:#fff;display:flex;align-items:center;gap:8px;font:500 11px var(--sans);letter-spacing:.16em;color:var(--sub);cursor:pointer}
+.hm-new i{width:6px;height:6px;border-radius:50%;background:var(--red)}
+.hm-t{text-align:center;margin:28px 0 6px;font:900 56px/1 var(--serif);letter-spacing:.04em;animation:blurin 1s ease both}.hm-t i{font-style:normal;color:var(--red)}
+.hm-s{text-align:center;font:400 15px/1.6 var(--serif);color:var(--sub);animation:blurin 1s .15s ease both}
+.hm-rule{height:1px;background:var(--ink);margin:22px 0 14px}
+.bento{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(150px,auto);gap:10px}
+.tile{position:relative;border-radius:20px;border:1px solid var(--ink);background:#fff;padding:14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;color:var(--ink);overflow:hidden;animation:fu .6s ease both;font:inherit}
+.tile .tt{font:600 18px var(--serif)}.tile .td{font:400 12px/1.5 var(--serif);color:var(--sub);margin-top:2px}
+.tile.map{grid-column:span 2;min-height:190px;padding:0}
+.tile.map>svg{position:absolute;inset:0;width:100%;height:100%}
+.tile.map .lb{position:absolute;left:14px;bottom:12px;right:14px;display:flex;justify-content:space-between;align-items:flex-end}
+.tile.map .lb span{background:#fff;border:1px solid var(--ink);border-radius:999px;padding:6px 14px;font:600 15px var(--serif)}
+.tile.map .lb .go{width:34px;height:34px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center}
+.tile.all{background:var(--red);border-color:var(--red);color:#fff}
+.tile.all .tt{position:relative;font:600 19px/1.3 var(--serif)}
+.tile.all .bg{position:absolute;right:-14px;bottom:-26px;font:900 104px/1 var(--serif);color:rgba(255,255,255,.13)}
+body[data-v=home] #main{display:none!important}
+#sheet{z-index:80}#mask{z-index:79}
+@media (min-width:1000px){
+  header .menu.pill{display:none}
+  header h1.pill{margin:0;height:48px;font:900 24px/46px var(--serif)}
+  header .lang.pill{height:48px;width:48px}
+  .dnav{display:flex;align-items:center;padding:0 6px;height:48px}
+  .dnav button{border:0;background:none;padding:0 14px;font:500 13px var(--sans);letter-spacing:.12em;color:var(--sub);cursor:pointer;border-left:1px solid var(--hair);line-height:16px}
+  .dnav button:first-child{border-left:0}.dnav button.on{color:var(--ink)}.dnav button:hover{color:var(--red)}
+  header{padding:20px 24px}
+  #main{flex:1;min-height:0;display:block}
+  #mapWrap{position:absolute;inset:0;height:auto!important}
+  #side{position:absolute;right:20px;top:20px;bottom:20px;width:440px;border:1px solid var(--ink);border-radius:24px;box-shadow:0 20px 60px rgba(0,0,0,.12);z-index:8;padding-bottom:10px}
+  .search2{border-radius:999px;height:44px;padding:0 18px;border:1px solid var(--hair);margin:20px 20px 0;width:calc(100% - 40px)}
+  .search2:focus{outline:none;border-color:var(--ink)}
+  .vhead button{border-radius:999px;padding:7px 14px}
+  .ctrl{right:484px;top:20px}
+  #fbar{left:12px;top:72px;right:500px}
+  .jump{left:24px;right:auto;bottom:20px;max-width:calc(100% - 520px)}body[data-v=map] .jump{display:flex}
+  .jump button{border-radius:0}.jump button:first-child{border-radius:999px 0 0 999px}.jump button:last-child{border-radius:0 999px 999px 0}
+  .note{left:24px;bottom:64px}
+  #peek{display:none!important}
+  #toast{right:auto;left:24px;bottom:64px;width:300px}#toast .later{display:block}
+  #fsheet{left:24px;right:auto;bottom:auto;top:132px;width:420px;max-height:calc(100dvh - 160px);border:1px solid var(--ink);border-radius:22px;transform:translateY(-10px);opacity:0;pointer-events:none;transition:transform .25s,opacity .25s;box-shadow:0 20px 60px rgba(0,0,0,.18)}
+  #fsheet.on{transform:none;opacity:1;pointer-events:auto}#fsheet .grab{display:none}
+  #fmask{background:rgba(0,0,0,.08)}
+  #sheet{border-radius:24px 0 0 24px;border-left:1px solid var(--ink)}
+}
 </style>
 </head>
 <body>
-<header><button id="menu" class="menu" aria-label="menu"><i></i><i></i><i></i></button><h1 id="h1">悉尼<i>吃喝</i></h1><button id="lang" class="lang">EN</button></header>
+<header><button id="menu" class="menu pill" aria-label="menu"><i></i><i></i><i></i></button><h1 id="h1" class="pill">悉尼<i>吃喝</i></h1><div class="dnav pill" id="dnav"></div><button id="lang" class="lang pill">EN</button></header>
 
 <div class="filters">
   <div class="row" id="cats"></div>
@@ -430,7 +540,9 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
   <div class="row" id="prices"></div>
   <input id="search" placeholder="搜索店名、区域或菜" style="display:none">
 </div>
+<div id="home"></div>
 <div id="main">
+<div id="fbar"></div>
 <div id="mapWrap">
   <svg id="map" xmlns="http://www.w3.org/2000/svg">
     <rect x="-2000" y="-2000" width="5000" height="5000" fill="#ffffff"/>
@@ -441,7 +553,7 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
   </svg>
   
   <div class="ctrl"><button id="zin">+</button><button id="zout">−</button><button id="zreset" style="font-size:14px">⟲</button></div>
-  <div class="jump" id="jump"></div><div class="note" id="note">示意地图：位置按区域近似标注。双指缩放，点圆点看介绍。</div>
+  <div class="jump" id="jump"></div><div id="peek"></div><div id="toast" style="display:none"></div><div class="note" id="note">示意地图：位置按区域近似标注。双指缩放，点圆点看介绍。</div>
 </div>
 <div id="side"><input id="search2" class="search2"><div id="list"></div></div>
 </div>
@@ -478,7 +590,8 @@ header .dek{font:400 13px var(--serif);color:var(--sub);margin-top:6px}
 <div id="swMatch"></div>
 <div id="brawl"><div class="br-in" id="brIn"></div></div>
 <canvas id="fx"></canvas>
-<div id="navMask"></div><nav id="nav"><div class="nav-h">悉尼<i>吃喝</i></div><div class="tabs"><button id="tMap" class="on">地 图</button><button id="tList">食 单</button><button id="tSpin">转一转</button><button id="tSwipe">刷一刷</button><button id="tBrawl">大乱斗</button></div></nav>
+<div id="navMask"></div><nav id="nav"><div class="nav-h">悉尼<i>吃喝</i></div><div class="tabs"><button id="tHome">首 页</button><button id="tMap" class="on">地 图</button><button id="tList">食 单</button><button id="tSpin">转一转</button><button id="tSwipe">刷一刷</button><button id="tBrawl">大乱斗</button></div></nav>
+<div id="fmask"></div><div id="fsheet"></div><button id="toMap" class="pill"></button>
 <div id="mask"></div>
 <div id="sheet"><div class="grab"></div><button class="x" id="close">关闭</button><div id="sc"></div></div>
 <script>
@@ -503,23 +616,23 @@ function shortName(n){n=n.replace(/[（(][^）)]*[）)]/g,'').trim();const cj=n.
 const CT=new Proxy({},{get:(o,k)=>[T().ct[k]]});
 const CO=['zh','jp','kr','west','asia','cafe','bake','bar'];
 const col=r=>CL[r];
-let yOn=null, rOn=new Set(RO), cOn=null, pOn=new Set(), q='', view='map';
+let yOn=null, rOn=new Set(RO), cSet=new Set(), pOn=new Set(), q='', view='map';
 const $=s=>document.querySelector(s);
 const PX=d=>d.p+(d.pe?(LANG==='en'?' (est.)':'（估）'):'');
 const PB=[['a',0,30],['b',30,60],['c',60,120],['d',120,1e9]];const pBk=d=>{for(const[k,lo,hi]of PB)if(d.p>lo&&d.p<=hi)return k;return 'a'};
 const NS='http://www.w3.org/2000/svg';
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function match(d){return (!yOn||d.dt.startsWith(yOn))&&rOn.has(d.r)&&(!cOn||d.c===cOn)&&(!pOn.size||pOn.has(pBk(d)))&&(!q||(d.n+d.a+d.t+d.d+d.i+d.ne+d.ae+d.te+d.de+d.ie).toLowerCase().includes(q))}
+function match(d){return (!yOn||d.dt.startsWith(yOn))&&rOn.has(d.r)&&(!cSet.size||cSet.has(d.c))&&(!pOn.size||pOn.has(pBk(d)))&&(!q||(d.n+d.a+d.t+d.d+d.i+d.ne+d.ae+d.te+d.de+d.ie).toLowerCase().includes(q))}
 function chips(){
   $('#rates').innerHTML=RO.map(r=>`<button class="chip ${rOn.has(r)?'':'off'}" data-r="${r}"><span class="stars" style="color:${col(r)}">${'★'.repeat(NS_(r))}</span><span class="n">${D.filter(d=>d.r===r).length}</span></button>`).join('');
   $('#prices').innerHTML=`<button class="chip cat ${pOn.size?'':'on'}" data-p="">${T().pall}</button>`+PB.map(([k])=>`<button class="chip cat ${pOn.has(k)?'on':''}" data-p="${k}">${T().pb[k]}<span class="n">${D.filter(d=>pBk(d)===k).length}</span></button>`).join('');
-  $('#cats').innerHTML=`<button class="chip cat ${cOn?'':'on'}" data-c="">${T().all}</button>`+CO.map(c=>`<button class="chip cat ${cOn===c?'on':''}" data-c="${c}">${CT[c][0]}<span class="n">${D.filter(d=>d.c===c).length}</span></button>`).join('');
+  $('#cats').innerHTML=`<button class="chip cat ${cSet.size?'':'on'}" data-c="">${T().all}</button>`+CO.map(c=>`<button class="chip cat ${cSet.has(c)?'on':''}" data-c="${c}">${CT[c][0]}<span class="n">${D.filter(d=>d.c===c).length}</span></button>`).join('');
   if(0)$('#years').innerHTML=[['','两年全部'],['2026','2026'],['2025','2025']].map(([y,l])=>`<button class="chip cat ${(yOn||'')===y?'on':''}" data-y="${y}">${l}<span class="n">${y?D.filter(d=>d.dt.startsWith(y)).length:D.length}</span></button>`).join('');
 }
 $('#rates').onclick=e=>{const b=e.target.closest('[data-r]');if(!b)return;const r=b.dataset.r;
   if(rOn.size===RO.length){rOn=new Set([r])}else if(rOn.has(r)){rOn.delete(r);if(!rOn.size)rOn=new Set(RO)}else rOn.add(r);render()};
 $('#prices').onclick=e=>{const b=e.target.closest('[data-p]');if(!b)return;const k=b.dataset.p;if(!k)pOn.clear();else{pOn.has(k)?pOn.delete(k):pOn.add(k);if(pOn.size===PB.length)pOn.clear()}render()};
-$('#cats').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;cOn=b.dataset.c||null;render()};
+$('#cats').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;const c=b.dataset.c;if(!c)cSet.clear();else{cSet.clear();cSet.add(c)}render()};
 if(0)$('#years').onclick=e=>{const b=e.target.closest('[data-y]');if(!b)return;yOn=b.dataset.y||null;render()};
 $('#search').oninput=e=>{q=e.target.value.trim().toLowerCase();render()};
 // labels
@@ -537,10 +650,10 @@ D.forEach((d,i)=>{if(!d.xy)return;const g=document.createElementNS(NS,'g');g.dat
 pins.sort((a,b)=>RO.indexOf(b[1].r)-RO.indexOf(a[1].r)).forEach(p=>$('#pins').appendChild(p[0]));
 const svg=$('#map'), wrap=$('#mapWrap');
 let vb;
-function fit(){const r=wrap.getBoundingClientRect();const xs=pins.map(p=>p[1].xy[0]),ys=pins.map(p=>p[1].xy[1]);const x0=Math.min(...xs)-20,x1=Math.max(...xs)+20,y0=Math.min(...ys)-40,y1=Math.max(...ys)+40;let w=x1-x0,h=y1-y0;const cx=(x0+x1)/2,cy=(y0+y1)/2;if(w/h<r.width/r.height)w=h*r.width/r.height;else h=w*r.height/r.width;vb={x:cx-w/2,y:cy-h/2,w,h};setVB()}
+function fit(){const r0=wrap.getBoundingClientRect();const PW=isDT()?470:0;const r={width:r0.width-PW,height:r0.height};const xs=pins.map(p=>p[1].xy[0]),ys=pins.map(p=>p[1].xy[1]);const x0=Math.min(...xs)-20,x1=Math.max(...xs)+20,y0=Math.min(...ys)-40,y1=Math.max(...ys)+40;let w=x1-x0,h=y1-y0;const cx=(x0+x1)/2,cy=(y0+y1)/2;if(w/h<r.width/r.height)w=h*r.width/r.height;else h=w*r.height/r.width;if(PW){const W2=w*r0.width/r.width;vb={x:cx-w/2,y:cy-h/2,w:W2,h};}else vb={x:cx-w/2,y:cy-h/2,w,h};setVB()}
 function setVB(){svg.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`);const s=vb.w/wrap.getBoundingClientRect().width;
   pins.forEach(([g,d])=>g.setAttribute('transform',`translate(${d.xy[0]},${d.xy[1]}) scale(${s})`));
-  document.querySelectorAll('.lab').forEach(t=>{t.setAttribute('font-size',12*s);t.style.display=(t.dataset.m==='1'&&vb.w>320)?'none':''});placeLabels();schedList();const o=Math.max(0,Math.min(1,(vb.w-200)/250));document.querySelectorAll('.wat').forEach(w=>w.style.opacity=o)}
+  document.querySelectorAll('.lab').forEach(t=>{t.setAttribute('font-size',12*s);t.style.display=(t.dataset.m==='1'&&vb.w>320)?'none':''});placeLabels();schedList();try{schedPeek()}catch(e){}const o=Math.max(0,Math.min(1,(vb.w-200)/250));document.querySelectorAll('.wat').forEach(w=>w.style.opacity=o)}
 function placeLabels(){const show=vb.w<150;const r=wrap.getBoundingClientRect();const sx=r.width/vb.w;const boxes=[];
   if(show)document.querySelectorAll('.lab').forEach(l=>{if(l.style.display==='none')return;const x=(+l.getAttribute('x')-vb.x)*sx,y=(+l.getAttribute('y')-vb.y)*sx,w=l.textContent.length*6.5;boxes.push([x-w/2,y-12,x+w/2,y+3])});
   if(show)pins.forEach(([g,d])=>{if(g.style.display==='none')return;const x=(d.xy[0]-vb.x)*sx,y=(d.xy[1]-vb.y)*sx;boxes.push([x-6,y-6,x+6,y+6])});
@@ -571,13 +684,13 @@ let SEED=new Date().toISOString().slice(0,10);
 function hsh(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 const isDT=()=>matchMedia('(min-width:1000px)').matches;
 function inView(d){if(!d.xy)return false;return d.xy[0]>=vb.x&&d.xy[0]<=vb.x+vb.w&&d.xy[1]>=vb.y&&d.xy[1]<=vb.y+vb.h}
-function render(){chips();pins.forEach(([g,d])=>g.style.display=match(d)?'':'none');renderList()}
-function renderList(){let vis=D.filter(match);const DT=isDT()&&vb;
+function render(){chips();pins.forEach(([g,d])=>g.style.display=match(d)?'':'none');renderList();try{renderF();schedPeek()}catch(e){}}
+function renderList(){window._cn=0;let vis=D.filter(match);const DT=isDT()&&vb;
   if(DT)vis=vis.filter(inView);
   const meta=d=>`${esc(F.t(d))} · ${esc(F.a(d))}${d.p?' · '+T().pp+PX(d):''}`;
   let h=DT?`<div class="vhead"><div><b>${T().inview(vis.length)}</b><span>${T().hint}</span></div><button id="shuf">${T().shuf}</button></div>`:'';
   RO.forEach(r=>{const arr=vis.filter(d=>d.r===r).sort((a,b)=>hsh(a.n+SEED)-hsh(b.n+SEED));if(!arr.length)return;
-    h+=`<div class="sec"><h2>${RT[r]}<span>${T().cnt(arr.length)}</span></h2>`+arr.map(d=>`<div class="card" data-i="${D.indexOf(d)}"><b>${esc(F.n(d))}</b><div class="intro">${esc(F.i(d))}</div><div class="m">${meta(d)}</div></div>`).join('')+'</div>'});
+    h+=`<div class="sec"><h2>${RT[r]}<span>${T().cnt(arr.length)}</span></h2>`+arr.map(d=>`<div class="card${(window._cn=(window._cn||0)+1)<=12?' fu':''}" style="animation-delay:${Math.min(window._cn,12)*.05}s" data-i="${D.indexOf(d)}">${ARR}<b>${esc(F.n(d))}</b><div class="intro">${esc(F.i(d))}</div><div class="m">${meta(d)}</div></div>`).join('')+'</div>'});
   if(!vis.length)h+=`<div class="empty">${T().empty}</div>`;
   $('#list').innerHTML=h;const s=$('#shuf');if(s)s.onclick=e=>{e.stopPropagation();SEED=String(Math.random());renderList();$('#side').scrollTop=0}}
 let _lt=null;function schedList(){if(!isDT())return;clearTimeout(_lt);_lt=setTimeout(renderList,150)}
@@ -593,21 +706,90 @@ function open(i){window._openI=i;const d=D[i];const g='https://www.google.com/ma
   $('#sheet').classList.add('on');$('#mask').classList.add('on');$('#sheet').scrollTop=0}
 function close(){$('#sheet').classList.remove('on');$('#mask').classList.remove('on')}
 $('#close').onclick=close;$('#mask').onclick=close;
-function setView(v){try{spClose()}catch(e){}if(v==='list'&&isDT())v='map';view=v;['tMap','tList','tSpin','tSwipe','tBrawl'].forEach(id=>$('#'+id).classList.toggle('on',id==='t'+v[0].toUpperCase()+v.slice(1)));
-  const sp=v==='spin'||v==='swipe'||v==='brawl',DT=isDT();$('#main').style.display=sp?'none':'';$('.filters').style.display=sp?'none':'';$('#spin').style.display=v==='spin'?'block':'none';$('#swipe').style.display=v==='swipe'?'block':'none';$('#brawl').style.display=v==='brawl'?'block':'none';if(v!=='swipe'){try{swList(false)}catch(e){}}
+// ===== redesign UI =====
+const NX={zh:{filter:'筛选',clear:'清除全部',show:n=>`显示 ${n} 家`,up:'上滑看食单',inv:n=>`地图范围内 ${n} 家`,region:'区域',cat:'菜系',star:'星级',price:'价位（可多选）',search:'搜索',
+  tT:'今晚不知道吃什么？',tS:'让老虎机替你决定。',tGo:'去转一转',later:'以后再说',toMap:'地图',home:'首页',
+  hs:n=>`${n} 家亲自吃过的悉尼餐厅`,nw:(m,d,n)=>`${m}月${d}日 新增 ${n} 家`,mapT:'地图',spD:'老虎机替你决定今晚吃什么',swD:'左右滑，挑出心动的店',brD:'两两对决，选出你的冠军',all:n=>`查看全部<br>${n} 家`},
+ en:{filter:'Filter',clear:'Clear all',show:n=>`Show ${n} places`,up:'Swipe up for list',inv:n=>`${n} in this view`,region:'AREA',cat:'CUISINE',star:'RATING',price:'PRICE (pick any)',search:'Search',
+  tT:'No idea what to eat tonight?',tS:'Let the slot machine decide.',tGo:'Spin it',later:'Not now',toMap:'Map',home:'HOME',
+  hs:n=>`${n} Sydney places, all personally tried`,nw:(m,d,n)=>`${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1]} ${d}: ${n} new`,mapT:'Map',spD:'A slot machine picks dinner',swD:'Swipe to find your match',brD:'Head to head until one wins',all:n=>`See all<br>${n} places`}};
+const NXT=()=>NX[LANG];
+const ARR='<svg class="arr" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#b42a1f" stroke-width="1.8" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6"/></svg>';
+const FICON='<svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1 3h14M4 7h8M6.5 11h3"/></svg>';
+const XI='<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#6b6b6b" stroke-width="1.6" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9"/></svg>';
+function fActive(){const a=[];cSet.forEach(c=>a.push({l:T().ct[c],rm:()=>cSet.delete(c)}));
+  if(rOn.size<RO.length)RO.filter(r=>rOn.has(r)).forEach(r=>a.push({l:'★'.repeat(NS_(r)),rm:()=>{rOn.delete(r);if(!rOn.size)rOn=new Set(RO)}}));
+  pOn.forEach(k=>a.push({l:T().pb[k],rm:()=>pOn.delete(k)}));if(q)a.push({l:'“'+q+'”',rm:()=>{q='';$('#search2').value='';const s=$('#fsQ');if(s)s.value=''}});return a}
+function renderF(){const x=NXT(),A=fActive();window._fa=A;
+  $('#fbar').innerHTML=`<button class="fb main" data-f="open">${FICON}${x.filter}${A.length?`<span class="bd">${A.length}</span>`:''}</button>`+A.map((a,i)=>`<button class="fb" data-f="${i}">${esc(a.l)}${XI}</button>`).join('');
+  if($('#fsheet').classList.contains('on'))renderSheet()}
+$('#fbar').onclick=e=>{const b=e.target.closest('[data-f]');if(!b)return;const f=b.dataset.f;if(f==='open')return fOpen(true);const a=window._fa[+f];if(a){a.rm();render()}};
+function renderSheet(){const x=NXT(),n=D.filter(match).length;const allR=rOn.size===RO.length;
+  $('#fsheet').innerHTML=`<div class="grab"></div><div class="fs-h"><b>${x.filter}</b><button data-a="clear">${x.clear}</button></div>
+  <input class="fs-q" id="fsQ" placeholder="${esc(T().ph)}" value="${esc(q)}">
+  <div class="fs-l">${x.cat}</div><div class="fs-c">${CO.map(c=>`<button data-c="${c}" class="${cSet.has(c)?'on':''}">${esc(T().ct[c])}</button>`).join('')}</div>
+  <div class="fs-l">${x.star}</div><div class="fs-c">${RO.map(r=>`<button data-r="${r}" class="${!allR&&rOn.has(r)?'on':''}"><span class="st">${'★'.repeat(NS_(r))}</span></button>`).join('')}</div>
+  <div class="fs-l">${x.price}</div><div class="fs-c">${PB.map(([k])=>`<button data-p="${k}" class="${pOn.has(k)?'on':''}">${T().pb[k]}</button>`).join('')}</div>
+  ${isDT()?'':`<div class="fs-l">${x.region}</div><div class="fs-c">${RG.map((g,i)=>`<button data-g="${i}">${esc(T().rg[i])}</button>`).join('')}</div>`}
+  <button class="fs-go" data-a="go">${x.show(n)}</button>`;
+  const qi=$('#fsQ');qi.oninput=e=>{q=e.target.value.trim().toLowerCase();$('#search2').value=e.target.value;render();$('#fsheet .fs-go').textContent=x.show(D.filter(match).length)}}
+$('#fsheet').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.a==='go')return fOpen(false);
+  if(b.dataset.a==='clear'){cSet.clear();pOn.clear();rOn=new Set(RO);q='';$('#search2').value=''}
+  else if(b.dataset.c){const c=b.dataset.c;cSet.has(c)?cSet.delete(c):cSet.add(c);if(cSet.size===CO.length)cSet.clear()}
+  else if(b.dataset.r){const r=b.dataset.r;if(rOn.size===RO.length)rOn=new Set([r]);else if(rOn.has(r)){rOn.delete(r);if(!rOn.size)rOn=new Set(RO)}else rOn.add(r)}
+  else if(b.dataset.p){const k=b.dataset.p;pOn.has(k)?pOn.delete(k):pOn.add(k);if(pOn.size===PB.length)pOn.clear()}
+  else if(b.dataset.g){jumpTo(+b.dataset.g);return fOpen(false)}
+  render();renderSheet()};
+function fOpen(o){if(o)renderSheet();$('#fsheet').classList.toggle('on',o);$('#fmask').classList.toggle('on',o)}
+$('#fmask').onclick=()=>fOpen(false);
+// peek
+function renderPeek(){if(isDT()||view!=='map'||!vb)return;const x=NXT();const vis=D.filter(d=>match(d)&&inView(d));
+  const top=vis.slice().sort((a,b)=>RO.indexOf(a.r)-RO.indexOf(b.r)||hsh(a.n+SEED)-hsh(b.n+SEED)).slice(0,8);
+  $('#peek').innerHTML=`<div class="grab"></div><div class="ph" data-a="list"><b>${x.inv(vis.length)}</b><span>${x.up}</span></div>
+  <div class="pr">${top.map((d,k)=>`<div class="pc" data-i="${D.indexOf(d)}" style="animation-delay:${k*.06}s">${ARR}<b>${esc(F.n(d))}</b><div class="s" style="color:${CL[d.r]}">${'★'.repeat(NS_(d.r))}</div><div class="i">${esc(F.i(d))}</div><div class="m">${esc(F.a(d))}${d.p?' · $'+PX(d):''}</div></div>`).join('')||`<div class="empty" style="padding:10px 0">${T().empty}</div>`}</div>`}
+let _pt=null;function schedPeek(){clearTimeout(_pt);_pt=setTimeout(renderPeek,160)}
+$('#peek').onclick=e=>{const c=e.target.closest('.pc');if(c)return open(+c.dataset.i);if(e.target.closest('[data-a=list],.grab'))setView('list')};
+(()=>{let y0=null;const p=$('#peek');p.addEventListener('pointerdown',e=>{if(e.target.closest('.pr'))return;y0=e.clientY});p.addEventListener('pointerup',e=>{if(y0!=null&&e.clientY-y0<-30)setView('list');y0=null})})();
+$('#toMap').onclick=()=>setView('map');
+// toast
+function toastOn(){try{if(localStorage.getItem('toastOff'))return}catch(e){}if(view!=='map')return;const x=NXT();
+  $('#toast').innerHTML=`<button class="x" data-a="x" aria-label="close">${XI}</button><div class="t">${x.tT}</div><div class="s">${x.tS}</div><div class="row"><button class="go2" data-a="go">${x.tGo}<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6"/></svg></button><button class="later" data-a="x">${x.later}</button></div>`;
+  $('#toast').style.display='block'}
+$('#toast').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;$('#toast').style.display='none';try{localStorage.setItem('toastOff','1')}catch(_){}if(b.dataset.a==='go')setView('spin')};
+setTimeout(toastOn,8000);
+// home
+function renderHome(){const x=NXT();const mx=D.reduce((a,d)=>d.dt>a?d.dt:a,'');const nn=D.filter(d=>d.dt===mx).length;const [yy,mm,dd]=mx.split('-').map(Number);
+  const pinsS=[[90,58,'5'],[104,64,'4'],[80,70,'3'],[220,44,'5'],[232,52,'4'],[210,56,'3'],[70,118,'5'],[84,126,'2'],[232,118,'5'],[246,112,'4'],[240,128,'3'],[258,124,'5'],[150,90,'4'],[170,96,'3']].map(([a,b,r])=>`<circle cx="${a}" cy="${b}" r="${r==='5'?5.5:r==='4'?4.5:3.5}" fill="${CL[r]}" stroke="#fff" stroke-width="1.5"/>`).join('');
+  $('#home').innerHTML=`<div class="hm-new"><button data-h="list"><i></i>${x.nw(mm,dd,nn)}</button></div>
+  <div class="hm-t">${T().h1}</div><div class="hm-s">${x.hs(D.length)}</div><div class="hm-rule"></div>
+  <div class="bento">
+   <button class="tile map" data-h="map" style="animation-delay:.25s"><svg viewBox="0 0 360 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="360" height="160" fill="#fff"/><path d="M0 84 C70 74 120 86 170 78 C220 70 260 56 300 52 C330 48 350 40 360 34 L360 50 C340 62 310 70 280 78 C240 88 200 96 160 96 C110 98 60 92 0 104 Z" fill="#e6ecef"/><path d="M310 0 L360 0 L360 160 L300 160 C316 120 296 90 316 60 C330 40 312 20 310 0 Z" fill="#e6ecef"/>${pinsS}</svg><div class="lb"><span>${x.mapT}</span><span class="go" style="padding:0;border:0;background:var(--ink)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6"/></svg></span></div></button>
+   <button class="tile" data-h="spin" style="animation-delay:.35s"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="#141414" stroke-width="1.6" aria-hidden="true"><rect x="3" y="8" width="22" height="20" rx="3"/><path d="M10 8v20M18 8v20M29 6v12"/><circle cx="29" cy="5" r="2.5" fill="#b42a1f" stroke="#b42a1f"/></svg><div><div class="tt">${T().spin}</div><div class="td">${x.spD}</div></div></button>
+   <button class="tile" data-h="swipe" style="animation-delay:.42s"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="#141414" stroke-width="1.6" aria-hidden="true"><rect x="9" y="4" width="18" height="24" rx="3" transform="rotate(10 18 16)"/><rect x="6" y="6" width="18" height="24" rx="3" fill="#fff"/><path d="M12 18c0-2 3-3 3-1 0-2 3-1 3 1 0 2-3 4-3 4s-3-2-3-4z" fill="#b42a1f" stroke="#b42a1f"/></svg><div><div class="tt">${SWX().tab}</div><div class="td">${x.swD}</div></div></button>
+   <button class="tile" data-h="brawl" style="animation-delay:.49s"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="#141414" stroke-width="1.6" aria-hidden="true"><path d="M6 28L22 12M22 12l4-6 2 2-6 4M28 28L12 12M12 12L8 6 6 8l6 4"/><circle cx="17" cy="20" r="2" fill="#b42a1f" stroke="#b42a1f"/></svg><div><div class="tt">${BX().tab}</div><div class="td">${x.brD}</div></div></button>
+   <button class="tile all" data-h="list" style="animation-delay:.56s"><svg width="16" height="16" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6"/></svg><div class="bg">${D.length}</div><div class="tt">${x.all(D.length)}</div></button>
+  </div>`}
+$('#home').onclick=e=>{const b=e.target.closest('[data-h]');if(b)setView(b.dataset.h)};
+function dnavRender(){const x=T();$('#dnav').innerHTML=[['map',x.map],['spin',x.spin],['swipe',SWX().tab],['brawl',BX().tab]].map(([v,l])=>`<button data-v="${v}" class="${view===v?'on':''}">${esc(l)}</button>`).join('')}
+$('#toMap').innerHTML='<svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="#fff" stroke-width="1.6" aria-hidden="true"><path d="M1 3l4.5-2 5 2L15 1v10l-4.5 2-5-2L1 13z"/></svg><span>'+NXT().toMap+'</span>';$('#tHome').textContent=NXT().home;
+$('#dnav').onclick=e=>{const b=e.target.closest('[data-v]');if(b)setView(b.dataset.v)};
+function setView(v){try{spClose()}catch(e){}try{fOpen(false)}catch(e){}if((v==='list'||v==='home')&&isDT())v='map';document.body.dataset.v=v;view=v;['tHome','tMap','tList','tSpin','tSwipe','tBrawl'].forEach(id=>$('#'+id).classList.toggle('on',id==='t'+v[0].toUpperCase()+v.slice(1)));
+  const sp=v==='spin'||v==='swipe'||v==='brawl'||v==='home',DT=isDT();$('#main').style.display=sp?'none':'';$('.filters').style.display=sp?'none':'';$('#spin').style.display=v==='spin'?'block':'none';$('#swipe').style.display=v==='swipe'?'block':'none';$('#brawl').style.display=v==='brawl'?'block':'none';$('#home').style.display=v==='home'?'block':'none';if(v!=='map')$('#toast').style.display='none';try{dnavRender()}catch(e){}if(v==='home')renderHome();if(v!=='swipe'){try{swList(false)}catch(e){}}
   if(!sp){$('#mapWrap').style.display=(v==='map'||DT)?'':'none';$('#list').style.display=(v==='list'||DT)?'block':'none';$('#search').style.display=v==='list'?'block':'none'}
-  if(v==='map')setVB();render();try{history.replaceState(null,'',v==='map'?location.pathname+location.search:'#'+v)}catch(e){}}
+  if(v==='map'){fit();setVB()}render();window.scrollTo(0,0);try{history.replaceState(null,'',(v==='map'&&isDT())||(v==='home'&&!isDT())?location.pathname+location.search:'#'+v)}catch(e){}}
 const navT=o=>{$('#nav').classList.toggle('on',o);$('#navMask').classList.toggle('on',o)};$('#menu').onclick=()=>navT(true);$('#navMask').onclick=()=>navT(false);$('#nav .tabs').addEventListener('click',()=>navT(false));
-$('#tMap').onclick=()=>setView('map');$('#tList').onclick=()=>setView('list');$('#tSpin').onclick=()=>setView('spin');$('#tSwipe').onclick=()=>setView('swipe');$('#tBrawl').onclick=()=>setView('brawl');
+$('#tHome').onclick=()=>setView('home');$('#tMap').onclick=()=>setView('map');$('#tList').onclick=()=>setView('list');$('#tSpin').onclick=()=>setView('spin');$('#tSwipe').onclick=()=>setView('swipe');$('#tBrawl').onclick=()=>setView('brawl');
 window.addEventListener('resize',()=>{if(view==='map')setVB()});
 const RG=[['全图',null],['市区CBD',[-33.861,-33.893,151.183,151.232]],['东区海湾',[-33.838,-33.895,151.205,151.29]],['北岸',[-33.79,-33.86,151.15,151.255]],['Eastwood/Epping',[-33.765,-33.80,151.065,151.13]],['Rhodes/Ryde',[-33.80,-33.84,151.07,151.115]],['Burwood/Lidcombe',[-33.84,-33.885,151.03,151.115]],['山区Hills',[-33.70,-33.745,150.94,151.11]],['Lidcombe/Parramatta',[-33.80,-33.88,150.99,151.07]],['南区',[-33.90,-34.045,151.06,151.21]]];
 function P(lat,lon){return[(lon-150.93)/0.38*VW,(-33.69-lat)/0.36*VH]}
 function jumpBtns(){$('#jump').innerHTML=RG.map((g,i)=>`<button data-g="${i}">${T().rg[i]}</button>`).join('')}jumpBtns();
-$('#jump').onclick=e=>{const b=e.target.closest('[data-g]');if(!b)return;const g=RG[+b.dataset.g][1];if(!g)return fit();
+$('#jump').onclick=e=>{const b=e.target.closest('[data-g]');if(b)jumpTo(+b.dataset.g)};
+function jumpTo(gi){const g=RG[gi][1];if(!g)return fit();
   const a=P(g[0],g[2]),c=P(g[1],g[3]);const r=wrap.getBoundingClientRect();let w=c[0]-a[0],h=c[1]-a[1];const cx=(a[0]+c[0])/2,cy=(a[1]+c[1])/2;
   if(w/h<r.width/r.height)w=h*r.width/r.height;else h=w*r.height/r.width;vb={x:cx-w/2,y:cy-h/2,w,h};setVB()};
 setTimeout(()=>{const n=$('#note');if(n)n.style.opacity=0;setTimeout(()=>n&&n.remove(),700)},7000);
-render();fit();if(location.hash==='#spin')setView('spin');else if(location.hash==='#swipe')setView('swipe');else if(location.hash==='#brawl')setView('brawl');else if(location.hash==='#list'&&!matchMedia('(min-width:1000px)').matches)setView('list');
+document.body.dataset.v='map';render();fit();setTimeout(()=>{if(location.hash==='#map')setView('map');else if(location.hash==='#spin')setView('spin');else if(location.hash==='#swipe')setView('swipe');else if(location.hash==='#brawl')setView('brawl');else if(location.hash==='#list'&&!matchMedia('(min-width:1000px)').matches)setView('list');else if(!isDT())setView('home');else setView('map');},0);
 $('#search2').oninput=e=>{q=e.target.value.trim().toLowerCase();render()};
 matchMedia('(min-width:1000px)').addEventListener('change',()=>{setView(view);fit()});
 
@@ -616,7 +798,7 @@ function applyLang(){const x=T();document.documentElement.lang=LANG==='en'?'en':
   $('#search').placeholder=x.ph;$('#search2').placeholder=x.ph;const n=$('#note');if(n)n.textContent=x.note;const c=$('#close');if(c)c.textContent=x.close;
   pins.forEach(([g,d])=>{const t=g.querySelector('.pl');if(!t)return;const L=shortName(F.n(d));t.setAttribute('y',L.length>1?-3:4);
     t.innerHTML=L.map((s,j)=>`<tspan x="10" dy="${j?13:0}">${esc(s)}</tspan>`).join('')});
-  jumpBtns();spinLang();swLang();brLang();render();if(view==='map')setVB();const sh=$('#sheet');if(sh&&sh.classList.contains('on')&&window._openI!=null)open(window._openI)}
+  jumpBtns();spinLang();swLang();brLang();try{dnavRender();renderF();if(view==='home')renderHome();$('#tHome').textContent=NXT().home;$('#toMap').querySelector('span').textContent=NXT().toMap;if($('#toast').style.display==='block')toastOn()}catch(e){}render();if(view==='map')setVB();const sh=$('#sheet');if(sh&&sh.classList.contains('on')&&window._openI!=null)open(window._openI)}
 
 // ===== spin =====
 const SP={lock:{g:null,c:null,r:null},cur:null,busy:false,vis:{}};
