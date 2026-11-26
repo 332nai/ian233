@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>飞行</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:opsz,wght@6..72,400;6..72,600;6..72,800&family=Noto+Serif+SC:wght@400;600;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:opsz,wght@6..72,400;6..72,600;6..72,800&family=Noto+Serif+SC:wght@400;600;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;600;800&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#16213a;--sub:#6e6a66;--hair:#e3d6c6;--acc:#e8590c;--paper:#f3e9dc;--coral:#f26b5f;--sky:#a8dcee;--lav:#d4ccf7;--cream2:#faf4ec;--disp:"Instrument Serif","Noto Serif SC",serif;--serif:"Newsreader","Noto Serif SC",serif;--sans:"Noto Sans SC",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace}
 *{box-sizing:border-box}html,body{margin:0;overflow-x:hidden;background:var(--paper);color:var(--ink);font:15px/1.6 var(--sans);-webkit-text-size-adjust:100%}
@@ -236,6 +236,149 @@ html{scroll-behavior:smooth}
 .alc .ft2 .fn{font:400 40px/1 var(--disp)}.alc .ft2 .fn small{font:500 11px var(--sans);letter-spacing:.12em;color:var(--sub);margin-left:6px}
 @media(max-width:820px){.ent{grid-template-columns:1fr}.en:nth-child(2){transform:rotate(.8deg)}.hero .bot{grid-template-columns:1fr;gap:6px}.hero p{font-size:15.5px}.ribs{height:280px}.rib.r2{top:112px}.rib.r3{top:196px}}
 @media(prefers-reduced-motion:reduce){.rib .tr,.hero .hm,.hero .hm *{animation:none!important}}
+/* ===== dashboard redesign: light grey, black, lime; square everything ===== */
+:root{--ink:#111;--sub:#77756f;--hair:#e2e1dc;--acc:#111;--paper:#ebebe7;--coral:#111;--sky:#d4ff3a;--lav:#f4f4f1;--cream2:#fff;--lime:#d4ff3a;--card:#fff;
+ --disp:"Geist","Noto Sans SC",system-ui,sans-serif;--serif:"Geist","Noto Sans SC",system-ui,sans-serif;--sans:"Geist","Noto Sans SC",system-ui,sans-serif;--mono:"Geist Mono","JetBrains Mono",ui-monospace,monospace}
+*,*::before,*::after{border-radius:0!important;font-style:normal!important}
+html,body{background:var(--paper);font:14px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+/* shell: black sidebar on desktop, black top bar on phones */
+header{background:#111!important;color:#fff;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.hd{max-width:none;padding:12px 16px}
+.logo{font:700 20px/1 var(--sans)!important;letter-spacing:0!important;align-items:center!important;gap:10px!important}
+.logo::before{content:"";width:14px;height:14px;background:var(--lime);display:block}
+.logo small{font:500 10.5px var(--mono)!important;letter-spacing:.12em!important;color:#8d8b85!important}
+nav{background:transparent!important;box-shadow:none!important;padding:0!important;gap:2px!important}
+nav button{color:#a8a6a0!important;letter-spacing:0!important;font:500 14px var(--sans)!important;padding:8px 12px!important;position:relative}
+nav button:hover{color:#fff!important}
+nav button.on{background:var(--lime)!important;color:#111!important}
+@media(min-width:1000px){
+ header{position:fixed!important;left:0;top:0;bottom:0;width:224px;border:0!important}
+ .hd{flex-direction:column;align-items:stretch!important;height:100%;padding:24px 16px!important;gap:28px!important}
+ .logo{flex-wrap:wrap}.logo small{width:100%;margin-top:6px}
+ nav{flex-direction:column;margin:0!important;width:100%}
+ nav button{text-align:left;padding:11px 12px!important;display:flex!important;align-items:center;gap:10px}
+ nav button::before{content:"";width:6px;height:6px;background:currentColor;opacity:.5}
+ nav button.on::before{opacity:1}
+ .wrap{margin-left:224px!important;max-width:none!important;padding:0 28px 40px!important}
+ footer{margin-left:0}
+}
+@media(max-width:999px){nav{margin-left:auto}}
+@media(max-width:560px){nav{width:100%;margin-left:0!important;justify-content:space-between}nav button{flex:1;text-align:center}}
+footer{border-top:1px solid #d6d5cf!important;font:500 11px var(--mono)!important;letter-spacing:.08em!important}
+/* generic pieces */
+h2{font:700 clamp(30px,4vw,44px)/1.05 var(--sans)!important;letter-spacing:-.02em!important}
+.kick{font:500 11px var(--mono)!important;letter-spacing:.12em!important;color:var(--sub)!important}
+.pill{background:#111!important;color:#fff!important;box-shadow:none!important;font:500 13px var(--sans)!important;padding:10px 16px!important}
+.arw{background:var(--lime)!important;color:#111!important;width:38px!important;height:38px!important}
+.pb:hover .pill{background:#2a2a2a!important}
+.flt button,.fil button{border:0!important;background:#fff!important;color:#111!important;font:500 13px var(--sans)!important;padding:8px 14px!important}
+.flt button.on,.fil button.on{background:#111!important;color:var(--lime)!important}
+.tg{border:0!important;background:#f1f0ec!important;font:500 11.5px var(--mono)!important;padding:3px 8px!important}
+.alc,.card{background:#fff!important;border:0!important;box-shadow:none!important}
+.alc:hover,.card:hover{transform:translateY(-3px);box-shadow:0 0 0 2px #111!important}
+.lgv{background:#f4f4f1!important}
+.alc h4{font:700 20px var(--sans)!important}
+.fn{font:600 30px var(--mono)!important}
+.fam{font:700 22px var(--sans)!important}
+.map{border:0!important;background:#111!important}
+.map .land{fill:#2b2b2b!important;stroke:#3a3a3a!important}.map .sph{fill:#161616!important}
+.map .ap circle{fill:var(--lime)!important;stroke:#111!important}.map .ap text{fill:#d9d8d2!important;font-family:var(--mono)!important}
+.spec{border-top:1px solid var(--hair)!important}.spec b{font-family:var(--mono)!important}
+.one{font:400 13.5px/1.7 var(--sans)!important}
+.kbb{border:0!important;background:#111!important;color:#fff!important;padding:7px 12px!important;font:500 12.5px var(--sans)!important}
+.kbb:hover{background:var(--lime)!important;color:#111!important}
+/* archive drawer */
+#kbx .pn{background:#fff!important;box-shadow:-30px 0 80px -30px rgba(0,0,0,.4)!important}
+#kbx .kh{background:#111!important;color:#fff!important}
+#kbx .kh h3{font:700 30px/1.15 var(--sans)!important;color:#fff!important}
+#kbx .kh p{color:#a8a6a0!important}
+#kbx .kh .big{font:700 64px/1 var(--mono)!important;color:var(--lime)!important}
+#kbx .kh .kick{color:var(--lime)!important}
+#kbx .kh .x{background:var(--lime)!important;color:#111!important;border:0!important}
+#kbx .klogo{background:#fff!important;padding:8px!important}
+.kt button{color:#a8a6a0!important}.kt button.on{background:var(--lime)!important;color:#111!important}
+.kn b,.km b,.tot b{font-family:var(--mono)!important}
+.kk div::before{color:#111!important;background:var(--lime)!important}
+.ktl b{font-family:var(--mono)!important;background:var(--lime)}
+/* ===== overview dashboard ===== */
+.dx{padding:24px 0 8px}
+.dx-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.dx-k{font:500 11px var(--mono);letter-spacing:.12em;color:var(--sub);margin-bottom:6px}
+.dx-top h1{margin:0;font:700 clamp(34px,5vw,56px)/1 var(--sans);letter-spacing:-.03em}
+.dx-top h1 i{background:var(--lime);padding:0 .12em}
+.dx-date{font:500 12px var(--mono);color:var(--sub);display:flex;align-items:center;gap:8px}
+.dx-date::before{content:"";width:8px;height:8px;background:#3bb54a;animation:dxp 2s infinite}
+@keyframes dxp{50%{opacity:.25}}
+.dx-kpi{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.dx-c{background:#fff;padding:16px 18px;position:relative;min-width:0}
+.dx-c.blk{background:#111;color:#fff}.dx-c.lim{background:var(--lime);color:#111}
+.dx-l{font:500 12px var(--sans);color:var(--sub);display:flex;justify-content:space-between;gap:8px}
+.dx-c.blk .dx-l{color:#a8a6a0}.dx-c.lim .dx-l{color:#3c4a00}
+.dx-n{font:600 clamp(30px,3.6vw,46px)/1.05 var(--mono);letter-spacing:-.04em;margin-top:14px}
+.dx-c.blk .dx-n{color:var(--lime)}
+.dx-s{font:400 12px var(--sans);color:var(--sub);margin-top:6px}.dx-c.blk .dx-s{color:#8d8b85}
+.dx-g{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:10px}
+.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s12{grid-column:span 12}
+@media(max-width:1180px){.dx-kpi{grid-template-columns:repeat(3,minmax(0,1fr))}.s4,.s5,.s7{grid-column:span 6}.s8{grid-column:span 12}}
+@media(max-width:700px){.dx-kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.dx-kpi .dx-c:first-child{grid-column:span 2}.dx-g>*{grid-column:span 12!important}}
+.dx-h{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.dx-h b{font:600 15px var(--sans)}.dx-h span{font:500 11.5px var(--mono);color:var(--sub)}
+.dx-go{border:0;background:#111;color:#fff;font:500 12px var(--sans);padding:6px 10px;cursor:pointer;white-space:nowrap}.dx-go:hover{background:var(--lime);color:#111}
+.dx-c.blk .dx-go{background:var(--lime);color:#111}.dx-c.lim .dx-go{background:#111;color:var(--lime)}
+/* map card */
+.dx-map{padding:0;overflow:hidden;min-height:380px;display:flex;flex-direction:column}
+.dx-map .dx-h{position:absolute;left:18px;right:18px;top:16px;z-index:2}
+.dx-map .dx-h b{color:#fff}
+.dx-map svg{display:block;width:100%;flex:1;min-height:320px}
+.dx-map .land{fill:#262626;stroke:#333;stroke-width:.4}
+.dx-map .ap circle{fill:var(--lime)}
+.dx-map .ap .ring{fill:none;stroke:var(--lime);stroke-width:1;animation:dxr 3.2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes dxr{0%{transform:scale(1);opacity:.9}100%{transform:scale(5);opacity:0}}
+.dx-reg{position:absolute;left:18px;bottom:16px;display:flex;flex-wrap:wrap;gap:6px;z-index:2}
+.dx-reg span{background:rgba(255,255,255,.08);color:#d9d8d2;font:500 11.5px var(--mono);padding:4px 8px}.dx-reg span b{color:var(--lime);font-weight:600;margin-left:6px}
+/* bars */
+.dx-seg{display:flex;height:44px;margin:4px 0 14px}
+.dx-seg i{display:block;height:100%;transition:flex .8s cubic-bezier(.2,.85,.15,1)}
+.dx-lg{display:grid;gap:8px}
+.dx-lg div{display:grid;grid-template-columns:12px minmax(0,1fr) auto auto;gap:10px;align-items:center;font-size:13px}
+.dx-lg i{width:12px;height:12px;display:block}.dx-lg b{font:600 13px var(--mono)}.dx-lg em{font:500 12px var(--mono);color:var(--sub);min-width:44px;text-align:right}
+.dx-waf{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;margin-bottom:14px}
+.dx-waf i{aspect-ratio:1;display:grid;place-items:center;font:600 10px var(--mono);cursor:pointer;transition:transform .2s}
+.dx-waf i:hover{transform:scale(1.12);outline:2px solid #111}
+.dx-rank{display:grid;gap:2px}
+.dx-r{display:grid;grid-template-columns:22px 34px minmax(0,1fr) 52px;gap:10px;align-items:center;padding:7px 0;cursor:pointer;border-top:1px solid #f0efeb}
+.dx-r:hover{background:#f7f7f4}
+.dx-r em{font:500 11px var(--mono);color:var(--sub)}
+.dx-r img{width:34px;height:22px;object-fit:contain}
+.dx-r .nm{min-width:0}.dx-r .nm b{display:block;font:600 13.5px var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dx-r .br{height:6px;background:#f1f0ec;margin-top:5px}.dx-r .br i{display:block;height:100%;background:#111}
+.dx-r:first-child .br i{background:var(--lime);box-shadow:inset 0 0 0 1px #9dbf1a}
+.dx-r .v{font:600 15px var(--mono);text-align:right}
+/* aircraft hero */
+.dx-ac{display:flex;flex-direction:column;cursor:pointer}
+.dx-ac .pl{flex:1;display:grid;place-items:center;padding:6px 0;min-height:140px}
+.dx-ac .pl svg{width:100%;height:auto;max-height:170px}
+.dx-ac h3{margin:0;font:700 clamp(36px,4vw,52px)/1 var(--mono);letter-spacing:-.04em}
+.dx-sp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid rgba(0,0,0,.2);margin-top:12px}
+.dx-sp div{padding:10px 0 0;font:500 11.5px var(--sans);color:#3c4a00}.dx-sp b{display:block;font:600 18px var(--mono);color:#111}
+.dx-rng{display:grid;gap:7px}
+.dx-q{display:grid;grid-template-columns:86px minmax(0,1fr) 64px;gap:10px;align-items:center;font:500 12.5px var(--mono);cursor:pointer}
+.dx-q:hover b{color:#111;background:var(--lime)}
+.dx-q b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dx-q .tr{height:16px;background:#f1f0ec;position:relative}.dx-q .tr i{position:absolute;left:0;top:0;bottom:0;background:#111}
+.dx-q .tr s{position:absolute;top:0;bottom:0;width:2px;background:var(--lime);text-decoration:none}
+.dx-q span{text-align:right;color:var(--sub)}
+.dx-plan{display:flex;flex-direction:column;cursor:pointer}
+.dx-plan img{width:100%;height:230px;object-fit:contain;background:#f4f4f1;margin-bottom:12px}
+.dx-plan .st{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.dx-plan .st div{font:500 11.5px var(--sans);color:var(--sub)}.dx-plan .st b{display:block;font:600 18px var(--mono);color:#111}
+.dx-tk{overflow:hidden;background:#111;color:#fff;white-space:nowrap;margin:10px 0 0;padding:12px 0}
+.dx-tk>div{display:inline-flex;gap:28px;animation:dxt 50s linear infinite;padding-left:28px;font:500 13px var(--mono)}
+.dx-tk span b{color:var(--lime);margin-right:8px}
+@keyframes dxt{to{transform:translateX(-50%)}}
+.dx .rv{opacity:0;transform:translateY(14px);transition:opacity .6s,transform .7s cubic-bezier(.2,.85,.15,1)}.dx .rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.dx-tk>div,.dx-map .ring,.dx-date::before{animation:none}}
+
 </style>
 </head>
 <body>
@@ -357,6 +500,51 @@ function renderHomeP(){const nAL=Object.keys(AL).length,nTY=Object.keys(TY).leng
   </div>
   <div class="bign rv"><div><b>${nAL}</b><span>航司</span></div><div><b>${nTY}</b><span>机型</span></div><div><b>${nAP}</b><span>机场</span></div><div><b>${ctry}</b><span>国家和地区</span></div><div><b>${fleet.toLocaleString()}</b><span>架在役飞机</span></div></div>`;
  rvObs($('#home'))}
+function renderHomeX(){const alK=Object.keys(AL),apK=Object.keys(AP),tyK=Object.keys(TY);
+ const fleet=Object.values(FL).reduce((s,f)=>s+f.t,0),orders=Object.values(FL).reduce((s,f)=>s+(f.o||0),0);
+ const cty={};apK.forEach(c=>{const k=AP[c][4];cty[k]=(cty[k]||0)+1});const ctyS=Object.entries(cty).sort((a,b)=>b[1]-a[1]);
+ const ALC={'寰宇一家':['#111','#fff'],'星空联盟':['#d4ff3a','#111'],'天合联盟':['#8d8b85','#fff'],'无联盟':['#e4e3de','#111']};
+ const alls=Object.keys(ALC).map(a=>[a,alK.filter(c=>AL[c][3]===a).length]);
+ const mf={};Object.values(FL).forEach(f=>f.r.forEach(r=>{const k=r[0].split(' ')[0];mf[k]=(mf[k]||0)+r[1]}));
+ const MFC={Airbus:'#111',Boeing:'#d4ff3a',COMAC:'#8d8b85',Embraer:'#c4c2ba'};const mfS=Object.entries(mf).filter(e=>e[1]).sort((a,b)=>b[1]-a[1]);const mfT=mfS.reduce((s,e)=>s+e[1],0);
+ const top=alK.filter(c=>FL[c]).sort((a,b)=>FL[b].t-FL[a].t).slice(0,8),mx=FL[top[0]].t;
+ const big=tyK.slice().sort((a,b)=>TY[b][3]-TY[a][3])[0],bt=TY[big];
+ const rng=tyK.slice().sort((a,b)=>TY[b][4]-TY[a][4]),rmx=TY[rng[0]][4];
+ const pc=PLANS.includes('HKG')?'HKG':PLANS[0],pw=(WD.AP||{})[pc],prw=(pw&&pw.rw)||[],ppx=((pw&&pw.g)||[]).flatMap(x=>x[1]).find(r=>/^旅客吞吐/.test(r[0]));
+ const tk=apK.map(c=>`<span><b>${c}</b>${AP[c][2]}</span>`).join('');
+ $('#home').innerHTML=`<div class="dx">
+ <div class="dx-top rv"><div><div class="dx-k">AVIATION ATLAS / OVERVIEW</div><h1>航空档案<i>总览</i></h1></div><div class="dx-date">数据整理至 2026.11</div></div>
+ <div class="dx-kpi">
+  <div class="dx-c blk rv"><div class="dx-l"><span>在役飞机</span><span>架</span></div><div class="dx-n" data-n="${fleet}">0</div><div class="dx-s">另有 ${orders.toLocaleString()} 架订单待交付</div></div>
+  <div class="dx-c rv" data-go="al" style="cursor:pointer"><div class="dx-l"><span>航司</span><span>↗</span></div><div class="dx-n" data-n="${alK.length}">0</div><div class="dx-s">${alls.filter(a=>a[0]!=='无联盟').map(a=>a[1]).reduce((x,y)=>x+y,0)} 家属于三大联盟</div></div>
+  <div class="dx-c rv" data-go="ac" style="cursor:pointer"><div class="dx-l"><span>机型</span><span>↗</span></div><div class="dx-n" data-n="${tyK.length}">0</div><div class="dx-s">${new Set(tyK.map(t=>TY[t][0])).size} 家制造商</div></div>
+  <div class="dx-c rv" data-go="ap" style="cursor:pointer"><div class="dx-l"><span>机场</span><span>↗</span></div><div class="dx-n" data-n="${apK.length}">0</div><div class="dx-s">${PLANS.length} 座带跑道平面图</div></div>
+  <div class="dx-c lim rv"><div class="dx-l"><span>国家和地区</span><span>${ctyS[0][0]}最多</span></div><div class="dx-n" data-n="${ctyS.length}">0</div><div class="dx-s" style="color:#3c4a00">覆盖 ${ctyS.slice(0,3).map(e=>e[0]).join('、')} 等</div></div>
+ </div>
+ <div class="dx-g">
+  <div class="dx-c blk dx-map s8 rv"><div class="dx-h"><b>${apK.length} 座机场分布</b><button class="dx-go" data-go="ap">全部机场</button></div>${heroMap()}
+   <div class="dx-reg">${ctyS.slice(0,6).map(([k,v])=>`<span>${k}<b>${v}</b></span>`).join('')}</div></div>
+  <div class="dx-c s4 rv"><div class="dx-h"><b>在役机队构成</b><span>${mfT.toLocaleString()} 架</span></div>
+   <div class="dx-seg">${mfS.map(([k,v])=>`<i style="flex:${v};background:${MFC[k]||'#e4e3de'}" title="${k} ${v}"></i>`).join('')}</div>
+   <div class="dx-lg">${mfS.map(([k,v])=>`<div><i style="background:${MFC[k]||'#e4e3de'};box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></i><span>${k}</span><b>${v.toLocaleString()}</b><em>${(v/mfT*100).toFixed(1)}%</em></div>`).join('')}</div>
+   <div class="dx-h" style="margin:22px 0 10px"><b>联盟</b><span>每格一家航司</span></div>
+   <div class="dx-waf">${alK.slice().sort((a,b)=>Object.keys(ALC).indexOf(AL[a][3])-Object.keys(ALC).indexOf(AL[b][3])).map(c=>`<i data-kb="AL:${c}" title="${AL[c][0]}" style="background:${ALC[AL[c][3]][0]};color:${ALC[AL[c][3]][1]}">${c}</i>`).join('')}</div>
+   <div class="dx-lg">${alls.map(([a,n])=>`<div><i style="background:${ALC[a][0]};box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)"></i><span>${a}</span><b>${n}</b><em></em></div>`).join('')}</div></div>
+  <div class="dx-c s7 rv"><div class="dx-h"><b>机队规模排行</b><button class="dx-go" data-go="al">全部航司</button></div>
+   <div class="dx-rank">${top.map((c,i)=>`<div class="dx-r" data-kb="AL:${c}"><em>${String(i+1).padStart(2,'0')}</em>${LOGO[c]?`<img src="${LOGO[c]}" alt="">`:`<span style="font:600 12px var(--mono)">${c}</span>`}<div class="nm"><b>${AL[c][0]}</b><div class="br"><i style="width:${FL[c].t/mx*100}%"></i></div></div><span class="v">${FL[c].t}</span></div>`).join('')}</div></div>
+  <div class="dx-c lim dx-ac s5 rv" data-kb="TY:${big}"><div class="dx-h"><b>最大的机型</b><button class="dx-go" data-go="ac">全部机型</button></div>
+   <h3>${big}</h3><div class="pl">${PLN[big]||''}</div>
+   <div class="dx-sp"><div>典型座位<b>${bt[3]}</b></div><div>航程<b>${fmt(bt[4])}</b></div><div>制造商<b>${bt[0]}</b></div></div></div>
+  <div class="dx-c s6 rv"><div class="dx-h"><b>谁飞得最远</b><span>满载航程，公里</span></div>
+   <div class="dx-rng">${rng.map(t=>`<div class="dx-q" data-kb="TY:${t}"><b>${t}</b><div class="tr"><i style="width:${TY[t][4]/rmx*100}%"></i></div><span>${fmt(TY[t][4])}</span></div>`).join('')}</div></div>
+  <div class="dx-c dx-plan s6 rv" data-kb="AP:${pc}"><div class="dx-h"><b>${AP[pc][2]} ${pc} 平面图</b><span>OpenStreetMap</span></div><img src="plans/${pc}.svg" alt="${pc} 平面图" loading="lazy">
+   <div class="st"><div>跑道<b>${prw.length} 条</b></div><div>最长跑道<b>${prw.length?Math.max(...prw.map(r=>+String(r[1]).replace(/,/g,'')||0)).toLocaleString()+' 米':'—'}</b></div><div>年旅客<b>${ppx?ppx[1].replace(/（.*$/,''):'—'}</b></div></div></div>
+ </div>
+ <div class="dx-tk"><div>${tk}${tk}</div></div></div>`;
+ const H=$('#home');H.querySelectorAll('[data-kb]').forEach(el=>el.addEventListener('click',e=>{if(e.target.closest('[data-go]'))return;e.stopPropagation();openKB(el.dataset.kb)}));
+ rvObs(H);
+ H.querySelectorAll('.dx-n[data-n]').forEach(el=>{const n=+el.dataset.n,t0=performance.now(),D=matchMedia('(prefers-reduced-motion:reduce)').matches?1:1100;const f=t=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,4);el.textContent=Math.round(n*e).toLocaleString();if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)})}
+
 let ALF='all';
 function renderALP(){const all=Object.keys(AL).sort((a,b)=>((FL[b]||{}).t||0)-((FL[a]||{}).t||0));const ks=all.filter(c=>ALF==='all'||AL[c][3]===ALF);
  const als=['all','寰宇一家','星空联盟','天合联盟','无联盟'];
@@ -377,7 +565,7 @@ function renderAPP(){const ks=Object.keys(AP).sort((a,b)=>AP[a][4]===AP[b][4]?AP
   $('#ap').innerHTML=`<div class="kick">AIRPORTS</div><h2>机场</h2>${mapPub('m2')}<div class="cards">${ks.map((c,i)=>{const a=AP[c],w=(WD.AP||{})[c];const rw=(w&&w.rw)||[];const px=((w&&w.g)||[]).flatMap(x=>x[1]).find(r=>r[0].startsWith('旅客吞吐'));
    return `<div class="card apc" data-c="${c}" style="animation-delay:${Math.min(i,10)*.04}s"><div class="tp"><div class="cd">${c}</div><div class="nm"><b>${a[2]}</b><span>${a[3]} · ${a[4]}</span></div></div>
    <div class="ft"><span>${rw.length} 条跑道</span>${px?`<span>${px[1]}</span>`:''}<span>${a[5]}</span></div><div class="kbrow"><button class="kbb" data-kb="AP:${c}">档案 →</button></div></div>`}).join('')}</div>`}
-if(!ME){renderHome=renderHomeP;renderAL=renderALP;renderAC=renderACP;renderAP=renderAPP}
+if(!ME){renderHome=renderHomeX;renderAL=renderALP;renderAC=renderACP;renderAP=renderAPP}
 function go(v){document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===v));document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
   ({home:renderHome,al:renderAL,ac:renderAC,ap:renderAP})[v]();window.scrollTo(0,0);try{history.replaceState(null,'',v==='home'?location.pathname:'#'+v)}catch(e){}}
 $('#nav').onclick=e=>{const b=e.target.closest('[data-v]');if(b)go(b.dataset.v)};
