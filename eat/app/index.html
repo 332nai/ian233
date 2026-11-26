@@ -705,37 +705,60 @@ html body .ctrl{top:64px;border:1px solid var(--line);box-shadow:none;background
 .dr-n a.on b{color:var(--red)}.dr-n a.on em{color:var(--red)}
 .dr-f{display:flex;justify-content:space-between;align-items:center;padding:18px 24px 26px;font:400 13px var(--sans);color:var(--sub);border-top:1px solid var(--line);flex:none}
 .dr-f .lk{border:1px solid var(--line);background:#fff;padding:7px 12px;font:500 13px var(--sans);color:var(--ink);cursor:pointer}.dr-f .lk:hover{border-color:var(--ink)}
-/* ===== spin + brawl ===== */
-.xv{display:none;padding:0 20px 90px}
+/* ===== games: spin + brawl on a black stage ===== */
+.xv{display:none;background:var(--ink);color:#fff;min-height:calc(100dvh - 56px);padding:0 0 90px;overflow-x:hidden}
 @media(min-width:1000px){.xv{flex:1;min-height:0;overflow-y:auto}}
-.xw{max-width:720px;margin:0 auto}
-.xhd{text-align:center;padding:64px 0 40px}
-.xhd h2{font:900 clamp(52px,11vw,96px)/1 var(--zh);margin:0 0 16px;letter-spacing:-.02em}
-.xhd p{color:var(--sub);margin:0;font-size:15px}
-.xm{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.xl{font:500 12px var(--sans);color:var(--sub);margin-bottom:8px;letter-spacing:.04em}
-.xwin{height:124px;background:var(--g1);overflow:hidden;position:relative;transition:background .3s,color .3s}
-.xwin::before,.xwin::after{content:"";position:absolute;left:0;right:0;height:22px;z-index:1;pointer-events:none}
-.xwin::before{top:0;background:linear-gradient(var(--g1),transparent)}.xwin::after{bottom:0;background:linear-gradient(transparent,var(--g1))}
+.xstage{position:relative;overflow:hidden}
+.xw{position:relative;max-width:760px;margin:0 auto;padding:0 20px}
+/* ticker */
+.xtk{background:var(--red);color:#fff;overflow:hidden;white-space:nowrap;height:38px;display:flex;align-items:center}
+.xtk-in{display:inline-flex;align-items:center;animation:xtk 60s linear infinite;will-change:transform}
+.xtk-in span,.xtk-in i{flex:none}.xtk-in span{font:900 15px var(--zh);padding:0 14px}.xtk-in i{font-style:normal;font-size:8px;opacity:.7}
+@keyframes xtk{to{transform:translateX(-50%)}}
+.xtop{display:flex;justify-content:flex-end;padding-top:14px}
+.xsnd{border:1px solid #3a3a3a;background:none;color:#a9a6a0;font:500 12px var(--sans);padding:6px 10px;cursor:pointer}.xsnd:hover{color:#fff;border-color:#fff}
+.xhd{text-align:center;padding:26px 0 40px}
+.xhd h2{font:900 clamp(64px,15vw,132px)/.95 var(--zh);margin:0 0 18px;letter-spacing:-.03em;color:#fff}
+.xhd h2 em{font-style:normal;color:var(--red)}
+.xhd p{color:#a9a6a0;margin:0;font-size:15px}
+/* reels */
+.xm{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.xl{font:500 12px var(--sans);color:#a9a6a0;margin-bottom:8px;letter-spacing:.06em}
+.xwin{height:132px;background:#fff;color:var(--ink);overflow:hidden;position:relative;transition:background .3s,color .3s,box-shadow .25s}
+.xwin::before,.xwin::after{content:"";position:absolute;left:0;right:0;height:30px;z-index:1;pointer-events:none}
+.xwin::before{top:0;background:linear-gradient(rgba(0,0,0,.22),transparent)}.xwin::after{bottom:0;background:linear-gradient(transparent,rgba(0,0,0,.22))}
+.xline{position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:var(--red);opacity:0;z-index:2;transition:opacity .2s}
+.xr.run .xline{opacity:.9}
 .xstrip{will-change:transform}
-.xi{height:124px;display:flex;align-items:center;justify-content:center;padding:0 10px;text-align:center;font:900 clamp(19px,4.8vw,30px)/1.15 var(--zh);word-break:break-word}
-.xi.st{color:var(--red);font:400 clamp(14px,3.6vw,22px) var(--sans);letter-spacing:1px}
-.xr.lk .xwin{background:var(--ink);color:#fff}
-.xr.lk .xwin::before{background:linear-gradient(var(--ink),transparent)}.xr.lk .xwin::after{background:linear-gradient(transparent,var(--ink))}
-.xr.lk .xi.st{color:#ff8a7a}
-.xlock{margin-top:8px;width:100%;height:42px;border:1px solid var(--line);background:#fff;font:500 13px var(--sans);color:var(--ink);cursor:pointer;transition:.2s}
-.xlock:hover{border-color:var(--ink)}
-.xr.lk .xlock{background:var(--ink);color:#fff;border-color:var(--ink)}
-.xlock:disabled{opacity:.4;cursor:default}
-.xgo{display:block;margin-top:22px;width:100%;height:66px;background:var(--red);color:#fff;border:0;font:700 18px var(--sans);letter-spacing:.1em;cursor:pointer;transition:background .2s,transform .12s}
-.xgo:hover{background:#b8261d}.xgo:active{transform:translateY(2px)}
-.xgo:disabled{background:var(--g2);color:var(--sub);letter-spacing:0;cursor:default;font-weight:500;font-size:15px}
-.xn{text-align:center;margin-top:12px;font-size:13px;color:var(--sub)}
-.xres{margin-top:40px;transition:opacity .3s}.xres.out{opacity:.25}
+.xr.run .xstrip{filter:blur(1.6px)}
+.xi{height:132px;display:flex;align-items:center;justify-content:center;padding:0 10px;text-align:center;font:900 clamp(20px,5vw,32px)/1.12 var(--zh);word-break:break-word}
+.xi.sm{font-size:clamp(15px,3.8vw,23px);word-break:normal;overflow-wrap:anywhere}
+.xi.st{color:var(--red);font:400 clamp(15px,3.8vw,24px) var(--sans);letter-spacing:1px}
+.xr.lk .xwin{background:var(--red);color:#fff}.xr.lk .xi.st{color:#fff}
+.xr.hit .xwin{animation:xhit .45s cubic-bezier(.2,.9,.25,1.3)}
+@keyframes xhit{0%{transform:scale(1.07);box-shadow:0 0 0 4px var(--red),0 0 40px rgba(214,52,42,.7)}100%{transform:none;box-shadow:0 0 0 0 transparent}}
+.xlock{margin-top:8px;width:100%;height:44px;border:1px solid #3a3a3a;background:none;color:#fff;font:500 13px var(--sans);cursor:pointer;transition:.2s}
+.xlock:hover{border-color:#fff}
+.xr.lk .xlock{background:#fff;color:var(--ink);border-color:#fff}
+.xlock:disabled{opacity:.35;cursor:default}
+/* big button */
+.xgo{position:relative;overflow:hidden;display:block;margin-top:24px;width:100%;height:76px;background:var(--red);color:#fff;border:0;font:900 26px var(--zh);letter-spacing:.3em;cursor:pointer;box-shadow:0 8px 0 #8f1d15;transition:transform .08s,box-shadow .08s,background .2s;animation:xpulse 1.8s ease-in-out infinite}
+.xgo span{position:relative;z-index:1}
+.xgo::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);transform:translateX(-100%);animation:xsheen 2.6s ease-in-out infinite}
+.xgo:hover{background:#e03a2f}
+.xgo:active,.xgo.pressed{transform:translateY(8px);box-shadow:0 0 0 #8f1d15}
+.xgo:disabled{background:#2a2a2a;color:#77736d;box-shadow:0 8px 0 #1b1b1b;cursor:default;letter-spacing:0;font:500 15px var(--sans);animation:none}.xgo:disabled::after{display:none}
+.xgo.pressed:disabled{background:var(--red);color:#fff;box-shadow:0 0 0 #8f1d15;letter-spacing:.3em;font:900 26px var(--zh)}
+@keyframes xpulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.12)}}
+@keyframes xsheen{0%,55%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.xn{text-align:center;margin-top:22px;font-size:13px;color:#a9a6a0}
+/* inline result after closing reveal */
+.xres{margin-top:46px;transition:opacity .3s}.xres.out{opacity:.25}
 .xres.in .xres-c{animation:xup .8s cubic-bezier(.2,.85,.15,1)}
 @keyframes xup{from{opacity:0;transform:translateY(28px)}}
-.xc{background:#fff;box-shadow:0 22px 50px -26px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.06);cursor:pointer;display:flex;flex-direction:column;transition:transform .45s cubic-bezier(.2,.85,.15,1),opacity .4s,box-shadow .3s;min-width:0}
-.xc:hover{transform:translateY(-4px)}
+/* cards */
+.xc{position:relative;background:#fff;color:var(--ink);box-shadow:0 30px 60px -30px rgba(0,0,0,.6);cursor:pointer;display:flex;flex-direction:column;transition:transform .45s cubic-bezier(.2,.85,.15,1),opacity .45s,filter .45s,box-shadow .3s;min-width:0}
+.xc:hover{transform:translateY(-5px)}
 .xc-top{height:150px;padding:16px;display:flex;flex-direction:column;justify-content:space-between}
 .xc-top span{font:500 12px var(--sans);opacity:.8}
 .xc-top b{font:900 22px/1.2 var(--zh)}
@@ -744,38 +767,82 @@ html body .ctrl{top:64px;border:1px solid var(--line);box-shadow:none;background
 .xc .mt{margin-top:auto;padding-top:14px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;color:var(--sub)}
 .xc .mt span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .xc .st{color:var(--red);letter-spacing:1px;white-space:nowrap}.xc .st i{opacity:.22;font-style:normal}
-.xc.big .xc-top{height:210px;padding:22px}.xc.big .xc-top b{font-size:clamp(28px,6vw,40px)}.xc.big .xc-bt{padding:20px 22px 22px}.xc.big .nm{font-size:clamp(22px,5vw,28px)}.xc.big .mt{font-size:14px}
-@media(min-width:700px){.xc.big{flex-direction:row;min-height:240px}.xc.big .xc-top{height:auto;flex:0 0 46%}}
+.xc.big .xc-top{height:210px;padding:22px}.xc.big .xc-top b{font-size:clamp(28px,6vw,42px)}.xc.big .xc-bt{padding:20px 22px 22px}.xc.big .nm{font-size:clamp(22px,5vw,28px)}.xc.big .mt{font-size:14px}
+@media(min-width:700px){.xc.big{flex-direction:row;min-height:250px}.xc.big .xc-top{height:auto;flex:0 0 46%}}
 .xres-a{display:flex;gap:10px;margin-top:14px}
-.xb{flex:1;height:54px;border:1px solid var(--line);background:#fff;font:500 15px var(--sans);color:var(--ink);cursor:pointer;transition:.2s}
-.xb:hover{border-color:var(--ink)}
-.xb.k{background:var(--ink);color:#fff;border-color:var(--ink)}.xb.k:hover{background:var(--red);border-color:var(--red)}
+.xb{flex:1;height:56px;border:1px solid #3a3a3a;background:none;color:#fff;font:700 15px var(--sans);cursor:pointer;transition:.2s}
+.xb:hover{border-color:#fff}
+.xb.w,.xb.k{background:#fff;color:var(--ink);border-color:#fff}.xb.w:hover,.xb.k:hover{background:#eceae6}
+.xb.r{background:var(--red);border-color:var(--red);color:#fff}.xb.r:hover{background:#e03a2f}
+.xq{display:block;margin:22px auto 0;border:0;background:none;color:#a9a6a0;font:500 13px var(--sans);text-decoration:underline;text-underline-offset:4px;cursor:pointer}.xq:hover{color:#fff}
+/* reveal overlay */
+#xrv{position:fixed;inset:0;z-index:150;background:rgba(14,14,14,.96);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;overflow:hidden}
+#xrv.on{opacity:1;pointer-events:auto;transition:opacity .2s}
+.xrays{position:absolute;left:50%;top:42%;width:240vmax;height:240vmax;margin:-120vmax 0 0 -120vmax;background:repeating-conic-gradient(rgba(214,52,42,.28) 0 7deg,transparent 7deg 22deg);animation:xspinr 24s linear infinite;pointer-events:none;-webkit-mask:radial-gradient(circle,#000 0,transparent 42%);mask:radial-gradient(circle,#000 0,transparent 42%)}
+@keyframes xspinr{to{transform:rotate(360deg)}}
+.xrv-in{position:relative;width:min(560px,100%);text-align:center}
+.xrv-k{font:900 clamp(40px,11vw,76px)/1 var(--zh);color:#fff;margin-bottom:26px;letter-spacing:-.02em}
+#xrv.on .xrv-k{animation:xslam .55s cubic-bezier(.2,.9,.25,1.35) both}
+#xrv.on .xc{text-align:left;animation:xpop .75s .12s cubic-bezier(.2,.9,.25,1.25) both}
+#xrv.on .xres-a,#xrv.on .xq{animation:xup .6s .45s cubic-bezier(.2,.85,.15,1) both}
+@keyframes xslam{from{opacity:0;transform:scale(2.4)}}
+@keyframes xpop{from{opacity:0;transform:scale(.4) rotate(-12deg)}}
+/* shake + flash */
+.xshk{animation:xshk .35s}
+.xshk2{animation:xshk2 .5s}
+@keyframes xshk{20%{transform:translate(-5px,2px)}40%{transform:translate(5px,-2px)}60%{transform:translate(-3px,1px)}80%{transform:translate(2px,0)}}
+@keyframes xshk2{10%{transform:translate(-10px,4px) rotate(-.6deg)}30%{transform:translate(9px,-4px) rotate(.5deg)}50%{transform:translate(-6px,2px)}70%{transform:translate(4px,-1px)}90%{transform:translate(-2px,0)}}
+.xflash{position:fixed;inset:0;z-index:170;pointer-events:none;animation:xflash .5s ease-out forwards}
+@keyframes xflash{from{opacity:var(--o)}to{opacity:0}}
+#xfx{position:fixed;inset:0;width:100%;height:100%;z-index:180;pointer-events:none}
 /* brawl setup */
-.xs-sec{border-top:1px solid var(--line);padding:18px 0 20px}
-.xs-l{font:700 13px var(--sans);margin-bottom:12px}
+.xs-sec{border-top:1px solid #2c2c2c;padding:18px 0 20px}
+.xs-l{font:700 13px var(--sans);margin-bottom:12px;color:#fff}
 .xch{display:flex;flex-wrap:wrap;gap:6px}
-.xch button{height:40px;padding:0 15px;border:0;background:var(--g1);color:var(--ink);font:500 13px var(--sans);cursor:pointer;transition:background .2s}
-.xch button:hover{background:var(--g2)}.xch button.on{background:var(--ink);color:#fff}
+.xch button{height:42px;padding:0 16px;border:1px solid #333;background:#1f1f1f;color:#fff;font:500 13px var(--sans);cursor:pointer;transition:background .15s,transform .1s}
+.xch button:hover{background:#2b2b2b}.xch button:active{transform:scale(.96)}
+.xch button.on{background:#fff;color:var(--ink);border-color:#fff}
 /* brawl fight */
-.xrd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:56px 0 14px}
-.xrd b{font:900 clamp(40px,9vw,72px)/1 var(--zh);letter-spacing:-.02em}
-.xrd span{color:var(--sub);font-size:13px;white-space:nowrap}
-.xpb{height:2px;background:var(--g2);margin-bottom:34px}.xpb i{display:block;height:100%;background:var(--ink);transition:width .6s cubic-bezier(.2,.85,.15,1)}
+.xrd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:18px 0 14px}
+.xrd b{font:900 clamp(48px,11vw,88px)/1 var(--zh);letter-spacing:-.03em}
+.xrd span{color:#a9a6a0;font-size:13px;white-space:nowrap}
+.xdots{display:flex;gap:4px;margin-bottom:34px}.xdots i{flex:1;height:6px;background:#2c2c2c}.xdots i.d{background:var(--red)}.xdots i.c{background:#fff;animation:xblink 1s infinite}
+@keyframes xblink{50%{opacity:.35}}
 .xa{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:14px}
-.xa.in .xc{animation:xup .6s cubic-bezier(.2,.85,.15,1) both}.xa.in .xc:last-child{animation-delay:.08s}
-.xa .xvs{align-self:center;font:900 clamp(22px,5vw,34px) var(--zh);color:var(--red)}
-.xa .xc-top{height:clamp(130px,30vw,220px)}.xa .xc-top b{font-size:clamp(18px,4.6vw,30px)}
-.xc.xwn{transform:translateY(-8px);box-shadow:0 0 0 2px var(--ink),0 30px 60px -28px rgba(0,0,0,.45)}
-.xc.xls{opacity:0;transform:scale(.94)}
-.xhint{text-align:center;color:var(--sub);font-size:13px;margin-top:26px}
-.xq{display:block;margin:22px auto 0;border:0;background:none;color:var(--sub);font:500 13px var(--sans);text-decoration:underline;text-underline-offset:4px;cursor:pointer}
-@media(max-width:600px){.xa{gap:8px}.xa .xc-bt{padding:12px}.xa .nm{font-size:15px}.xa .mt{flex-direction:column;align-items:flex-start;gap:4px}}
+.xa.in .xc:first-child{animation:xinL .6s cubic-bezier(.2,.9,.25,1.2) both}
+.xa.in .xc:last-child{animation:xinR .6s cubic-bezier(.2,.9,.25,1.2) both}
+@keyframes xinL{from{opacity:0;transform:translateX(-60vw) rotate(-14deg)}}
+@keyframes xinR{from{opacity:0;transform:translateX(60vw) rotate(14deg)}}
+.xvs{align-self:center;font:900 clamp(30px,7vw,52px) var(--zh);color:var(--red);text-shadow:0 0 30px rgba(214,52,42,.6)}
+.xa.in .xvs{animation:xvs .5s .3s cubic-bezier(.2,.9,.25,1.4) both}
+@keyframes xvs{from{opacity:0;transform:scale(4) rotate(-20deg)}}
+.xa .xc-top{height:clamp(130px,30vw,230px)}.xa .xc-top b{font-size:clamp(18px,4.6vw,32px)}
+.xa:not(.done) .xc.pk:hover{transform:translateY(-8px) rotate(-1deg);box-shadow:0 0 0 3px var(--red),0 30px 60px -24px rgba(214,52,42,.6)}
+.xc.xwn{transform:translateY(-10px) scale(1.04)!important;box-shadow:0 0 0 4px var(--red),0 30px 70px -20px rgba(214,52,42,.7)!important;z-index:2}
+.xc.xls{opacity:0;transform:translateY(80px) rotate(10deg) scale(.9)!important;filter:grayscale(1)}
+.xa.done .xvs{opacity:0;transition:opacity .2s}
+.xstamp{position:absolute;right:-10px;top:-14px;width:64px;height:64px;background:var(--red);color:#fff;display:grid;place-items:center;font:900 28px var(--zh);transform:rotate(-12deg);box-shadow:0 10px 24px -8px rgba(0,0,0,.6);animation:xstamp .4s cubic-bezier(.2,.9,.25,1.5) both;z-index:3}
+@keyframes xstamp{from{opacity:0;transform:scale(3) rotate(-30deg)}}
+.xhint{text-align:center;color:#a9a6a0;font-size:13px;margin-top:30px}
+@media(max-width:600px){.xa{gap:8px}.xa .xc-bt{padding:12px}.xa .nm{font-size:15px}.xa .mt{flex-direction:column;align-items:flex-start;gap:4px}.xstamp{width:48px;height:48px;font-size:22px;right:-6px;top:-10px}}
+/* round interstitial */
+#xri{position:fixed;inset:0;z-index:160;pointer-events:none;display:flex;align-items:center;opacity:0}
+#xri.on{opacity:1;animation:xriBg 1.15s forwards}
+@keyframes xriBg{0%{background:rgba(14,14,14,0)}15%,75%{background:rgba(14,14,14,.92)}100%{background:rgba(14,14,14,0)}}
+.xri-band{width:100%;background:var(--red);color:#fff;padding:22px 0;display:flex;align-items:baseline;justify-content:center;gap:18px;transform:skewY(-4deg)}
+#xri.on .xri-band{animation:xband 1.15s cubic-bezier(.2,.85,.15,1) forwards}
+@keyframes xband{0%{transform:skewY(-4deg) translateX(100%)}25%,70%{transform:skewY(-4deg) translateX(0)}100%{transform:skewY(-4deg) translateX(-100%)}}
+.xri-band b{font:900 clamp(56px,14vw,120px)/1 var(--zh);letter-spacing:-.02em}
+.xri-band span{font:700 16px var(--sans);opacity:.85}
 /* champion */
-.xchamp{text-align:center;padding-top:60px}
-.xchamp .xey{font:700 13px var(--sans);color:var(--red);letter-spacing:.12em}
-.xchamp h2{font:900 clamp(40px,9vw,76px)/1.05 var(--zh);margin:14px 0 34px;letter-spacing:-.02em}
-.xchamp .xc{text-align:left;animation:xup .8s cubic-bezier(.2,.85,.15,1)}
-.xi.sm{font-size:clamp(15px,3.8vw,22px);word-break:normal;overflow-wrap:anywhere}
+.xchamp{text-align:center;min-height:calc(100dvh - 56px)}
+.xchamp .xrays{top:30%}
+.xcrown{display:inline-block;margin-top:24px;background:var(--red);color:#fff;font:900 clamp(30px,7vw,48px)/1 var(--zh);padding:14px 22px;transform:rotate(-3deg);animation:xslam .6s cubic-bezier(.2,.9,.25,1.4) both}
+.xchamp h2{font:900 clamp(40px,9vw,80px)/1.02 var(--zh);margin:26px 0 34px;letter-spacing:-.02em;animation:xup .7s .15s cubic-bezier(.2,.85,.15,1) both}
+.xchamp .xc{text-align:left;animation:xpop .8s .25s cubic-bezier(.2,.9,.25,1.25) both}
+.xchamp .xres-a{animation:xup .6s .55s both}
+@media(prefers-reduced-motion:reduce){.xtk-in,.xrays,.xgo,.xgo::after{animation:none!important}}
+.xchamp h2.long{font-size:clamp(30px,6vw,56px)}
 
 </style>
 </head>
@@ -1427,16 +1494,35 @@ applyLang();
  document.getElementById('mb').onclick=()=>set(true);dr.querySelector('.dr-bg').onclick=()=>set(false);dr.querySelector('.dr-x').onclick=()=>set(false);
  addEventListener('keydown',e=>{if(e.key==='Escape')set(false)});window.drSet=set})();
 /* ===== shared card, spin and brawl (redesigned) ===== */
-const XT={zh:{spin:'转一转',spinS:'锁住你想要的，剩下的交给运气。',g:'区域',c:'菜系',r:'星级',lock:'锁定',locked:'已锁定',go:'拉 一 下',again:'再转一次',n:n=>`符合 ${n} 家`,none:'没有符合的店，解锁一个试试',view:'看详情',
- brawl:'大乱斗',brawlS:'两两对决，一路淘汰，选出今晚的冠军。',size:'人数',all:'全部',price:'价位',start:'开 打',pool:n=>`符合条件 ${n} 家`,match:(a,b)=>`第 ${a} 场，共 ${b} 场`,hint:'点你更想吃的那家',quit:'退出比赛',champ:'今晚的冠军',rematch:'再来一局',
- rd:{2:'决赛',4:'半决赛',8:'八强',16:'十六强',32:'三十二强'},pr:['$30以内','$30至60','$60至120','$120以上'],close:'关闭'},
- en:{spin:'Spin',spinS:'Lock what you want. Luck does the rest.',g:'Area',c:'Cuisine',r:'Stars',lock:'Lock',locked:'Locked',go:'P U L L',again:'Spin again',n:n=>`${n} matches`,none:'Nothing matches, unlock one',view:'Details',
- brawl:'Brawl',brawlS:'Head to head, knockout style, until one wins tonight.',size:'Entrants',all:'All',price:'Price',start:'F I G H T',pool:n=>`${n} eligible`,match:(a,b)=>`Match ${a} of ${b}`,hint:'Tap the one you would rather eat',quit:'Quit',champ:'Tonight\'s champion',rematch:'Play again',
- rd:{2:'Final',4:'Semifinal',8:'Quarterfinal',16:'Round of 16',32:'Round of 32'},pr:['Under $30','$30 to 60','$60 to 120','$120 plus'],close:'Close'}};
+const XT={zh:{spin:'转一转',spinS:'锁住你想要的，剩下的交给运气。',g:'区域',c:'菜系',r:'星级',lock:'锁定',locked:'已锁定',go:'拉一下',again:'再转一次',n:n=>`符合 ${n} 家`,none:'没有符合的店，解锁一个试试',view:'看详情',
+ brawl:'大乱斗',brawlS:'两两对决，一路淘汰，选出今晚的冠军。',size:'人数',all:'全部',price:'价位',start:'开打',pool:n=>`符合条件 ${n} 家`,match:(a,b)=>`第 ${a} 场，共 ${b} 场`,hint:'点你更想吃的那家',quit:'退出比赛',champ:'今晚的冠军',rematch:'再来一局',
+ rd:{2:'决赛',4:'半决赛',8:'八强',16:'十六强',32:'三十二强'},adv:n=>`${n} 进 ${n/2}`,win:'胜',pickT:'就吃这家',closeT:'收起',snd:'声音',on:'开',off:'关',pr:['$30以内','$30至60','$60至120','$120以上'],close:'关闭'},
+ en:{spin:'Spin',spinS:'Lock what you want. Luck does the rest.',g:'Area',c:'Cuisine',r:'Stars',lock:'Lock',locked:'Locked',go:'PULL',again:'Spin again',n:n=>`${n} matches`,none:'Nothing matches, unlock one',view:'Details',
+ brawl:'Brawl',brawlS:'Head to head, knockout style, until one wins tonight.',size:'Entrants',all:'All',price:'Price',start:'FIGHT',pool:n=>`${n} eligible`,match:(a,b)=>`Match ${a} of ${b}`,hint:'Tap the one you would rather eat',quit:'Quit',champ:'Tonight\'s champion',rematch:'Play again',
+ rd:{2:'Final',4:'Semifinal',8:'Quarterfinal',16:'Round of 16',32:'Round of 32'},adv:n=>`${n} to ${n/2}`,win:'WIN',pickT:'Tonight it is',closeT:'Close',snd:'Sound',on:'on',off:'off',pr:['Under $30','$30 to 60','$60 to 120','$120 plus'],close:'Close'}};
 const XX=()=>XT[LANG]||XT.zh;
 function XC(i,cls){const d=D[i],[bg,fg]=NPAL(d.t),n=+d.r||0;return `<div class="xc ${cls||''}" data-i="${i}"><div class="xc-top" style="background:${bg};color:${fg}"><span>${esc(F.t(d)||'')}</span><b>${esc(NDISH(d))}</b></div><div class="xc-bt"><div class="nm">${esc(F.n(d))}</div><div class="mt"><span>${esc((F.a(d)||'').replace(/,.*$/,''))} · $${d.p}</span><span class="st">${'★'.repeat(n)}<i>${'★'.repeat(Math.max(0,5-n))}</i></span></div></div></div>`}
 
-/* spin */
+/* ===== fx: confetti, shake, flash, sound ===== */
+const XFX={cv:null,ps:[],raf:0};
+function xfxCanvas(){if(XFX.cv)return XFX.cv;const c=document.createElement('canvas');c.id='xfx';document.body.appendChild(c);XFX.cv=c;const r=()=>{c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio};r();addEventListener('resize',r);return c}
+function xBurst(x,y,n,sp){if(RM)return;const c=xfxCanvas(),dp=devicePixelRatio,C=['#d6342a','#ef5b3f','#ffffff','#141414','#f7e6a3','#fbd9c9'];
+ for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=(3+Math.random()*10)*(sp||1);XFX.ps.push({x:x*dp,y:y*dp,vx:Math.cos(a)*s*dp,vy:(Math.sin(a)*s-7)*dp,w:(6+Math.random()*8)*dp,h:(3+Math.random()*5)*dp,r:Math.random()*6,vr:(Math.random()-.5)*.45,c:C[i%C.length],life:1})}
+ if(!XFX.raf)XFX.raf=requestAnimationFrame(xfxLoop)}
+function xfxLoop(){const c=XFX.cv,g=c.getContext('2d'),dp=devicePixelRatio;g.clearRect(0,0,c.width,c.height);
+ XFX.ps=XFX.ps.filter(p=>p.life>0&&p.y<c.height+60);
+ XFX.ps.forEach(p=>{p.vy+=.32*dp;p.vx*=.986;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.life-=.0055;g.save();g.translate(p.x,p.y);g.rotate(p.r);g.globalAlpha=Math.min(1,p.life*2);g.fillStyle=p.c;g.fillRect(-p.w/2,-p.h/2,p.w,p.h);g.restore()});
+ XFX.raf=XFX.ps.length?requestAnimationFrame(xfxLoop):0}
+function xShake(el,big){if(RM||!el)return;el.classList.remove('xshk','xshk2');void el.offsetWidth;el.classList.add(big?'xshk2':'xshk')}
+function xFlash(col,op){if(RM)return;const f=document.createElement('div');f.className='xflash';f.style.background=col||'#fff';f.style.setProperty('--o',op||.55);document.body.appendChild(f);setTimeout(()=>f.remove(),520)}
+function xBuzz(ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
+function xT(f,d,t,v,t0,f2){try{tone(f,d,t,v,t0,f2)}catch(e){}}
+function xFan(){[523,659,784,1047].forEach((f,i)=>xT(f,.22,'square',.07,i*.09));xT(1568,.5,'triangle',.06,.38)}
+function xSndBtn(){const x=XX();return `<button class="xsnd" data-snd>${x.snd} ${MUTE?x.off:x.on}</button>`}
+function xTicker(ids){const it=ids.slice(0,24).map(i=>`<span>${esc(F.n(D[i]))}</span><i>■</i>`).join('');return `<div class="xtk"><div class="xtk-in">${it}${it}</div></div>`}
+const xTk=r=>{const t=document.querySelector('.xv .xtk-in');if(!t)return;t.getAnimations().forEach(a=>a.playbackRate=r)};
+
+/* ===== spin ===== */
 const XS={lock:{g:null,c:null,r:null},cur:{g:null,c:null,r:null},busy:false,res:null,init:false};const XK=['g','c','r'];
 const xsOpts=k=>k==='g'?RG.map((_,i)=>i).slice(1):k==='c'?CO.slice():['5','4','3'];
 const xsLab=(k,v)=>v==null?'?':k==='g'?T().rg[v]:k==='c'?T().ct[v]:'★'.repeat(+v);
@@ -1444,46 +1530,71 @@ function xsI(k,v){const l=String(xsLab(k,v));return `<div class="xi${k==='r'?' s
 function xsCands(){const L=XS.lock;return D.map((d,i)=>i).filter(i=>{const d=D[i];return d.r!=='X'&&+d.r>=3&&regionOf(d)&&(L.g==null||regionOf(d)===L.g)&&(L.c==null||d.c===L.c)&&(L.r==null||d.r===L.r)})}
 function xsPick(c){let s=0;c.forEach(i=>s+=W[D[i].r]||1);let x=Math.random()*s;for(const i of c){x-=W[D[i].r]||1;if(x<=0)return i}return c[c.length-1]}
 function xsInit(){if(XS.init)return;XS.init=true;const c=xsCands(),d=D[xsPick(c)];XS.cur={g:regionOf(d),c:d.c,r:d.r};xsRender()}
-function xsRes(i){const x=XX();return `<div class="xres-c">${XC(i,'big')}<div class="xres-a"><button class="xb k" data-o="${i}">${x.view}</button><button class="xb" data-again>${x.again}</button></div></div>`}
-function xsRender(){const x=XX(),R=$('#xspin'),c=xsCands();
- R.innerHTML=`<div class="xw"><div class="xhd"><h2>${x.spin}</h2><p>${x.spinS}</p></div>
- <div class="xm">${XK.map(k=>`<div class="xr${XS.lock[k]!=null?' lk':''}" data-k="${k}"><div class="xl">${x[k]}</div><div class="xwin"><div class="xstrip">${xsI(k,XS.cur[k])}</div></div><button class="xlock" data-k="${k}"${XS.cur[k]==null?' disabled':''}>${XS.lock[k]!=null?x.locked:x.lock}</button></div>`).join('')}</div>
- <button class="xgo" id="xgo"${c.length?'':' disabled'}>${c.length?x.go:x.none}</button><div class="xn">${x.n(c.length)}</div>
- <div class="xres" id="xres">${XS.res!=null?xsRes(XS.res):''}</div></div>`}
+function xsResInline(i){const x=XX();return `<div class="xres-c">${XC(i,'big')}<div class="xres-a"><button class="xb k" data-o="${i}">${x.view}</button><button class="xb r" data-again>${x.again}</button></div></div>`}
+function xsRender(){const x=XX(),R=$('#xspin'),c=xsCands();const sh=c.slice().sort(()=>Math.random()-.5);
+ R.innerHTML=`<div class="xstage">${xTicker(sh)}<div class="xw">
+ <div class="xtop">${xSndBtn()}</div>
+ <div class="xhd"><h2>${LANG==='en'?'Spin':'转一<em>转</em>'}</h2><p>${x.spinS}</p></div>
+ <div class="xm" id="xm">${XK.map(k=>`<div class="xr${XS.lock[k]!=null?' lk':''}" data-k="${k}"><div class="xl">${x[k]}</div><div class="xwin"><div class="xstrip">${xsI(k,XS.cur[k])}</div><i class="xline"></i></div><button class="xlock" data-k="${k}"${XS.cur[k]==null?' disabled':''}>${XS.lock[k]!=null?x.locked:x.lock}</button></div>`).join('')}</div>
+ <button class="xgo" id="xgo"${c.length?'':' disabled'}><span>${c.length?x.go:x.none}</span></button><div class="xn">${x.n(c.length)}</div></div></div>
+ <div class="xw xres" id="xres">${XS.res!=null?xsResInline(XS.res):''}</div>`}
 function xsSpin(){if(XS.busy)return;const c=xsCands();if(!c.length)return;XS.busy=true;
- const i=xsPick(c),d=D[i],tgt={g:regionOf(d),c:d.c,r:d.r};$('#xres').classList.add('out');$('#xgo').disabled=true;
- const H=document.querySelector('#xspin .xwin').offsetHeight;let last=0;
- XK.forEach((k,j)=>{const el=document.querySelector(`#xspin .xr[data-k="${k}"] .xstrip`);if(XS.lock[k]!=null)return;
-  const o=xsOpts(k),seq=[XS.cur[k]];for(let m=0;m<12+j*6;m++)seq.push(o[Math.floor(Math.random()*o.length)]);seq.push(tgt[k]);
-  el.innerHTML=seq.map(v=>xsI(k,v)).join('');el.style.transition='none';el.style.transform='translateY(0)';el.offsetHeight;
-  const dur=RM?.05:1+j*.45;last=Math.max(last,dur);el.style.transition=`transform ${dur}s cubic-bezier(.15,.7,.2,1)`;el.style.transform=`translateY(${-(seq.length-1)*H}px)`});
- XS.cur=tgt;setTimeout(()=>{XS.busy=false;XS.res=i;xsRender();const r=$('#xres');r.classList.add('in');const b=r.getBoundingClientRect();if(b.top>innerHeight*.6)r.scrollIntoView({behavior:'smooth',block:'start'})},last*1000+180)}
-$('#xspin').addEventListener('click',e=>{const t=e.target;if(XS.busy)return;
- const lk=t.closest('.xlock');if(lk){const k=lk.dataset.k;XS.lock[k]=XS.lock[k]!=null?null:XS.cur[k];xsRender();return}
+ const i=xsPick(c),d=D[i],tgt={g:regionOf(d),c:d.c,r:d.r};const M=$('#xm'),go=$('#xgo');go.disabled=true;go.classList.add('pressed');
+ $('#xres').classList.add('out');xTk(7);xShake(M);xBuzz(20);xT(140,.25,'sawtooth',.08,0,420);
+ const H=M.querySelector('.xwin').offsetHeight;let pending=0;const spinning=XK.filter(k=>XS.lock[k]==null);
+ XK.forEach((k,j)=>{const r=M.querySelector(`.xr[data-k="${k}"]`),el=r.querySelector('.xstrip');if(XS.lock[k]!=null)return;pending++;
+  const o=xsOpts(k),seq=[XS.cur[k]];for(let m=0;m<16+j*8;m++)seq.push(o[Math.floor(Math.random()*o.length)]);seq.push(tgt[k]);
+  el.innerHTML=seq.map(v=>xsI(k,v)).join('');el.style.transition='none';el.style.transform='translateY(0)';el.offsetHeight;r.classList.add('run');
+  const dur=RM?.05:1.15+spinning.indexOf(k)*.55;let tk=0;const ti=setInterval(()=>{xT(900+Math.random()*300,.025,'square',.025);if(++tk>dur*14)clearInterval(ti)},70);
+  el.style.transition=`transform ${dur}s cubic-bezier(.2,.75,.25,1.08)`;el.style.transform=`translateY(${-(seq.length-1)*H}px)`;
+  el.addEventListener('transitionend',function h(){el.removeEventListener('transitionend',h);clearInterval(ti);r.classList.remove('run');r.classList.remove('hit');void r.offsetWidth;r.classList.add('hit');
+   xT(220,.12,'square',.09);xT(110,.18,'triangle',.12);xBuzz(18);xShake(M);
+   if(--pending===0){xTk(1);setTimeout(()=>xsReveal(i),320)}})});
+ XS.cur=tgt;if(!pending)setTimeout(()=>xsReveal(i),200)}
+function xsReveal(i){const x=XX();XS.res=i;XS.busy=false;let O=$('#xrv');if(!O){O=document.createElement('div');O.id='xrv';document.body.appendChild(O)}
+ O.innerHTML=`<div class="xrays"></div><div class="xrv-in"><div class="xrv-k">${x.pickT}</div>${XC(i,'big')}<div class="xres-a"><button class="xb w" data-o="${i}">${x.view}</button><button class="xb r" data-again>${x.again}</button></div><button class="xq" data-close>${x.closeT}</button></div>`;
+ O.classList.remove('on');void O.offsetWidth;O.classList.add('on');xFlash('#fff',.7);xFan();xBuzz([30,40,60]);
+ setTimeout(()=>{xBurst(innerWidth/2,innerHeight*.42,150,1.2)},180);setTimeout(()=>{xBurst(innerWidth*.15,innerHeight*.9,60,1);xBurst(innerWidth*.85,innerHeight*.9,60,1)},520)}
+function xsClose(){const O=$('#xrv');if(O)O.classList.remove('on');xsRender();const r=$('#xres');r.classList.add('in')}
+document.addEventListener('click',e=>{const O=e.target.closest('#xrv');if(!O)return;const t=e.target;
+ if(t.closest('[data-close]'))return xsClose();if(t.closest('[data-again]')){O.classList.remove('on');xsRender();return setTimeout(xsSpin,250)}
+ const o=t.closest('[data-o]')||t.closest('.xc');if(o){O.classList.remove('on');xsRender();open(+(o.dataset.o??o.dataset.i))}});
+$('#xspin').addEventListener('click',e=>{const t=e.target;if(t.closest('[data-snd]')){MUTE=!MUTE;t.closest('[data-snd]').outerHTML=xSndBtn();return}if(XS.busy)return;
+ const lk=t.closest('.xlock');if(lk){const k=lk.dataset.k;XS.lock[k]=XS.lock[k]!=null?null:XS.cur[k];xT(XS.lock[k]!=null?660:330,.08,'square',.06);xsRender();return}
  if(t.closest('#xgo')||t.closest('[data-again]'))return xsSpin();
  const o=t.closest('[data-o]')||t.closest('.xc');if(o)open(+(o.dataset.o??o.dataset.i))});
 
-/* brawl */
+/* ===== brawl ===== */
 const XB={size:16,cat:null,pr:null,stage:'set',cur:[],next:[],idx:0,champ:null,busy:false};
 function xbPool(){return D.map((d,i)=>i).filter(i=>{const d=D[i];return d.r!=='X'&&(!XB.cat||d.c===XB.cat)&&(!XB.pr||pBk(d)===XB.pr)})}
 function xbStart(){const p=xbPool().map(i=>[i,+D[i].r+Math.random()*2.2]).sort((a,b)=>b[1]-a[1]).map(a=>a[0]);let n=XB.size;while(n>2&&n>p.length)n/=2;if(p.length<2)return;
- XB.cur=p.slice(0,n).sort(()=>Math.random()-.5);XB.next=[];XB.idx=0;XB.stage='fight';xbRender();window.scrollTo(0,0);$('#xbrawl').scrollTop=0}
+ XB.cur=p.slice(0,n).sort(()=>Math.random()-.5);XB.next=[];XB.idx=0;XB.stage='fight';xT(110,.4,'sawtooth',.08,0,55);xbRound(()=>{xbRender();window.scrollTo(0,0);$('#xbrawl').scrollTop=0})}
+function xbRound(cb){const x=XX(),n=XB.cur.length;let O=$('#xri');if(!O){O=document.createElement('div');O.id='xri';document.body.appendChild(O)}
+ if(RM){cb();return}O.innerHTML=`<div class="xri-band"><b>${x.rd[n]||n}</b><span>${x.adv(n)}</span></div>`;O.classList.remove('on');void O.offsetWidth;O.classList.add('on');
+ try{brHit()}catch(e){}xBuzz(30);setTimeout(cb,520);setTimeout(()=>O.classList.remove('on'),1150)}
 function xbRender(){const x=XX(),R=$('#xbrawl');
- if(XB.stage==='set'){const n=xbPool().length;const ch=(k,v,l,on)=>`<button class="${on?'on':''}" data-${k}="${v}">${l}</button>`;
-  R.innerHTML=`<div class="xw"><div class="xhd"><h2>${x.brawl}</h2><p>${x.brawlS}</p></div>
+ if(XB.stage==='set'){const n=xbPool().length;const ch=(k,v,l,on)=>`<button class="${on?'on':''}" data-${k}="${v}">${l}</button>`;const sh=xbPool().sort(()=>Math.random()-.5);
+  R.innerHTML=`<div class="xstage">${xTicker(sh)}<div class="xw"><div class="xtop">${xSndBtn()}</div><div class="xhd"><h2>${LANG==='en'?'Brawl':'大<em>乱</em>斗'}</h2><p>${x.brawlS}</p></div>
   <div class="xs-sec"><div class="xs-l">${x.size}</div><div class="xch">${[8,16,32].map(v=>ch('size',v,v,XB.size===v)).join('')}</div></div>
-  <div class="xs-sec"><div class="xs-l">${T().cat||x.c}</div><div class="xch">${ch('cat','',x.all,!XB.cat)}${CO.map(c=>ch('cat',c,esc(T().ct[c]),XB.cat===c)).join('')}</div></div>
+  <div class="xs-sec"><div class="xs-l">${x.c}</div><div class="xch">${ch('cat','',x.all,!XB.cat)}${CO.map(c=>ch('cat',c,esc(T().ct[c]),XB.cat===c)).join('')}</div></div>
   <div class="xs-sec"><div class="xs-l">${x.price}</div><div class="xch">${ch('pr','',x.all,!XB.pr)}${PB.map((b,j)=>ch('pr',b[0],x.pr[j],XB.pr===b[0])).join('')}</div></div>
-  <button class="xgo" data-start${n<2?' disabled':''}>${x.start}</button><div class="xn">${x.pool(n)}</div></div>`;return}
- if(XB.stage==='fight'){const tot=XB.cur.length/2,m=XB.idx/2+1,a=XB.cur[XB.idx],b=XB.cur[XB.idx+1];const done=(XB.size-XB.cur.length+XB.idx/2)/(Math.max(2,Math.min(XB.size,XB.cur.length*2))-1);
-  R.innerHTML=`<div class="xw"><div class="xrd"><b>${x.rd[XB.cur.length]||XB.cur.length}</b><span>${x.match(m,tot)}</span></div><div class="xpb"><i style="width:${Math.round(((m-1)/tot)*100)}%"></i></div>
-  <div class="xa">${XC(a,'pk')}<div class="xvs">VS</div>${XC(b,'pk')}</div><div class="xhint">${x.hint}</div><button class="xq" data-quit>${x.quit}</button></div>`;return}
- const i=XB.champ;R.innerHTML=`<div class="xw xchamp"><div class="xey">${x.champ}</div><h2>${esc(F.n(D[i]))}</h2>${XC(i,'big')}<div class="xres-a"><button class="xb k" data-o="${i}">${x.view}</button><button class="xb" data-again>${x.rematch}</button></div></div>`}
-function xbPick(el){if(XB.busy)return;XB.busy=true;const w=+el.dataset.i;const cs=[...document.querySelectorAll('#xbrawl .xa .xc')];cs.forEach(c=>c.classList.add(c===el?'xwn':'xls'));
- setTimeout(()=>{XB.next.push(w);XB.idx+=2;if(XB.idx>=XB.cur.length){if(XB.next.length===1){XB.champ=XB.next[0];XB.stage='champ'}else{XB.cur=XB.next;XB.next=[];XB.idx=0}}XB.busy=false;xbRender();
-  const a=document.querySelector('#xbrawl .xa');if(a){a.classList.add('in')}},RM?60:520)}
+  <button class="xgo" data-start${n<2?' disabled':''}><span>${x.start}</span></button><div class="xn">${x.pool(n)}</div></div></div>`;return}
+ if(XB.stage==='fight'){const tot=XB.cur.length/2,m=XB.idx/2+1,a=XB.cur[XB.idx],b=XB.cur[XB.idx+1];
+  R.innerHTML=`<div class="xstage xfight"><div class="xw"><div class="xtop">${xSndBtn()}</div><div class="xrd"><b>${x.rd[XB.cur.length]||XB.cur.length}</b><span>${x.match(m,tot)}</span></div>
+  <div class="xdots">${Array.from({length:tot},(_,j)=>`<i class="${j<m-1?'d':j===m-1?'c':''}"></i>`).join('')}</div>
+  <div class="xa in" id="xa">${XC(a,'pk')}<div class="xvs">VS</div>${XC(b,'pk')}</div><div class="xhint">${x.hint}</div><button class="xq" data-quit>${x.quit}</button></div></div>`;
+  setTimeout(()=>{const A=$('#xa');if(!A)return;xShake(A);try{brHit()}catch(e){}xBuzz(15)},RM?0:330);return}
+ const i=XB.champ;R.innerHTML=`<div class="xstage xchamp"><div class="xrays"></div><div class="xw"><div class="xtop">${xSndBtn()}</div><div class="xcrown">${LANG==='en'?'Champion':'冠军'}</div><h2${F.n(D[i]).length>12?' class="long"':''}>${esc(F.n(D[i]))}</h2>${XC(i,'big')}<div class="xres-a"><button class="xb w" data-o="${i}">${x.view}</button><button class="xb r" data-again>${x.rematch}</button></div></div></div>`;
+ xFlash('#fff',.8);xFan();xBuzz([40,40,80]);setTimeout(()=>xBurst(innerWidth/2,innerHeight*.35,170,1.3),150);setTimeout(()=>{xBurst(innerWidth*.1,innerHeight*.8,70,1.1);xBurst(innerWidth*.9,innerHeight*.8,70,1.1)},600)}
+function xbPick(el){if(XB.busy)return;XB.busy=true;const w=+el.dataset.i;const A=$('#xa'),cs=[...A.querySelectorAll('.xc')];
+ cs.forEach(c=>{c.classList.add(c===el?'xwn':'xls');if(c===el)c.insertAdjacentHTML('beforeend',`<div class="xstamp">${XX().win}</div>`)});A.classList.add('done');
+ xFlash('#d6342a',.25);try{brHit()}catch(e){}xT(330,.14,'square',.08);xT(495,.2,'square',.07,.08);xBuzz(25);xShake(A,true);
+ const r=el.getBoundingClientRect();xBurst(r.left+r.width/2,r.top+r.height*.3,40,.7);
+ setTimeout(()=>{XB.next.push(w);XB.idx+=2;let round=false;if(XB.idx>=XB.cur.length){if(XB.next.length===1){XB.champ=XB.next[0];XB.stage='champ'}else{XB.cur=XB.next;XB.next=[];XB.idx=0;round=true}}
+  XB.busy=false;if(round)xbRound(xbRender);else xbRender()},RM?60:820)}
 $('#xbrawl').addEventListener('click',e=>{const t=e.target,b=t.closest('button');
- if(b){if(b.dataset.size){XB.size=+b.dataset.size;return xbRender()}if(b.dataset.cat!==undefined){XB.cat=b.dataset.cat||null;return xbRender()}if(b.dataset.pr!==undefined){XB.pr=b.dataset.pr||null;return xbRender()}
+ if(b){if(b.hasAttribute('data-snd')){MUTE=!MUTE;b.outerHTML=xSndBtn();return}
+  if(b.dataset.size){XB.size=+b.dataset.size;xT(660,.06,'square',.05);return xbRender()}if(b.dataset.cat!==undefined){XB.cat=b.dataset.cat||null;xT(660,.06,'square',.05);return xbRender()}if(b.dataset.pr!==undefined){XB.pr=b.dataset.pr||null;xT(660,.06,'square',.05);return xbRender()}
   if(b.hasAttribute('data-start'))return xbStart();if(b.hasAttribute('data-quit')||b.hasAttribute('data-again')){XB.stage='set';return xbRender()}if(b.dataset.o)return open(+b.dataset.o)}
  const c=t.closest('.xc');if(!c)return;if(c.classList.contains('pk'))xbPick(c);else open(+c.dataset.i)});
 
