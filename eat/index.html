@@ -19,7 +19,7 @@ header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.86);backdro
 .hd{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:10px}
 .logo{display:flex;align-items:center;gap:9px;font:900 19px var(--zh)}
 .logo i{width:22px;height:22px;border-radius:50% 50% 50% 8px;background:var(--ink);display:block}
-.logo b{color:var(--red)}
+.logo b{color:var(--red);margin-left:-9px}
 .nav{display:flex;gap:2px;margin-left:16px}
 .nav a{padding:8px 13px;border-radius:999px;color:var(--sub);font-size:14px}.nav a:hover{color:var(--ink)}
 .nav a.on{background:var(--g1);color:var(--ink)}
@@ -56,9 +56,6 @@ header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.86);backdro
 .sec{padding:110px 0 0}
 .sec h2{text-align:center;margin:0 0 26px;font:900 clamp(34px,5vw,56px)/1.1 var(--zh)}
 .sec h2 em{font-style:normal;color:var(--red)}
-.seg{display:flex;justify-content:center;gap:4px;margin:0 auto 18px;background:var(--g1);border-radius:999px;padding:4px;width:max-content;max-width:100%;overflow-x:auto;scrollbar-width:none}
-.seg button{padding:8px 16px;border-radius:999px;font-size:14px;color:var(--sub);white-space:nowrap}
-.seg button.on{background:#fff;color:var(--ink);box-shadow:0 2px 8px -4px rgba(0,0,0,.25)}
 .panel{border:1px solid var(--line);border-radius:28px;padding:22px;min-height:520px;display:flex;flex-direction:column;background:#fff}
 .chat{flex:1;display:flex;flex-direction:column;gap:14px}
 .bub{align-self:flex-end;background:var(--g1);border-radius:18px 18px 4px 18px;padding:10px 16px;max-width:80%;font-size:15px}
@@ -120,12 +117,27 @@ footer{margin-top:120px;padding:40px 0 0;border-top:1px solid var(--line);overfl
 #sh .x{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.8);font-size:20px}
 .rv{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
 .proto{position:fixed;left:14px;bottom:14px;z-index:40;background:var(--coral);color:#fff;font:600 11px var(--sans);padding:5px 10px;border-radius:999px;letter-spacing:.06em}
+
+/* no rounded or oval shapes anywhere */
+*,*::before,*::after{border-radius:0!important}
+.logo i{width:18px;height:18px;background:var(--red)}
+header{border-bottom:1px solid var(--line)}
+.hd{height:60px;padding-top:0;padding-bottom:0}
+.nav{align-self:stretch}
+.nav a{display:flex;align-items:center;padding:0 13px;box-shadow:inset 0 -2px 0 transparent}
+.nav a.on{background:none;box-shadow:inset 0 -2px 0 var(--ink)}
+.btn.k:hover{background:var(--red);transform:none}
+.btn.sm{padding:9px 16px}
+.inp{padding:6px 6px 6px 16px}
+.sug button{background:var(--g1);border-color:transparent}.sug button:hover{background:var(--g2);border-color:transparent}
+.bub{background:var(--g1)}
+.panel{border-color:var(--line)}
 </style>
 </head>
 <body>
 <header><div class="hd">
  <a class="logo" href="#"><i></i>悉尼<b>吃喝</b></a>
- <nav class="nav"><a class="on" href="#">首页</a><a href="/eat/app/#map">地图</a><a href="/eat/app/#list">全部</a><a href="#ask">问一问<span class="new">NEW</span></a></nav>
+ <nav class="nav"><a class="on" href="#">首页</a><a href="/eat/app/#map">地图</a><a href="/eat/app/#list">全部</a><a href="#ask">问一问</a><a href="/eat/app/#party">饭局</a></nav>
   <div class="hr"><button class="btn k sm" data-rand>随便来一家</button></div>
 </div></header>
 
@@ -141,7 +153,6 @@ footer{margin-top:120px;padding:40px 0 0;border-top:1px solid var(--line);overfl
 <main class="wrap">
  <section class="sec rv" id="ask">
   <h2>说说想吃<em>什么</em></h2>
-  <div class="seg" id="seg"><button class="on" data-m="ask">问一问</button><button data-m="spin">转一转</button><button data-m="swipe">刷一刷</button><button data-m="brawl">大乱斗</button><button data-m="party">饭局</button></div>
   <div class="panel" id="panel"></div>
  </section>
 
@@ -225,9 +236,7 @@ async function run(q,typed){q=(q||'').trim();if(!q||busy)return;busy=true;const 
  if(res.length){const rail=document.createElement('div');rail.className='rail';rail.innerHTML=res.slice(0,12).map(x=>{const [bg,fg]=pal(x.t);return `<div class="rc" data-i="${D.indexOf(x)}"><div class="im" style="background:${bg};color:${fg}"><span class="st" style="color:${fg}">${stars(+x.r)}</span><span class="dish">${esc(dish(x))}</span></div><div class="cap"><b>${esc(x.n)}</b><span>$${x.p}</span></div></div>`}).join('');
   rail.onclick=e=>{const r=e.target.closest('.rc');if(r)openSheet(D[+r.dataset.i])};c.appendChild(rail);rail.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:500,easing:'cubic-bezier(.2,.8,.2,1)'})}
  busy=false}
-function panelAlt(m){const T={spin:['转一转','老虎机替你决定今晚吃什么。','/eat/app/#spin'],swipe:['刷一刷','左右滑，挑出心动的店。','/eat/app/#swipe'],brawl:['大乱斗','两两对决，选出你的冠军。','/eat/app/#brawl'],party:['饭局','和朋友一起选，全员心动就开吃。','/eat/app/#party']}[m];
- $('#panel').innerHTML=`<div class="alt"><div><h3>${T[0]}</h3><p>${T[1]}</p><a class="btn k" href="${T[2]}" style="margin-top:12px">打开${T[0]} ›</a></div></div>`}
-$('#seg').onclick=e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x===b));b.dataset.m==='ask'?panelAsk():panelAlt(b.dataset.m)};
+
 panelAsk();
 let demoDone=false;const io0=new IntersectionObserver(es=>{if(es[0].isIntersecting&&!demoDone){demoDone=true;run(SUG[0],true)}},{threshold:.4});io0.observe($('#panel'));
 /* ===== quote of the day ===== */
