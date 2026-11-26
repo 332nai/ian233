@@ -573,28 +573,12 @@ header .logo{display:flex;align-items:center;gap:9px;font:900 19px var(--zh);col
 header .logo>i{width:18px;height:18px;background:var(--red);display:block}
 header #h1 i{color:var(--red)}
 header #h1 span{display:inline}
-html body header .nav.dnav{display:flex;gap:0;margin-left:22px;height:60px;padding:0;align-items:stretch;border:0;background:none;box-shadow:none}
-html body header .dnav button{border:0;background:none;padding:0 13px;font:500 14px var(--sans);letter-spacing:0;color:var(--sub);cursor:pointer;box-shadow:inset 0 -2px 0 transparent}
-html body header .dnav button:hover{color:var(--ink)}
-html body header .dnav button.on{color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
+html body header .nav.dnav{display:none!important}
 header .hr{display:flex;align-items:center;gap:14px;margin-left:auto}
-header .lk{border:0;background:none;font:500 13px var(--sans);color:var(--sub);cursor:pointer;padding:6px 2px}
-header .lk:hover{color:var(--ink)}
-header .bk{border:0;background:var(--ink);color:#fff;font:500 14px var(--sans);padding:9px 16px;cursor:pointer;white-space:nowrap}
+header .bk{border:0;background:var(--ink);color:#fff;font:500 14px var(--sans);padding:10px 16px;margin:0;overflow:visible;display:block;gap:0;text-align:center;cursor:pointer;white-space:nowrap;transition:background .2s}
 header .bk:hover{background:var(--red)}
 #menu,#nav,#navMask{display:none!important}
-@media(min-width:1000px){html body header .dnav [data-v=list]{display:none}}
-@media(max-width:999px){
- header .hd{padding:0 14px;height:56px;gap:6px}
- header .logo{font-size:17px;gap:7px}
- header .logo>i{width:14px;height:14px}
- html body header .nav.dnav{margin-left:6px;height:56px}
- html body header .dnav button{padding:0 8px;font-size:14px}
- html body header .dnav [data-v=home]{display:none}
- header .hr{gap:10px}
- header .bk{padding:8px 11px;font-size:13px}
-}
-@media(max-width:380px){header .logo span{display:none!important}header .logo>i{width:16px;height:16px}}
+@media(max-width:999px){header .hd{padding:0 16px;height:56px}header .logo{font-size:18px}}
 
 /* map */
 html body[data-v=map] #mapWrap{height:calc(100dvh - 56px)}
@@ -696,10 +680,107 @@ html body .ctrl{top:64px;border:1px solid var(--line);box-shadow:none;background
 .pt-share{white-space:nowrap;padding:0 14px}
 .pt-code{letter-spacing:.04em!important;font:500 13px var(--sans)!important}
 
+/* ===== header menu button + drawer (shared) ===== */
+.mb{width:40px;height:40px;margin-left:-8px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;border:0;background:none;cursor:pointer;flex:none}
+.mb i{display:block;width:20px;height:2px;background:var(--ink);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.mb:hover i:first-child{transform:translateX(-3px)}.mb:hover i:last-child{transform:translateX(3px)}
+#dr{position:fixed;inset:0;z-index:200;pointer-events:none}
+#dr .dr-bg{position:absolute;inset:0;background:rgba(20,20,20,.32);opacity:0;transition:opacity .45s}
+#dr .dr-p{position:absolute;left:0;top:0;bottom:0;width:min(460px,100%);background:#fff;transform:translateX(-102%);transition:transform .6s cubic-bezier(.2,.85,.15,1);display:flex;flex-direction:column;overflow-y:auto}
+#dr.on{pointer-events:auto}#dr.on .dr-bg{opacity:1}#dr.on .dr-p{transform:none}
+.dr-h{display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 24px;border-bottom:1px solid var(--line);flex:none}
+.dr-h .logo{color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:9px;font:900 19px var(--zh)}
+.dr-h .logo i{width:18px;height:18px;background:var(--red);display:block}
+.dr-h .logo b{color:var(--red);margin-left:-9px}
+.dr-x{border:0;background:none;font:500 14px var(--sans);color:var(--sub);cursor:pointer;padding:8px 0}.dr-x:hover{color:var(--ink)}
+.dr-n{flex:1;padding:14px 24px 24px;display:flex;flex-direction:column}
+.dr-n a{position:relative;display:grid;grid-template-columns:44px 1fr auto;align-items:baseline;padding:20px 0 18px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .6s cubic-bezier(.2,.85,.15,1)}
+#dr.on .dr-n a{opacity:1;transform:none}
+#dr.on .dr-n a:nth-child(1){transition-delay:.08s}#dr.on .dr-n a:nth-child(2){transition-delay:.12s}#dr.on .dr-n a:nth-child(3){transition-delay:.16s}#dr.on .dr-n a:nth-child(4){transition-delay:.2s}#dr.on .dr-n a:nth-child(5){transition-delay:.24s}#dr.on .dr-n a:nth-child(6){transition-delay:.28s}
+.dr-n em{font:500 12px var(--sans);color:var(--sub);font-style:normal;letter-spacing:.04em}
+.dr-n b{font:900 clamp(30px,8vw,40px)/1.05 var(--zh);letter-spacing:-.01em;transition:color .25s,transform .4s cubic-bezier(.2,.85,.15,1);display:inline-block}
+.dr-n span{grid-column:2/4;font:400 13px var(--sans);color:var(--sub);margin-top:6px}
+.dr-n a::after{content:"→";grid-column:3;grid-row:1;align-self:center;font:400 20px var(--sans);color:var(--red);opacity:0;transform:translateX(-8px);transition:.3s}
+.dr-n a:hover b{color:var(--red);transform:translateX(6px)}.dr-n a:hover::after{opacity:1;transform:none}
+.dr-n a.on b{color:var(--red)}.dr-n a.on em{color:var(--red)}
+.dr-f{display:flex;justify-content:space-between;align-items:center;padding:18px 24px 26px;font:400 13px var(--sans);color:var(--sub);border-top:1px solid var(--line);flex:none}
+.dr-f .lk{border:1px solid var(--line);background:#fff;padding:7px 12px;font:500 13px var(--sans);color:var(--ink);cursor:pointer}.dr-f .lk:hover{border-color:var(--ink)}
+/* ===== spin + brawl ===== */
+.xv{display:none;padding:0 20px 90px}
+@media(min-width:1000px){.xv{flex:1;min-height:0;overflow-y:auto}}
+.xw{max-width:720px;margin:0 auto}
+.xhd{text-align:center;padding:64px 0 40px}
+.xhd h2{font:900 clamp(52px,11vw,96px)/1 var(--zh);margin:0 0 16px;letter-spacing:-.02em}
+.xhd p{color:var(--sub);margin:0;font-size:15px}
+.xm{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.xl{font:500 12px var(--sans);color:var(--sub);margin-bottom:8px;letter-spacing:.04em}
+.xwin{height:124px;background:var(--g1);overflow:hidden;position:relative;transition:background .3s,color .3s}
+.xwin::before,.xwin::after{content:"";position:absolute;left:0;right:0;height:22px;z-index:1;pointer-events:none}
+.xwin::before{top:0;background:linear-gradient(var(--g1),transparent)}.xwin::after{bottom:0;background:linear-gradient(transparent,var(--g1))}
+.xstrip{will-change:transform}
+.xi{height:124px;display:flex;align-items:center;justify-content:center;padding:0 10px;text-align:center;font:900 clamp(19px,4.8vw,30px)/1.15 var(--zh);word-break:break-word}
+.xi.st{color:var(--red);font:400 clamp(14px,3.6vw,22px) var(--sans);letter-spacing:1px}
+.xr.lk .xwin{background:var(--ink);color:#fff}
+.xr.lk .xwin::before{background:linear-gradient(var(--ink),transparent)}.xr.lk .xwin::after{background:linear-gradient(transparent,var(--ink))}
+.xr.lk .xi.st{color:#ff8a7a}
+.xlock{margin-top:8px;width:100%;height:42px;border:1px solid var(--line);background:#fff;font:500 13px var(--sans);color:var(--ink);cursor:pointer;transition:.2s}
+.xlock:hover{border-color:var(--ink)}
+.xr.lk .xlock{background:var(--ink);color:#fff;border-color:var(--ink)}
+.xlock:disabled{opacity:.4;cursor:default}
+.xgo{display:block;margin-top:22px;width:100%;height:66px;background:var(--red);color:#fff;border:0;font:700 18px var(--sans);letter-spacing:.1em;cursor:pointer;transition:background .2s,transform .12s}
+.xgo:hover{background:#b8261d}.xgo:active{transform:translateY(2px)}
+.xgo:disabled{background:var(--g2);color:var(--sub);letter-spacing:0;cursor:default;font-weight:500;font-size:15px}
+.xn{text-align:center;margin-top:12px;font-size:13px;color:var(--sub)}
+.xres{margin-top:40px;transition:opacity .3s}.xres.out{opacity:.25}
+.xres.in .xres-c{animation:xup .8s cubic-bezier(.2,.85,.15,1)}
+@keyframes xup{from{opacity:0;transform:translateY(28px)}}
+.xc{background:#fff;box-shadow:0 22px 50px -26px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.06);cursor:pointer;display:flex;flex-direction:column;transition:transform .45s cubic-bezier(.2,.85,.15,1),opacity .4s,box-shadow .3s;min-width:0}
+.xc:hover{transform:translateY(-4px)}
+.xc-top{height:150px;padding:16px;display:flex;flex-direction:column;justify-content:space-between}
+.xc-top span{font:500 12px var(--sans);opacity:.8}
+.xc-top b{font:900 22px/1.2 var(--zh)}
+.xc-bt{padding:14px 16px 16px;flex:1;display:flex;flex-direction:column}
+.xc .nm{font:900 18px/1.3 var(--zh);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.xc .mt{margin-top:auto;padding-top:14px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;color:var(--sub)}
+.xc .mt span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.xc .st{color:var(--red);letter-spacing:1px;white-space:nowrap}.xc .st i{opacity:.22;font-style:normal}
+.xc.big .xc-top{height:210px;padding:22px}.xc.big .xc-top b{font-size:clamp(28px,6vw,40px)}.xc.big .xc-bt{padding:20px 22px 22px}.xc.big .nm{font-size:clamp(22px,5vw,28px)}.xc.big .mt{font-size:14px}
+@media(min-width:700px){.xc.big{flex-direction:row;min-height:240px}.xc.big .xc-top{height:auto;flex:0 0 46%}}
+.xres-a{display:flex;gap:10px;margin-top:14px}
+.xb{flex:1;height:54px;border:1px solid var(--line);background:#fff;font:500 15px var(--sans);color:var(--ink);cursor:pointer;transition:.2s}
+.xb:hover{border-color:var(--ink)}
+.xb.k{background:var(--ink);color:#fff;border-color:var(--ink)}.xb.k:hover{background:var(--red);border-color:var(--red)}
+/* brawl setup */
+.xs-sec{border-top:1px solid var(--line);padding:18px 0 20px}
+.xs-l{font:700 13px var(--sans);margin-bottom:12px}
+.xch{display:flex;flex-wrap:wrap;gap:6px}
+.xch button{height:40px;padding:0 15px;border:0;background:var(--g1);color:var(--ink);font:500 13px var(--sans);cursor:pointer;transition:background .2s}
+.xch button:hover{background:var(--g2)}.xch button.on{background:var(--ink);color:#fff}
+/* brawl fight */
+.xrd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:56px 0 14px}
+.xrd b{font:900 clamp(40px,9vw,72px)/1 var(--zh);letter-spacing:-.02em}
+.xrd span{color:var(--sub);font-size:13px;white-space:nowrap}
+.xpb{height:2px;background:var(--g2);margin-bottom:34px}.xpb i{display:block;height:100%;background:var(--ink);transition:width .6s cubic-bezier(.2,.85,.15,1)}
+.xa{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:14px}
+.xa.in .xc{animation:xup .6s cubic-bezier(.2,.85,.15,1) both}.xa.in .xc:last-child{animation-delay:.08s}
+.xa .xvs{align-self:center;font:900 clamp(22px,5vw,34px) var(--zh);color:var(--red)}
+.xa .xc-top{height:clamp(130px,30vw,220px)}.xa .xc-top b{font-size:clamp(18px,4.6vw,30px)}
+.xc.xwn{transform:translateY(-8px);box-shadow:0 0 0 2px var(--ink),0 30px 60px -28px rgba(0,0,0,.45)}
+.xc.xls{opacity:0;transform:scale(.94)}
+.xhint{text-align:center;color:var(--sub);font-size:13px;margin-top:26px}
+.xq{display:block;margin:22px auto 0;border:0;background:none;color:var(--sub);font:500 13px var(--sans);text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+@media(max-width:600px){.xa{gap:8px}.xa .xc-bt{padding:12px}.xa .nm{font-size:15px}.xa .mt{flex-direction:column;align-items:flex-start;gap:4px}}
+/* champion */
+.xchamp{text-align:center;padding-top:60px}
+.xchamp .xey{font:700 13px var(--sans);color:var(--red);letter-spacing:.12em}
+.xchamp h2{font:900 clamp(40px,9vw,76px)/1.05 var(--zh);margin:14px 0 34px;letter-spacing:-.02em}
+.xchamp .xc{text-align:left;animation:xup .8s cubic-bezier(.2,.85,.15,1)}
+.xi.sm{font-size:clamp(15px,3.8vw,22px);word-break:normal;overflow-wrap:anywhere}
+
 </style>
 </head>
 <body>
-<header><div class="hd"><a class="logo" href="/eat/"><i></i><span id="h1"><span>悉尼<i>吃喝</i></span></span></a><nav class="nav dnav" id="dnav"></nav><div class="hr"><button id="lang" class="lk">EN</button><button class="bk" id="rand">随便来一家</button></div></div><button id="menu" hidden></button></header>
+<header><div class="hd"><button class="mb" id="mb" aria-label="menu"><i></i><i></i></button><a class="logo" href="/eat/"><i></i><span id="h1"><span>悉尼<i>吃喝</i></span></span></a><nav class="nav dnav" id="dnav"></nav><div class="hr"><button class="bk" id="rand">随便来一家</button></div></div><button id="menu" hidden></button></header><div id="dr"><div class="dr-bg"></div><aside class="dr-p" aria-label="menu"><div class="dr-h"><a class="logo" href="/eat/"><i></i>悉尼<b>吃喝</b></a><button class="dr-x">关闭</button></div><nav class="dr-n"><a data-v="home" href="/eat/" data-zh="首页|今晚吃什么" data-en="Home|What to eat tonight"><em>01</em><b>首页</b><span>今晚吃什么</span></a><a data-v="map" href="#map" data-zh="地图|按区域找附近" data-en="Map|Find places nearby"><em>02</em><b>地图</b><span>按区域找附近</span></a><a data-v="list" href="#list" data-zh="全部|按星级排好" data-en="All|Ranked by stars"><em>03</em><b>全部</b><span>按星级排好</span></a><a data-v="spin" href="#spin" data-zh="转一转|锁住想要的，剩下交给运气" data-en="Spin|Lock what you want, luck does the rest"><em>04</em><b>转一转</b><span>锁住想要的，剩下交给运气</span></a><a data-v="brawl" href="#brawl" data-zh="大乱斗|两两对决，选出冠军" data-en="Brawl|Head to head until one wins"><em>05</em><b>大乱斗</b><span>两两对决，选出冠军</span></a><a data-v="party" href="#party" data-zh="饭局|和朋友一起滑，全员心动就开吃" data-en="Group|Swipe with friends until everyone agrees"><em>06</em><b>饭局</b><span>和朋友一起滑，全员心动就开吃</span></a></nav><div class="dr-f"><span>0 家店 · 悉尼</span><button id="lang" class="lk">EN</button></div></aside></div>
 
 <div class="filters">
   <div class="row" id="cats"></div>
@@ -756,7 +837,7 @@ html body .ctrl{top:64px;border:1px solid var(--line);box-shadow:none;background
  <div id="swList"></div>
 </div></div>
 <div id="swMatch"></div>
-<div id="brawl"><div class="br-in" id="brIn"></div></div>
+<div id="xspin" class="xv"></div><div id="xbrawl" class="xv"></div><div id="brawl"><div class="br-in" id="brIn"></div></div>
 <canvas id="fx"></canvas>
 <div id="navMask"></div><nav id="nav"><div class="nav-h">悉尼<i>吃喝</i></div><div class="tabs"><button id="tHome">首 页</button><button id="tMap" class="on">地 图</button><button id="tList">食 单</button><button id="tSpin">转一转</button><button id="tSwipe">刷一刷</button><button id="tBrawl">大乱斗</button><button id="tParty">饭局</button></div></nav>
 <div id="fmask"></div><div id="fsheet"></div><button id="toMap" class="pill"></button>
@@ -1060,7 +1141,7 @@ $('#home').onclick=e=>{const b=e.target.closest('[data-h]');if(!b)return;if(b.da
 function dnavRender(){const x=T(),en=LANG==='en';$('#dnav').innerHTML=[['home',en?'Home':'首页'],['map',x.map.replace(/\s/g,'')],['list',en?'All':'全部'],['party',PX2().tab.replace(/\s/g,'')]].map(([v,l])=>`<button data-v="${v}" class="${view===v?'on':''}">${esc(l)}</button>`).join('')}
 $('#toMap').innerHTML='<svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="#fff" stroke-width="1.6" aria-hidden="true"><path d="M1 3l4.5-2 5 2L15 1v10l-4.5 2-5-2L1 13z"/></svg><span>'+NXT().toMap+'</span>';$('#tHome').textContent=NXT().home;
 $('#dnav').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;if(b.dataset.v==='party')history.replaceState(null,'','#party');setView(b.dataset.v)};
-function setView(v){if(v==="home"||v==="spin"||v==="brawl")v="map";if(v==="swipe")v="party";try{spClose()}catch(e){}try{fOpen(false)}catch(e){}if((v==='list'||v==='home')&&isDT())v='map';document.body.dataset.v=v;view=v;['tHome','tMap','tList','tSpin','tSwipe','tBrawl','tParty'].forEach(id=>$('#'+id).classList.toggle('on',id==='t'+v[0].toUpperCase()+v.slice(1)));
+function setView(v){if(v==="home")v="map";if(v==="swipe")v="party";try{spClose()}catch(e){}try{fOpen(false)}catch(e){}if((v==='list'||v==='home')&&isDT())v='map';document.body.dataset.v=v;view=v;['tHome','tMap','tList','tSpin','tSwipe','tBrawl','tParty'].forEach(id=>$('#'+id).classList.toggle('on',id==='t'+v[0].toUpperCase()+v.slice(1)));
   const sp=v==='spin'||v==='swipe'||v==='brawl'||v==='home'||v==='party',DT=isDT();$('#main').style.display=sp?'none':'';$('.filters').style.display=sp?'none':'';$('#spin').style.display=v==='spin'?'block':'none';$('#swipe').style.display=v==='swipe'?'block':'none';$('#brawl').style.display=v==='brawl'?'block':'none';$('#home').style.display=v==='home'?'block':'none';$('#party').style.display=v==='party'?'block':'none';if(v==='party')partyEnter();if(v!=='map')$('#toast').style.display='none';try{dnavRender()}catch(e){}if(v==='home')renderHome();if(v!=='swipe'){try{swList(false)}catch(e){}}
   if(!sp){$('#mapWrap').style.display=(v==='map'||DT)?'':'none';$('#list').style.display=(v==='list'||DT)?'block':'none';$('#search').style.display=v==='list'?'block':'none'}
   if(v==='map'){fit();setVB()}render();window.scrollTo(0,0);try{if(!(v==='party'&&location.hash.startsWith('#party')))history.replaceState(null,'',(v==='map'&&isDT())?location.pathname+location.search:'#'+v)}catch(e){}}
@@ -1212,7 +1293,7 @@ function swCardHTML(i,k){const d=D[i],x=SWX(),[bg,fg]=NPAL(d.t);const st='★'.r
   <div class="sw-bars"></div><div class="sw-emo"></div><div class="sw-info"></div>
   <div class="stamp like">${x.like}</div><div class="stamp nope">${x.nope}</div><div class="stamp sup">${x.sup}</div><button class="sw-i" data-a="i">${LANG==='en'?'Details':'详情'}</button></div>`}
 const NPAL=t=>{const P=[['#fbd9c9','#8a3a1c'],['#d8e8f6','#1d4a73'],['#e5defa','#43308a'],['#f7e6a3','#6a5410'],['#d6eedc','#1f5b33'],['#f8d5de','#86213e'],['#e9e4dc','#3d362c']];const G=[[/日|寿司|拉面|Omakase|居酒屋|烧鸟|Japan/i,1],[/韩|Korea/i,2],[/火锅|烤|炸串|川|湘|重庆|冒菜|自贡|贵州|麻辣|Hot ?pot|Sichuan/i,0],[/咖啡|Cafe|Brunch|烘焙|可颂|蛋糕|甜|冰淇淋|糖水|Bakery|Dessert/i,3],[/越南|泰|马来|印尼|菲律宾|云南|Viet|Thai|Malay/i,4],[/意|法|希腊|西餐|Pizza|牛排|澳|墨西哥|土耳其|波斯|汉堡|Ital|French|Greek|Steak/i,5]];for(const [re,j] of G)if(re.test(t||''))return P[j];return P[6]};
-const NDISH=d=>(F.d(d)||F.t(d)||'').split(/[、，,。.]/)[0].replace(/[（(].*$/,'').slice(0,LANG==='en'?28:12);
+const NDISH=d=>(F.d(d)||F.t(d)||'').split(/[、，,。.；;]/)[0].replace(/[（(].*$/,'').slice(0,LANG==='en'?28:12);
 function swRender(){const dk=$('#swDeck'),x=SWX();$('#swLeft').textContent=x.left(SW.deck.length);$('#swLikeN').textContent=SW.like.length;
   if(!SW.deck.length){dk.innerHTML=`<div class="sw-empty"><div class="pulse">${EMO.zh}</div><div>${x.empty}</div><button id="swReset">${x.reset}</button></div>`;$('#swReset').onclick=()=>{SW.seen.clear();SW.hist=[];swSave();swDeck();swRender()};return}
   dk.innerHTML=SW.deck.slice(0,3).map((i,k)=>swCardHTML(i,k)).reverse().join('');SW.page=0;swBind()}
@@ -1342,9 +1423,82 @@ $('#lang').onclick=()=>{LANG=LANG==='en'?'zh':'en';try{localStorage.setItem('lan
 applyLang();
 </script>
 <script>
+(function(){const dr=document.getElementById('dr');const set=o=>{dr.classList.toggle('on',o);document.documentElement.style.overflow=o?'hidden':''};
+ document.getElementById('mb').onclick=()=>set(true);dr.querySelector('.dr-bg').onclick=()=>set(false);dr.querySelector('.dr-x').onclick=()=>set(false);
+ addEventListener('keydown',e=>{if(e.key==='Escape')set(false)});window.drSet=set})();
+/* ===== shared card, spin and brawl (redesigned) ===== */
+const XT={zh:{spin:'转一转',spinS:'锁住你想要的，剩下的交给运气。',g:'区域',c:'菜系',r:'星级',lock:'锁定',locked:'已锁定',go:'拉 一 下',again:'再转一次',n:n=>`符合 ${n} 家`,none:'没有符合的店，解锁一个试试',view:'看详情',
+ brawl:'大乱斗',brawlS:'两两对决，一路淘汰，选出今晚的冠军。',size:'人数',all:'全部',price:'价位',start:'开 打',pool:n=>`符合条件 ${n} 家`,match:(a,b)=>`第 ${a} 场，共 ${b} 场`,hint:'点你更想吃的那家',quit:'退出比赛',champ:'今晚的冠军',rematch:'再来一局',
+ rd:{2:'决赛',4:'半决赛',8:'八强',16:'十六强',32:'三十二强'},pr:['$30以内','$30至60','$60至120','$120以上'],close:'关闭'},
+ en:{spin:'Spin',spinS:'Lock what you want. Luck does the rest.',g:'Area',c:'Cuisine',r:'Stars',lock:'Lock',locked:'Locked',go:'P U L L',again:'Spin again',n:n=>`${n} matches`,none:'Nothing matches, unlock one',view:'Details',
+ brawl:'Brawl',brawlS:'Head to head, knockout style, until one wins tonight.',size:'Entrants',all:'All',price:'Price',start:'F I G H T',pool:n=>`${n} eligible`,match:(a,b)=>`Match ${a} of ${b}`,hint:'Tap the one you would rather eat',quit:'Quit',champ:'Tonight\'s champion',rematch:'Play again',
+ rd:{2:'Final',4:'Semifinal',8:'Quarterfinal',16:'Round of 16',32:'Round of 32'},pr:['Under $30','$30 to 60','$60 to 120','$120 plus'],close:'Close'}};
+const XX=()=>XT[LANG]||XT.zh;
+function XC(i,cls){const d=D[i],[bg,fg]=NPAL(d.t),n=+d.r||0;return `<div class="xc ${cls||''}" data-i="${i}"><div class="xc-top" style="background:${bg};color:${fg}"><span>${esc(F.t(d)||'')}</span><b>${esc(NDISH(d))}</b></div><div class="xc-bt"><div class="nm">${esc(F.n(d))}</div><div class="mt"><span>${esc((F.a(d)||'').replace(/,.*$/,''))} · $${d.p}</span><span class="st">${'★'.repeat(n)}<i>${'★'.repeat(Math.max(0,5-n))}</i></span></div></div></div>`}
+
+/* spin */
+const XS={lock:{g:null,c:null,r:null},cur:{g:null,c:null,r:null},busy:false,res:null,init:false};const XK=['g','c','r'];
+const xsOpts=k=>k==='g'?RG.map((_,i)=>i).slice(1):k==='c'?CO.slice():['5','4','3'];
+const xsLab=(k,v)=>v==null?'?':k==='g'?T().rg[v]:k==='c'?T().ct[v]:'★'.repeat(+v);
+function xsI(k,v){const l=String(xsLab(k,v));return `<div class="xi${k==='r'?' st':l.length>7?' sm':''}">${esc(l).replace(/\//g,'/<wbr>')}</div>`}
+function xsCands(){const L=XS.lock;return D.map((d,i)=>i).filter(i=>{const d=D[i];return d.r!=='X'&&+d.r>=3&&regionOf(d)&&(L.g==null||regionOf(d)===L.g)&&(L.c==null||d.c===L.c)&&(L.r==null||d.r===L.r)})}
+function xsPick(c){let s=0;c.forEach(i=>s+=W[D[i].r]||1);let x=Math.random()*s;for(const i of c){x-=W[D[i].r]||1;if(x<=0)return i}return c[c.length-1]}
+function xsInit(){if(XS.init)return;XS.init=true;const c=xsCands(),d=D[xsPick(c)];XS.cur={g:regionOf(d),c:d.c,r:d.r};xsRender()}
+function xsRes(i){const x=XX();return `<div class="xres-c">${XC(i,'big')}<div class="xres-a"><button class="xb k" data-o="${i}">${x.view}</button><button class="xb" data-again>${x.again}</button></div></div>`}
+function xsRender(){const x=XX(),R=$('#xspin'),c=xsCands();
+ R.innerHTML=`<div class="xw"><div class="xhd"><h2>${x.spin}</h2><p>${x.spinS}</p></div>
+ <div class="xm">${XK.map(k=>`<div class="xr${XS.lock[k]!=null?' lk':''}" data-k="${k}"><div class="xl">${x[k]}</div><div class="xwin"><div class="xstrip">${xsI(k,XS.cur[k])}</div></div><button class="xlock" data-k="${k}"${XS.cur[k]==null?' disabled':''}>${XS.lock[k]!=null?x.locked:x.lock}</button></div>`).join('')}</div>
+ <button class="xgo" id="xgo"${c.length?'':' disabled'}>${c.length?x.go:x.none}</button><div class="xn">${x.n(c.length)}</div>
+ <div class="xres" id="xres">${XS.res!=null?xsRes(XS.res):''}</div></div>`}
+function xsSpin(){if(XS.busy)return;const c=xsCands();if(!c.length)return;XS.busy=true;
+ const i=xsPick(c),d=D[i],tgt={g:regionOf(d),c:d.c,r:d.r};$('#xres').classList.add('out');$('#xgo').disabled=true;
+ const H=document.querySelector('#xspin .xwin').offsetHeight;let last=0;
+ XK.forEach((k,j)=>{const el=document.querySelector(`#xspin .xr[data-k="${k}"] .xstrip`);if(XS.lock[k]!=null)return;
+  const o=xsOpts(k),seq=[XS.cur[k]];for(let m=0;m<12+j*6;m++)seq.push(o[Math.floor(Math.random()*o.length)]);seq.push(tgt[k]);
+  el.innerHTML=seq.map(v=>xsI(k,v)).join('');el.style.transition='none';el.style.transform='translateY(0)';el.offsetHeight;
+  const dur=RM?.05:1+j*.45;last=Math.max(last,dur);el.style.transition=`transform ${dur}s cubic-bezier(.15,.7,.2,1)`;el.style.transform=`translateY(${-(seq.length-1)*H}px)`});
+ XS.cur=tgt;setTimeout(()=>{XS.busy=false;XS.res=i;xsRender();const r=$('#xres');r.classList.add('in');const b=r.getBoundingClientRect();if(b.top>innerHeight*.6)r.scrollIntoView({behavior:'smooth',block:'start'})},last*1000+180)}
+$('#xspin').addEventListener('click',e=>{const t=e.target;if(XS.busy)return;
+ const lk=t.closest('.xlock');if(lk){const k=lk.dataset.k;XS.lock[k]=XS.lock[k]!=null?null:XS.cur[k];xsRender();return}
+ if(t.closest('#xgo')||t.closest('[data-again]'))return xsSpin();
+ const o=t.closest('[data-o]')||t.closest('.xc');if(o)open(+(o.dataset.o??o.dataset.i))});
+
+/* brawl */
+const XB={size:16,cat:null,pr:null,stage:'set',cur:[],next:[],idx:0,champ:null,busy:false};
+function xbPool(){return D.map((d,i)=>i).filter(i=>{const d=D[i];return d.r!=='X'&&(!XB.cat||d.c===XB.cat)&&(!XB.pr||pBk(d)===XB.pr)})}
+function xbStart(){const p=xbPool().map(i=>[i,+D[i].r+Math.random()*2.2]).sort((a,b)=>b[1]-a[1]).map(a=>a[0]);let n=XB.size;while(n>2&&n>p.length)n/=2;if(p.length<2)return;
+ XB.cur=p.slice(0,n).sort(()=>Math.random()-.5);XB.next=[];XB.idx=0;XB.stage='fight';xbRender();window.scrollTo(0,0);$('#xbrawl').scrollTop=0}
+function xbRender(){const x=XX(),R=$('#xbrawl');
+ if(XB.stage==='set'){const n=xbPool().length;const ch=(k,v,l,on)=>`<button class="${on?'on':''}" data-${k}="${v}">${l}</button>`;
+  R.innerHTML=`<div class="xw"><div class="xhd"><h2>${x.brawl}</h2><p>${x.brawlS}</p></div>
+  <div class="xs-sec"><div class="xs-l">${x.size}</div><div class="xch">${[8,16,32].map(v=>ch('size',v,v,XB.size===v)).join('')}</div></div>
+  <div class="xs-sec"><div class="xs-l">${T().cat||x.c}</div><div class="xch">${ch('cat','',x.all,!XB.cat)}${CO.map(c=>ch('cat',c,esc(T().ct[c]),XB.cat===c)).join('')}</div></div>
+  <div class="xs-sec"><div class="xs-l">${x.price}</div><div class="xch">${ch('pr','',x.all,!XB.pr)}${PB.map((b,j)=>ch('pr',b[0],x.pr[j],XB.pr===b[0])).join('')}</div></div>
+  <button class="xgo" data-start${n<2?' disabled':''}>${x.start}</button><div class="xn">${x.pool(n)}</div></div>`;return}
+ if(XB.stage==='fight'){const tot=XB.cur.length/2,m=XB.idx/2+1,a=XB.cur[XB.idx],b=XB.cur[XB.idx+1];const done=(XB.size-XB.cur.length+XB.idx/2)/(Math.max(2,Math.min(XB.size,XB.cur.length*2))-1);
+  R.innerHTML=`<div class="xw"><div class="xrd"><b>${x.rd[XB.cur.length]||XB.cur.length}</b><span>${x.match(m,tot)}</span></div><div class="xpb"><i style="width:${Math.round(((m-1)/tot)*100)}%"></i></div>
+  <div class="xa">${XC(a,'pk')}<div class="xvs">VS</div>${XC(b,'pk')}</div><div class="xhint">${x.hint}</div><button class="xq" data-quit>${x.quit}</button></div>`;return}
+ const i=XB.champ;R.innerHTML=`<div class="xw xchamp"><div class="xey">${x.champ}</div><h2>${esc(F.n(D[i]))}</h2>${XC(i,'big')}<div class="xres-a"><button class="xb k" data-o="${i}">${x.view}</button><button class="xb" data-again>${x.rematch}</button></div></div>`}
+function xbPick(el){if(XB.busy)return;XB.busy=true;const w=+el.dataset.i;const cs=[...document.querySelectorAll('#xbrawl .xa .xc')];cs.forEach(c=>c.classList.add(c===el?'xwn':'xls'));
+ setTimeout(()=>{XB.next.push(w);XB.idx+=2;if(XB.idx>=XB.cur.length){if(XB.next.length===1){XB.champ=XB.next[0];XB.stage='champ'}else{XB.cur=XB.next;XB.next=[];XB.idx=0}}XB.busy=false;xbRender();
+  const a=document.querySelector('#xbrawl .xa');if(a){a.classList.add('in')}},RM?60:520)}
+$('#xbrawl').addEventListener('click',e=>{const t=e.target,b=t.closest('button');
+ if(b){if(b.dataset.size){XB.size=+b.dataset.size;return xbRender()}if(b.dataset.cat!==undefined){XB.cat=b.dataset.cat||null;return xbRender()}if(b.dataset.pr!==undefined){XB.pr=b.dataset.pr||null;return xbRender()}
+  if(b.hasAttribute('data-start'))return xbStart();if(b.hasAttribute('data-quit')||b.hasAttribute('data-again')){XB.stage='set';return xbRender()}if(b.dataset.o)return open(+b.dataset.o)}
+ const c=t.closest('.xc');if(!c)return;if(c.classList.contains('pk'))xbPick(c);else open(+c.dataset.i)});
+
+/* routing, drawer, language */
+function XV(){const v=view;$('#xspin').style.display=v==='spin'?'block':'none';$('#xbrawl').style.display=v==='brawl'?'block':'none';
+ if(v==='spin')xsInit();if(v==='brawl'&&!$('#xbrawl').innerHTML)xbRender();document.querySelectorAll('#dr .dr-n a').forEach(a=>a.classList.toggle('on',a.dataset.v===v))}
+{const _sv=setView;setView=function(v){_sv(v);try{XV()}catch(e){console.error(e)}}}
+document.querySelector('#dr .dr-n').addEventListener('click',e=>{const a=e.target.closest('a[data-v]');if(!a||a.dataset.v==='home')return;e.preventDefault();drSet(false);const v=a.dataset.v;if(v==='party')history.replaceState(null,'','#party');setTimeout(()=>setView(v),180)});
+addEventListener('hashchange',()=>{const h=location.hash.slice(1).split('=')[0];if(['map','list','spin','brawl','party','swipe'].includes(h)&&h!==view)setView(h)});
+{const o=applyLang;applyLang=function(){o.apply(this,arguments);const en=LANG==='en';document.querySelectorAll('#dr .dr-n a').forEach(a=>{const [b,s]=a.dataset[en?'en':'zh'].split('|');a.querySelector('b').textContent=b;a.querySelector('span').textContent=s});
+ document.querySelector('#dr .dr-x').textContent=XX().close;const r=$('#rand');if(r)r.textContent=en?'Surprise me':'随便来一家';if(XS.init)xsRender();if($('#xbrawl').innerHTML)xbRender()}}
 document.getElementById('rand').onclick=()=>{const c=[];D.forEach((d,i)=>{if(d.r!=='X'&&+d.r>=4&&match(d))c.push(i)});const pool=c.length?c:D.map((d,i)=>i).filter(i=>D[i].r!=='X');open(pool[Math.floor(Math.random()*pool.length)])};
-document.getElementById('dnav').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(b&&b.dataset.v==='home'){e.stopImmediatePropagation();location.href='/eat/'}},true);
-(function(){const L=()=>{const r=document.getElementById('rand');if(r)r.textContent=LANG==='en'?'Surprise me':'随便来一家'};const o=applyLang;applyLang=function(){o.apply(this,arguments);L()};L()})();
+setTimeout(()=>{try{XV()}catch(e){}},60);
+
+{const f=()=>{const n=D.filter(d=>d.r!=='X').length,el=document.querySelector('#dr .dr-f span');if(el)el.textContent=LANG==='en'?n+' places · Sydney':n+' 家店 · 悉尼'};f();const o=applyLang;applyLang=function(){o.apply(this,arguments);f()}}
 </script>
 </body>
 </html>

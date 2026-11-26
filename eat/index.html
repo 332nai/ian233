@@ -41,7 +41,7 @@ header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.86);backdro
 .hero p{margin:0 auto 28px;max-width:520px;color:var(--sub);font-size:17px}
 .hero .cta{display:flex;gap:10px;justify-content:center}
 /* arc */
-.arc{position:relative;height:430px;margin:24px auto 0;max-width:1400px;overflow:hidden;cursor:grab}
+.arc{position:relative;height:430px;margin:24px auto 0;max-width:1400px;overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}.arc.drag{cursor:grabbing}.arc.drag .cd{transition:opacity .3s!important}.cd{-webkit-user-drag:none}
 .cd{position:absolute;left:50%;top:70px;width:220px;height:296px;margin-left:-110px;border-radius:20px;background:#fff;box-shadow:0 22px 50px -26px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.04);transform-origin:50% 1500px;transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .6s;overflow:hidden;display:flex;flex-direction:column}
 .cd:hover{z-index:5}
 .cd .top{height:150px;padding:16px;display:flex;flex-direction:column;justify-content:space-between}
@@ -86,12 +86,12 @@ header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.86);backdro
 .quote .by i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:900 15px var(--zh);color:#fff;background:var(--red);font-style:normal}
 .quote .by b{display:block;text-align:left}.quote .by span{display:block;color:var(--sub);font-size:12.5px;text-align:left}
 /* tiles */
-.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:70px}
+.tiles{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:70px}.tile{grid-column:span 2}.tile.w{grid-column:span 3;min-height:300px}
 .tile{background:var(--g1);border-radius:24px;padding:24px;min-height:330px;display:flex;flex-direction:column;transition:background .2s}
 .tile:hover{background:var(--g2)}
 .tile h4{margin:0 0 6px;font:700 17px var(--zh)}.tile p{margin:0;color:var(--sub);font-size:14px}
 .tile .vis{flex:1;display:grid;place-items:center;margin-top:18px}
-@media(max-width:860px){.tiles{grid-template-columns:1fr}}
+@media(max-width:860px){.tiles{grid-template-columns:1fr}.tile,.tile.w{grid-column:auto}}
 /* footer */
 footer{margin-top:120px;padding:40px 0 0;border-top:1px solid var(--line);overflow:hidden}
 .ft{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;font-size:14px;color:var(--sub)}
@@ -132,14 +132,47 @@ header{border-bottom:1px solid var(--line)}
 .sug button{background:var(--g1);border-color:transparent}.sug button:hover{background:var(--g2);border-color:transparent}
 .bub{background:var(--g1)}
 .panel{border-color:var(--line)}
+
+/* ===== header menu button + drawer (shared) ===== */
+.mb{width:40px;height:40px;margin-left:-8px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;border:0;background:none;cursor:pointer;flex:none}
+.mb i{display:block;width:20px;height:2px;background:var(--ink);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.mb:hover i:first-child{transform:translateX(-3px)}.mb:hover i:last-child{transform:translateX(3px)}
+#dr{position:fixed;inset:0;z-index:200;pointer-events:none}
+#dr .dr-bg{position:absolute;inset:0;background:rgba(20,20,20,.32);opacity:0;transition:opacity .45s}
+#dr .dr-p{position:absolute;left:0;top:0;bottom:0;width:min(460px,100%);background:#fff;transform:translateX(-102%);transition:transform .6s cubic-bezier(.2,.85,.15,1);display:flex;flex-direction:column;overflow-y:auto}
+#dr.on{pointer-events:auto}#dr.on .dr-bg{opacity:1}#dr.on .dr-p{transform:none}
+.dr-h{display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 24px;border-bottom:1px solid var(--line);flex:none}
+.dr-h .logo{color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:9px;font:900 19px var(--zh)}
+.dr-h .logo i{width:18px;height:18px;background:var(--red);display:block}
+.dr-h .logo b{color:var(--red);margin-left:-9px}
+.dr-x{border:0;background:none;font:500 14px var(--sans);color:var(--sub);cursor:pointer;padding:8px 0}.dr-x:hover{color:var(--ink)}
+.dr-n{flex:1;padding:14px 24px 24px;display:flex;flex-direction:column}
+.dr-n a{position:relative;display:grid;grid-template-columns:44px 1fr auto;align-items:baseline;padding:20px 0 18px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .6s cubic-bezier(.2,.85,.15,1)}
+#dr.on .dr-n a{opacity:1;transform:none}
+#dr.on .dr-n a:nth-child(1){transition-delay:.08s}#dr.on .dr-n a:nth-child(2){transition-delay:.12s}#dr.on .dr-n a:nth-child(3){transition-delay:.16s}#dr.on .dr-n a:nth-child(4){transition-delay:.2s}#dr.on .dr-n a:nth-child(5){transition-delay:.24s}#dr.on .dr-n a:nth-child(6){transition-delay:.28s}
+.dr-n em{font:500 12px var(--sans);color:var(--sub);font-style:normal;letter-spacing:.04em}
+.dr-n b{font:900 clamp(30px,8vw,40px)/1.05 var(--zh);letter-spacing:-.01em;transition:color .25s,transform .4s cubic-bezier(.2,.85,.15,1);display:inline-block}
+.dr-n span{grid-column:2/4;font:400 13px var(--sans);color:var(--sub);margin-top:6px}
+.dr-n a::after{content:"→";grid-column:3;grid-row:1;align-self:center;font:400 20px var(--sans);color:var(--red);opacity:0;transform:translateX(-8px);transition:.3s}
+.dr-n a:hover b{color:var(--red);transform:translateX(6px)}.dr-n a:hover::after{opacity:1;transform:none}
+.dr-n a.on b{color:var(--red)}.dr-n a.on em{color:var(--red)}
+.dr-f{display:flex;justify-content:space-between;align-items:center;padding:18px 24px 26px;font:400 13px var(--sans);color:var(--sub);border-top:1px solid var(--line);flex:none}
+.dr-f .lk{border:1px solid var(--line);background:#fff;padding:7px 12px;font:500 13px var(--sans);color:var(--ink);cursor:pointer}.dr-f .lk:hover{border-color:var(--ink)}
+
+.tv-spin{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:380px}
+.tv-spin div{background:#fff;padding:12px 12px 14px;display:flex;flex-direction:column;gap:18px}
+.tv-spin span{font:500 11px var(--sans);color:var(--sub)}.tv-spin b{font:900 18px/1.2 var(--zh)}.tv-spin b.r{color:var(--red);font:400 14px var(--sans);letter-spacing:1px}
+.tv-br{display:flex;align-items:center;gap:14px;width:100%;max-width:380px}
+.tv-c{flex:1;background:#fff;min-width:0}.tv-c div{height:78px;padding:12px;display:flex;align-items:flex-end;font:900 17px/1.2 var(--zh)}.tv-c b{display:block;padding:10px 12px 12px;font:700 13px/1.3 var(--zh);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tv-br i{font:900 22px var(--zh);color:var(--red);font-style:normal}
 </style>
 </head>
 <body>
 <header><div class="hd">
- <a class="logo" href="#"><i></i>悉尼<b>吃喝</b></a>
- <nav class="nav"><a class="on" href="#">首页</a><a href="/eat/app/#map">地图</a><a href="/eat/app/#list">全部</a><a href="#ask">问一问</a><a href="/eat/app/#party">饭局</a></nav>
+ <button class="mb" id="mb" aria-label="菜单"><i></i><i></i></button><a class="logo" href="#"><i></i>悉尼<b>吃喝</b></a>
   <div class="hr"><button class="btn k sm" data-rand>随便来一家</button></div>
 </div></header>
+<div id="dr"><div class="dr-bg"></div><aside class="dr-p" aria-label="menu"><div class="dr-h"><a class="logo" href="/eat/"><i></i>悉尼<b>吃喝</b></a><button class="dr-x">关闭</button></div><nav class="dr-n"><a class="on" data-v="home" href="/eat/" data-zh="首页|今晚吃什么" data-en="Home|What to eat tonight"><em>01</em><b>首页</b><span>今晚吃什么</span></a><a data-v="map" href="/eat/app/#map" data-zh="地图|按区域找附近" data-en="Map|Find places nearby"><em>02</em><b>地图</b><span>按区域找附近</span></a><a data-v="list" href="/eat/app/#list" data-zh="全部|按星级排好" data-en="All|Ranked by stars"><em>03</em><b>全部</b><span>按星级排好</span></a><a data-v="spin" href="/eat/app/#spin" data-zh="转一转|锁住想要的，剩下交给运气" data-en="Spin|Lock what you want, luck does the rest"><em>04</em><b>转一转</b><span>锁住想要的，剩下交给运气</span></a><a data-v="brawl" href="/eat/app/#brawl" data-zh="大乱斗|两两对决，选出冠军" data-en="Brawl|Head to head until one wins"><em>05</em><b>大乱斗</b><span>两两对决，选出冠军</span></a><a data-v="party" href="/eat/app/#party" data-zh="饭局|和朋友一起滑，全员心动就开吃" data-en="Group|Swipe with friends until everyone agrees"><em>06</em><b>饭局</b><span>和朋友一起滑，全员心动就开吃</span></a></nav><div class="dr-f"><span>542 家店 · 悉尼</span><span>ian233.com</span></div></aside></div>
 
 <main class="wrap">
  <section class="hero rv">
@@ -162,6 +195,8 @@ header{border-bottom:1px solid var(--line)}
   <a class="tile" href="/eat/app/#map"><h4>地图</h4><p>按区域看，缩放就能找附近。</p><div class="vis" id="tmap"></div></a>
   <a class="tile" href="/eat/app/#list"><h4>全部清单</h4><p>按星级排好，五星到一星。</p><div class="vis" id="tlist"></div></a>
   <a class="tile" href="/eat/app/#party"><h4>饭局<span class="new">NEW</span></h4><p>和朋友一起选，全员心动就开吃。</p><div class="vis" id="tparty"></div></a>
+  <a class="tile w" href="/eat/app/#spin"><h4>转一转</h4><p>锁住想要的区域或菜系，剩下交给运气。</p><div class="vis" id="tspin"></div></a>
+  <a class="tile w" href="/eat/app/#brawl"><h4>大乱斗</h4><p>两两对决，一路淘汰，选出今晚的冠军。</p><div class="vis" id="tbrawl"></div></a>
  </section>
 </main>
 
@@ -179,18 +214,24 @@ const stars=r=>'★'.repeat(+r)+'<span style="opacity:.25">'+'★'.repeat(5-r)+'
 const dish=x=>(x.d||x.t||'').split(/[、，,]/)[0].replace(/[（(].*$/,'').slice(0,12);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 $('#sub').textContent='从 '+D.length+' 家吃过的店里挑。说一句想吃什么，或者干脆让它替你决定。';
-/* ===== arc ===== */
-let pool=[],arcT;
+/* ===== arc: drag or swipe, loops forever ===== */
+let pool=[],pos=0,arcT,drag=null,moved=false;
 function pick(n){const s=[...D].sort(()=>Math.random()-.5);const hi=s.filter(x=>+x.r>=4);return hi.slice(0,n)}
 function cardHTML(x){const [bg,fg]=pal(x.t);return `<div class="top" style="background:${bg};color:${fg}"><span class="ty">${esc(x.t)}</span><span class="dish">${esc(dish(x))}</span></div><div class="bt"><div class="nm">${esc(x.n)}</div><div class="mt"><span>${esc(x.a.replace(/,.*$/,''))} · $${x.p}</span><span class="st">${stars(+x.r)}</span></div></div>`}
-function layArc(){const els=[...document.querySelectorAll('.cd')],n=els.length,mid=(n-1)/2,w=innerWidth;const step=w<600?7.5:6.2;
- els.forEach((el,i)=>{const k=i-mid;el.style.transform=`rotate(${k*step}deg)`;el.style.zIndex=10-Math.abs(Math.round(k))})}
-function buildArc(){const n=innerWidth<600?7:9;pool=pick(n);$('#arc').innerHTML=pool.map((x,i)=>`<div class="cd" data-i="${D.indexOf(x)}" style="transform:rotate(0deg);opacity:0">${cardHTML(x)}</div>`).join('');
- requestAnimationFrame(()=>requestAnimationFrame(()=>{document.querySelectorAll('.cd').forEach(c=>c.style.opacity=1);layArc()}))}
-function shuffleArc(){const els=[...document.querySelectorAll('.cd')];els.forEach(e=>{e.style.transform='rotate(0deg) translateY(30px)';e.style.opacity=.0});setTimeout(()=>{const nx=pick(els.length);els.forEach((e,i)=>{e.dataset.i=D.indexOf(nx[i]);e.innerHTML=cardHTML(nx[i]);e.style.opacity=1});layArc()},650)}
-buildArc();arcT=setInterval(shuffleArc,7000);addEventListener('resize',layArc);
-$('#arc').addEventListener('click',e=>{const c=e.target.closest('.cd');if(c)openSheet(D[+c.dataset.i])});
-$('#arc').addEventListener('mouseenter',()=>clearInterval(arcT));$('#arc').addEventListener('mouseleave',()=>{clearInterval(arcT);arcT=setInterval(shuffleArc,7000)});
+function arcGeo(){const w=innerWidth;return {step:w<600?7.5:6.2,vis:w<600?3.4:5.4}}
+function layArc(){const els=[...document.querySelectorAll('.cd')],n=els.length,{step,vis}=arcGeo();
+ els.forEach((el,i)=>{let k=((i-pos)%n+n)%n;if(k>n/2)k-=n;const out=Math.abs(k)>vis;el.style.transform=`rotate(${k*step}deg)`;el.style.opacity=out?0:1;el.style.zIndex=100-Math.round(Math.abs(k)*4);el.style.pointerEvents=out?'none':''})}
+function buildArc(){pool=pick(24);$('#arc').innerHTML=pool.map(x=>`<div class="cd" data-i="${D.indexOf(x)}" style="opacity:0">${cardHTML(x)}</div>`).join('');requestAnimationFrame(()=>requestAnimationFrame(layArc))}
+function arcPlay(){clearInterval(arcT);arcT=setInterval(()=>{if(!drag&&!document.hidden){pos+=1;layArc()}},4200)}
+buildArc();arcPlay();addEventListener('resize',layArc);
+{const A=$('#arc');let vx=0,lx=0,lt=0;const ppc=()=>1500*arcGeo().step*Math.PI/180;
+ A.addEventListener('pointerdown',e=>{if(e.button)return;drag={x:e.clientX,y:e.clientY,p:pos,id:e.pointerId};moved=false;vx=0;lx=e.clientX;lt=performance.now()});
+ A.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x;if(!moved&&Math.abs(dx)>6&&Math.abs(dx)>Math.abs(e.clientY-drag.y)){moved=true;A.classList.add('drag');try{A.setPointerCapture(drag.id)}catch(_){}}
+  if(!moved)return;const t=performance.now();vx=(e.clientX-lx)/Math.max(1,t-lt);lx=e.clientX;lt=t;pos=drag.p-dx/ppc();layArc()});
+ const end=()=>{if(!drag)return;A.classList.remove('drag');if(moved){pos=Math.round(pos-vx*260/ppc());layArc()}drag=null;arcPlay()};
+ A.addEventListener('pointerup',end);A.addEventListener('pointercancel',end);
+ A.addEventListener('click',e=>{if(moved){e.preventDefault();moved=false;return}const c=e.target.closest('.cd');if(c)openSheet(D[+c.dataset.i])});
+ A.addEventListener('mouseenter',()=>clearInterval(arcT));A.addEventListener('mouseleave',arcPlay)}
 /* ===== sheet ===== */
 function openSheet(x){const [bg,fg]=pal(x.t);$('#sh .pn').innerHTML=`<div class="im" style="background:${bg};color:${fg}"><span class="st" style="color:${fg}">${stars(+x.r)}</span><span class="dish">${esc(dish(x))}</span></div><button class="x" onclick="closeSheet()">×</button>
  <div class="bd"><h3>${esc(x.n)}</h3><div class="chips"><span>${esc(x.t)}</span><span>${esc(x.a)}</span><span>人均 $${x.p}</span>${x.dt?`<span>${x.dt.replaceAll('-','.')}</span>`:''}</div>
@@ -247,10 +288,17 @@ let demoDone=false;const io0=new IntersectionObserver(es=>{if(es[0].isIntersecti
 /* ===== tiles visuals ===== */
 $('#tmap').innerHTML=`<svg viewBox="0 0 240 150" width="100%" style="max-width:300px"><path d="M10 95 C60 80 100 100 150 70 S230 60 240 40" fill="none" stroke="#dcd8d1" stroke-width="16" stroke-linecap="round"/>${D.slice(0,60).map((x,i)=>{const X=(x.xy?x.xy[0]:i*13)%220+10,Y=(x.xy?x.xy[1]:i*7)%130+10;return ''}).join('')}${Array.from({length:26},(_,i)=>`<circle cx="${20+((i*53)%200)}" cy="${18+((i*37)%115)}" r="${i%5?4:6}" fill="${['#d6342a','#ef7b3a','#141414'][i%3]}"/>`).join('')}</svg>`;
 $('#tlist').innerHTML=`<div style="width:100%;max-width:300px;display:grid;gap:8px">${[5,4,3].map(r=>{const x=D.find(y=>+y.r===r);return `<div style="background:#fff;border-radius:12px;padding:10px 12px;display:flex;justify-content:space-between;gap:8px;font-size:13px"><b style="font-family:var(--zh);overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${esc(x.n)}</b><span class="st">${stars(r)}</span></div>`}).join('')}</div>`;
+$('#tspin').innerHTML=`<div class="tv-spin">${[['区域','东区海湾'],['菜系','日料'],['星级','★★★★★']].map(([a,b],i)=>`<div><span>${a}</span><b${i==2?' class=r':''}>${b}</b></div>`).join('')}</div>`;
+{const hi=D.filter(x=>+x.r===5);const a=hi[3]||D[0],b=hi[9]||D[1];const mini=x=>{const [bg,fg]=pal(x.t);return `<div class="tv-c"><div style="background:${bg};color:${fg}">${esc(dish(x))}</div><b>${esc(x.n.replace(/[（(].*$/,''))}</b></div>`};$('#tbrawl').innerHTML=`<div class="tv-br">${mini(a)}<i>VS</i>${mini(b)}</div>`}
 $('#tparty').innerHTML=`<div style="display:flex">${['A','B','C','D'].map((k,i)=>`<span style="width:52px;height:52px;border-radius:50%;margin-left:${i?-12:0}px;border:3px solid var(--g1);display:grid;place-items:center;font:700 16px var(--sans);background:${['#fbd9c9','#d8e8f6','#e5defa','#d6eedc'][i]}">${k}</span>`).join('')}<span style="width:52px;height:52px;border-radius:50%;margin-left:-12px;border:3px solid var(--g1);display:grid;place-items:center;background:var(--ink);color:#fff;font-size:20px">♥</span></div>`;
 /* ===== reveal + top ===== */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.1});document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 addEventListener('scroll',()=>$('#tb').classList.toggle('on',scrollY>700),{passive:true});$('#tb').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+<script>
+(function(){const dr=document.getElementById('dr');const set=o=>{dr.classList.toggle('on',o);document.documentElement.style.overflow=o?'hidden':''};
+ document.getElementById('mb').onclick=()=>set(true);dr.querySelector('.dr-bg').onclick=()=>set(false);dr.querySelector('.dr-x').onclick=()=>set(false);
+ addEventListener('keydown',e=>{if(e.key==='Escape')set(false)});window.drSet=set})();
 </script>
 </body>
 </html>
