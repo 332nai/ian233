@@ -147,11 +147,11 @@ header{border-bottom:1px solid var(--line)}
 .dr-h .logo b{color:var(--red);margin-left:-9px}
 .dr-x{border:0;background:none;font:500 14px var(--sans);color:var(--sub);cursor:pointer;padding:8px 0}.dr-x:hover{color:var(--ink)}
 .dr-n{flex:1;padding:14px 24px 24px;display:flex;flex-direction:column}
-.dr-n a{position:relative;display:grid;grid-template-columns:44px 1fr auto;align-items:baseline;padding:20px 0 18px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .6s cubic-bezier(.2,.85,.15,1)}
+.dr-n a{position:relative;display:grid;grid-template-columns:44px 1fr auto;align-items:baseline;padding:14px 0 12px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .6s cubic-bezier(.2,.85,.15,1)}
 #dr.on .dr-n a{opacity:1;transform:none}
-#dr.on .dr-n a:nth-child(1){transition-delay:.08s}#dr.on .dr-n a:nth-child(2){transition-delay:.12s}#dr.on .dr-n a:nth-child(3){transition-delay:.16s}#dr.on .dr-n a:nth-child(4){transition-delay:.2s}#dr.on .dr-n a:nth-child(5){transition-delay:.24s}#dr.on .dr-n a:nth-child(6){transition-delay:.28s}
+#dr.on .dr-n a:nth-child(1){transition-delay:.08s}#dr.on .dr-n a:nth-child(2){transition-delay:.12s}#dr.on .dr-n a:nth-child(3){transition-delay:.16s}#dr.on .dr-n a:nth-child(4){transition-delay:.2s}#dr.on .dr-n a:nth-child(5){transition-delay:.24s}#dr.on .dr-n a:nth-child(6){transition-delay:.28s}#dr.on .dr-n a:nth-child(7){transition-delay:.32s}#dr.on .dr-n a:nth-child(8){transition-delay:.36s}#dr.on .dr-n a:nth-child(9){transition-delay:.4s}
 .dr-n em{font:500 12px var(--sans);color:var(--sub);font-style:normal;letter-spacing:.04em}
-.dr-n b{font:900 clamp(30px,8vw,40px)/1.05 var(--zh);letter-spacing:-.01em;transition:color .25s,transform .4s cubic-bezier(.2,.85,.15,1);display:inline-block}
+.dr-n b{font:900 clamp(26px,7vw,34px)/1.05 var(--zh);letter-spacing:-.01em;transition:color .25s,transform .4s cubic-bezier(.2,.85,.15,1);display:inline-block}
 .dr-n span{grid-column:2/4;font:400 13px var(--sans);color:var(--sub);margin-top:6px}
 .dr-n a::after{content:"→";grid-column:3;grid-row:1;align-self:center;font:400 20px var(--sans);color:var(--red);opacity:0;transform:translateX(-8px);transition:.3s}
 .dr-n a:hover b{color:var(--red);transform:translateX(6px)}.dr-n a:hover::after{opacity:1;transform:none}
@@ -165,6 +165,9 @@ header{border-bottom:1px solid var(--line)}
 .tv-br{display:flex;align-items:center;gap:14px;width:100%;max-width:380px}
 .tv-c{flex:1;background:#fff;min-width:0}.tv-c div{height:78px;padding:12px;display:flex;align-items:flex-end;font:900 17px/1.2 var(--zh)}.tv-c b{display:block;padding:10px 12px 12px;font:700 13px/1.3 var(--zh);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tv-br i{font:900 22px var(--zh);color:var(--red);font-style:normal}
+.tv-hand{display:grid;grid-template-columns:repeat(4,52px);gap:6px}.tv-hand i{height:52px;display:grid;place-items:center;background:#fff;font:900 18px var(--zh);color:var(--ink)}.tv-hand i.y{background:var(--red);color:#fff}
+.tv-mix{display:grid;grid-template-columns:repeat(4,44px);gap:4px}.tv-mix i{height:22px;display:block}
+.tv-cut{display:flex;gap:8px}.tv-cut i{position:relative;width:62px;height:80px;background:#fff;box-shadow:0 10px 20px -12px rgba(0,0,0,.35)}.tv-cut i::before{content:"";position:absolute;left:0;right:0;top:0;height:34px;background:#f7e6a3}.tv-cut i.x{opacity:.55;filter:grayscale(1)}.tv-cut i.x::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:4px;background:var(--ink);transform:rotate(-30deg)}
 </style>
 </head>
 <body>
@@ -172,7 +175,7 @@ header{border-bottom:1px solid var(--line)}
  <button class="mb" id="mb" aria-label="菜单"><i></i><i></i></button><a class="logo" href="#"><i></i>悉尼<b>吃喝</b></a>
   <div class="hr"><button class="btn k sm" data-rand>随便来一家</button></div>
 </div></header>
-<div id="dr"><div class="dr-bg"></div><aside class="dr-p" aria-label="menu"><div class="dr-h"><a class="logo" href="/eat/"><i></i>悉尼<b>吃喝</b></a><button class="dr-x">关闭</button></div><nav class="dr-n"><a class="on" data-v="home" href="/eat/" data-zh="首页|今晚吃什么" data-en="Home|What to eat tonight"><em>01</em><b>首页</b><span>今晚吃什么</span></a><a data-v="map" href="/eat/app/#map" data-zh="地图|按区域找附近" data-en="Map|Find places nearby"><em>02</em><b>地图</b><span>按区域找附近</span></a><a data-v="list" href="/eat/app/#list" data-zh="全部|按星级排好" data-en="All|Ranked by stars"><em>03</em><b>全部</b><span>按星级排好</span></a><a data-v="spin" href="/eat/app/#spin" data-zh="转一转|锁住想要的，剩下交给运气" data-en="Spin|Lock what you want, luck does the rest"><em>04</em><b>转一转</b><span>锁住想要的，剩下交给运气</span></a><a data-v="brawl" href="/eat/app/#brawl" data-zh="大乱斗|两两对决，选出冠军" data-en="Brawl|Head to head until one wins"><em>05</em><b>大乱斗</b><span>两两对决，选出冠军</span></a><a data-v="party" href="/eat/app/#party" data-zh="饭局|和朋友一起滑，全员心动就开吃" data-en="Group|Swipe with friends until everyone agrees"><em>06</em><b>饭局</b><span>和朋友一起滑，全员心动就开吃</span></a></nav><div class="dr-f"><span>542 家店 · 悉尼</span><span>ian233.com</span></div></aside></div>
+<div id="dr"><div class="dr-bg"></div><aside class="dr-p" aria-label="menu"><div class="dr-h"><a class="logo" href="/eat/"><i></i>悉尼<b>吃喝</b></a><button class="dr-x">关闭</button></div><nav class="dr-n"><a class="on" data-v="home" data-x="1" href="/eat/" data-zh="首页|今晚吃什么" data-en="Home|What to eat tonight"><em>01</em><b>首页</b><span>今晚吃什么</span></a><a data-v="map" href="/eat/app/#map" data-zh="地图|按区域找附近" data-en="Map|Find places nearby"><em>02</em><b>地图</b><span>按区域找附近</span></a><a data-v="list" href="/eat/app/#list" data-zh="全部|按星级排好" data-en="All|Ranked by stars"><em>03</em><b>全部</b><span>按星级排好</span></a><a data-v="spin" href="/eat/app/#spin" data-zh="转一转|锁住想要的，剩下交给运气" data-en="Spin|Lock what you want, luck does the rest"><em>04</em><b>转一转</b><span>锁住想要的，剩下交给运气</span></a><a data-v="brawl" href="/eat/app/#brawl" data-zh="大乱斗|两两对决，选出冠军" data-en="Brawl|Head to head until one wins"><em>05</em><b>大乱斗</b><span>两两对决，选出冠军</span></a><a data-v="party" href="/eat/app/#party" data-zh="饭局|和朋友一起滑，全员心动就开吃" data-en="Group|Swipe with friends until everyone agrees"><em>06</em><b>饭局</b><span>和朋友一起滑，全员心动就开吃</span></a><a data-v="vote" data-x="1" href="/eat/vote/" data-zh="举手|一家一家亮出来，所有人同时举手" data-en="Hands up|Everyone votes at once, one place at a time"><em>07</em><b>举手</b><span>一家一家亮出来，所有人同时举手</span></a><a data-v="mix" data-x="1" href="/eat/mix/" data-zh="合口味|大家的口味叠在一起，算出答案" data-en="Taste mix|Overlap everyone's tastes to find the answer"><em>08</em><b>合口味</b><span>大家的口味叠在一起，算出答案</span></a><a data-v="cut" data-x="1" href="/eat/cut/" data-zh="划掉|轮流划掉一家，留到最后的就去" data-en="Strike out|Take turns striking places, the last one wins"><em>09</em><b>划掉</b><span>轮流划掉一家，留到最后的就去</span></a></nav><div class="dr-f"><span>542 家店 · 悉尼</span><span>ian233.com</span></div></aside></div>
 
 <main class="wrap">
  <section class="hero rv">
@@ -197,10 +200,13 @@ header{border-bottom:1px solid var(--line)}
   <a class="tile" href="/eat/app/#party"><h4>饭局<span class="new">NEW</span></h4><p>和朋友一起选，全员心动就开吃。</p><div class="vis" id="tparty"></div></a>
   <a class="tile w" href="/eat/app/#spin"><h4>转一转</h4><p>锁住想要的区域或菜系，剩下交给运气。</p><div class="vis" id="tspin"></div></a>
   <a class="tile w" href="/eat/app/#brawl"><h4>大乱斗</h4><p>两两对决，一路淘汰，选出今晚的冠军。</p><div class="vis" id="tbrawl"></div></a>
+  <a class="tile" href="/eat/vote/"><h4>举手<span class="new">NEW</span></h4><p>一家一家亮出来，所有人同时举手。</p><div class="vis"><div class="tv-hand"><i class="y">想</i><i>不</i><i class="y">想</i><i class="y">想</i></div></div></a>
+  <a class="tile" href="/eat/mix/"><h4>合口味<span class="new">NEW</span></h4><p>大家的口味叠在一起，算出答案。</p><div class="vis"><div class="tv-mix"><i style="background:#141414"></i><i style="background:#fff"></i><i style="background:#ef8a3f"></i><i style="background:#fff"></i><i style="background:#fff"></i><i style="background:#4f7fb0"></i><i style="background:#ef8a3f"></i><i style="background:#9a7ad1"></i><i style="background:#fff"></i><i style="background:#4f7fb0"></i><i style="background:#fff"></i><i style="background:#fff"></i></div></div></a>
+  <a class="tile" href="/eat/cut/"><h4>划掉<span class="new">NEW</span></h4><p>轮流划掉一家，留到最后的就去。</p><div class="vis"><div class="tv-cut"><i></i><i class="x"></i><i class="x"></i></div></div></a>
  </section>
 </main>
 
-<footer><div class="wrap"><div class="ft"><div><b>悉尼吃喝</b>ian233.com</div><div>地图 · 全部 · 问一问 · 饭局</div></div></div><div class="wm">悉尼吃喝</div></footer>
+<footer><div class="wrap"><div class="ft"><div><b>悉尼吃喝</b>ian233.com</div><div>地图 · 全部 · 问一问 · 饭局 · 举手 · 合口味 · 划掉</div></div></div><div class="wm">悉尼吃喝</div></footer>
 <button class="top-btn" id="tb" aria-label="回到顶部">↑</button>
 <div id="sh"><div class="bg"></div><div class="pn"></div></div>
 
