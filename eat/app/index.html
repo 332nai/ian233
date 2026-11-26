@@ -723,21 +723,21 @@ html body .ctrl{top:118px;right:14px;border:0;box-shadow:0 10px 30px -14px rgba(
 #mtoast{position:absolute;z-index:30;left:50%;top:120px;transform:translate(-50%,-10px);background:var(--ink);color:#fff;font:500 13px var(--sans);padding:10px 14px;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap}
 #mtoast.on{opacity:1;transform:translate(-50%,0)}
 #toast{display:none!important}
-/* peek */
-#peek{padding-top:8px!important}
-#peek .ph{padding:4px 16px 0!important}
-#peek .ph b{font:900 17px var(--zh)!important}
-#peek .ph span{font:500 13px var(--sans)!important;color:var(--ink)!important;letter-spacing:0!important}
-#peek .pr{gap:10px!important;padding:12px 16px 16px!important}
-.pc.pc2{width:62%!important;max-width:250px;padding:0!important;border:0!important;background:#fff;box-shadow:0 14px 30px -18px rgba(0,0,0,.4),0 0 0 1px rgba(0,0,0,.07)!important;display:flex;flex-direction:column;overflow:hidden}
+/* peek: compact */
+#peek{padding-top:6px!important}
+#peek .grab{margin-bottom:4px!important}
+#peek .ph{padding:0 14px!important}
+#peek .ph b{font:700 14px var(--sans)!important}
+#peek .ph span{font:500 12px var(--sans)!important;color:var(--ink)!important;letter-spacing:0!important}
+#peek .pr{gap:8px!important;padding:8px 14px 12px!important}
+.pc.pc2{width:68%!important;max-width:250px;height:58px;padding:0!important;border:0!important;background:#fff;box-shadow:0 8px 20px -14px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.08)!important;display:flex;flex-direction:row;overflow:hidden}
 .pc.pc2 .arr{display:none}
-.pc2 .pk-t{height:84px;padding:10px 12px;display:flex;flex-direction:column;justify-content:space-between}
-.pc2 .pk-t span{font:500 11px var(--sans);opacity:.8}.pc2 .pk-t b{font:900 17px/1.2 var(--zh);display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
-.pc2 .pk-b{padding:10px 12px 12px}
-.pc2 .pk-n{display:block;font:900 15px/1.3 var(--zh)!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pc2 .pk-m{display:flex;justify-content:space-between;gap:6px;margin-top:6px;font:400 11.5px var(--sans);color:var(--sub)}
+.pc2 .pk-t{flex:none;width:58px;height:58px;padding:5px;display:flex;align-items:flex-end;font:900 11px/1.15 var(--zh);overflow:hidden}
+.pc2 .pk-b{flex:1;min-width:0;padding:8px 10px;display:flex;flex-direction:column;justify-content:center}
+.pc2 .pk-n{display:block;font:700 14px/1.3 var(--sans)!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc2 .pk-m{display:flex;justify-content:space-between;gap:6px;margin-top:3px;font:400 11.5px var(--sans);color:var(--sub)}
 .pc2 .pk-m span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pc2 .pk-s{color:var(--red);white-space:nowrap;letter-spacing:.5px}.pc2 .pk-s i{opacity:.22;font-style:normal}
+.pc2 .pk-s{color:var(--red);white-space:nowrap;letter-spacing:.5px;font-size:10.5px}
 /* desktop side list */
 @media(min-width:1000px){
  .vhead{align-items:center!important;padding:20px 0 8px!important}
@@ -1722,7 +1722,7 @@ function selPin(i){pins.forEach(([g])=>{if(g.classList.contains('sel')){g.classL
 renderPeek=function(){if(isDT()||view!=='map'||!vb)return;const x=NXT();const vis=D.filter(d=>match(d)&&inView(d));
  const top=vis.slice().sort((a,b)=>RO.indexOf(a.r)-RO.indexOf(b.r)||hsh(a.n+SEED)-hsh(b.n+SEED)).slice(0,10);
  $('#peek').innerHTML=`<div class="grab"></div><div class="ph" data-a="list"><b>${x.inv(vis.length)}</b><span>${LANG==='en'?'List':'列表'} ↑</span></div>
- <div class="pr">${top.map((d,k)=>{const [bg,fg]=NPAL(d.t),n=NS_(d.r);return `<div class="pc pc2" data-i="${D.indexOf(d)}" style="animation-delay:${k*.05}s"><div class="pk-t" style="background:${bg};color:${fg}"><span>${esc(F.t(d)||'')}</span><b>${esc(NDISH(d))}</b></div><div class="pk-b"><b class="pk-n">${esc(F.n(d))}</b><div class="pk-m"><span>${esc((F.a(d)||'').replace(/,.*$/,''))}${d.p?' · $'+PX(d):''}</span><span class="pk-s">${'★'.repeat(n)}<i>${'★'.repeat(Math.max(0,5-n))}</i></span></div></div></div>`}).join('')||`<div class="empty" style="padding:10px 0">${T().empty}</div>`}</div>`};
+ <div class="pr">${top.map((d,k)=>{const [bg,fg]=NPAL(d.t),n=NS_(d.r);return `<div class="pc pc2" data-i="${D.indexOf(d)}" style="animation-delay:${k*.05}s"><div class="pk-t" style="background:${bg};color:${fg}">${esc(NDISH(d))}</div><div class="pk-b"><b class="pk-n">${esc(F.n(d))}</b><div class="pk-m"><span>${esc((F.a(d)||'').replace(/,.*$/,''))}${d.p?' · $'+PX(d):''}</span><span class="pk-s">${'★'.repeat(n)}</span></div></div></div>`}).join('')||`<div class="empty" style="padding:10px 0">${T().empty}</div>`}</div>`};
 $('#peek').addEventListener('pointerover',e=>{const c=e.target.closest('.pc');if(c)hl(+c.dataset.i)});
 /* legend text */
 function mLegend(){const en=LANG==='en';$('#mlg').innerHTML=[['5',en?'5★':'五星'],['4',en?'4★':'四星'],['3',en?'3★':'三星']].map(([r,l])=>`<span><i style="background:${CL[r]}"></i>${l}</span>`).join('')+`<span><i class="k"></i>${en?'Group':'多家'}</span>`;$('#mq').placeholder=en?'Search name, area or dish':'搜索店名、区域或菜'}
