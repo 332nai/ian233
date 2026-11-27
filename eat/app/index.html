@@ -1686,7 +1686,7 @@ addEventListener('hashchange',()=>{const h=location.hash.slice(1).split('=')[0];
 document.getElementById('rand').onclick=()=>{const c=[];D.forEach((d,i)=>{if(d.r!=='X'&&+d.r>=4&&match(d))c.push(i)});const pool=c.length?c:D.map((d,i)=>i).filter(i=>D[i].r!=='X');open(pool[Math.floor(Math.random()*pool.length)])};
 setTimeout(()=>{try{XV()}catch(e){}},60);
 
-{const f=()=>{const n=D.filter(d=>d.r!=='X').length,el=document.querySelector('#dr .dr-f span');if(el)el.textContent=LANG==='en'?n+' places · Sydney':n+' 家店 · 悉尼'};f();const o=applyLang;applyLang=function(){o.apply(this,arguments);f()}}
+{const f=()=>{const n=D.filter(d=>d.r!=='X').length,el=document.querySelector('#dr .dr-f span');if(el)el.textContent=''};f();const o=applyLang;applyLang=function(){o.apply(this,arguments);f()}}
 /* ===== map redesign: clusters, smooth zoom, locate, peek cards, selection ===== */
 function animVB(b,ms){const a={...vb},t0=performance.now();ms=RM?1:(ms||420);cancelAnimationFrame(window._avb);const st=n=>{let t=Math.min(1,(n-t0)/ms);t=1-Math.pow(1-t,3);vb={x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t,w:a.w+(b.w-a.w)*t,h:a.h+(b.h-a.h)*t};setVB();if(t<1)window._avb=requestAnimationFrame(st)};window._avb=requestAnimationFrame(st)}
 function zoomTo(f,px,py){const r=wrap.getBoundingClientRect(),mx=vb.x+(px-r.left)/r.width*vb.w,my=vb.y+(py-r.top)/r.height*vb.h,nw=Math.min(Math.max(vb.w*f,25),2200),k=nw/vb.w;animVB({x:mx-(mx-vb.x)*k,y:my-(my-vb.y)*k,w:nw,h:vb.h*k})}
@@ -1921,5 +1921,44 @@ return {load,strip,into,close};
 {const o=setView;setView=function(v){return o.call(this,v==='party'?'map':v)}}
 if(location.hash.startsWith('#party')){history.replaceState(null,'','#map');try{setView('map')}catch(e){}}
 </script>
+<style>
+/* ===== 2026-11-28 style A 柔光: warm paper, rounded corners, soft shadows ===== */
+:root{--g1:#f3efe8}
+body{background:#f7f4ef!important}
+header,.hd{background:rgba(247,244,239,.86)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:0!important}
+.btn,.bk,#rand{border-radius:999px!important}
+.btn.k,#rand{background:#d6342a!important;color:#fff!important;box-shadow:0 8px 22px -8px rgba(214,52,42,.6)}
+.btn.g{background:#fff!important;box-shadow:0 2px 10px rgba(60,40,20,.08)}
+.arc .cd{border-radius:20px!important;overflow:hidden;box-shadow:0 18px 40px -18px rgba(60,40,20,.35)!important}
+.panel{border-radius:22px!important;background:#fff!important;box-shadow:0 10px 40px -20px rgba(60,40,20,.25);border:0!important}
+.panel .inp,.panel input{border-radius:14px!important}
+.panel .sug button,.panel .sug a,.panel .sug span{border-radius:999px!important;background:#f3efe8!important}
+.tile{border-radius:24px!important;background:#fff!important;box-shadow:0 10px 30px -18px rgba(60,40,20,.3);overflow:hidden}
+.tile .vis *{border-radius:10px!important}
+.quote{border-radius:24px!important}
+#mqw,#fbar .fb,.ctrl{border-radius:16px!important;overflow:hidden}
+#mqw{box-shadow:0 10px 30px -12px rgba(60,40,20,.35)!important}
+#peek{border-radius:26px 26px 0 0!important;box-shadow:0 -12px 40px -16px rgba(60,40,20,.35)!important}
+#peek .pc,#peek .pc *{border-radius:16px!important}
+#peek .pc{overflow:hidden;box-shadow:0 6px 18px -10px rgba(60,40,20,.4)}
+#sheet{border-radius:28px 28px 0 0!important;background:#fffdf9!important}
+#sheet .go,#sheet .again,#sheet .xph-s button{border-radius:14px!important}
+#list{background:#f7f4ef}
+#list .card{background:#fff;border-radius:18px!important;padding:16px 18px!important;margin:10px 0!important;border:0!important;box-shadow:0 8px 24px -16px rgba(60,40,20,.35)}
+#list .sec h2{border:0!important}
+#list .sec h2{display:inline-flex;gap:8px;align-items:center;background:#141414;color:#fff;padding:5px 12px!important;border-radius:999px!important;font-size:12px!important}
+#list .sec h2 span{color:rgba(255,255,255,.6)}
+.jump button{border-radius:999px!important;margin:0 3px!important}
+#mlg i{border-radius:2px!important}
+@media(min-width:1000px){html body #side{background:#f7f4ef!important}#sheet{border-radius:28px 0 0 28px!important}}
+
+#side input,.vhead button,#mq{border-radius:12px!important}
+#xspin button,#xbrawl button,#xbrawl .xc{border-radius:12px!important}
+#dr .dr-p{border-radius:0 24px 24px 0!important}
+#dr .dr-n a{border-radius:12px!important}
+#sh .pn{border-radius:28px 28px 0 0!important}
+@media(min-width:700px){#sh .pn{border-radius:28px!important}}
+#sh .again{border-radius:14px!important}
+</style>
 </body>
 </html>
