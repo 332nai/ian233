@@ -15,8 +15,6 @@ ADMIN_FIELDS = ['id', 'n', 'ne', 'a', 't', 'r', 'dt']
 GAME_RATINGS = {'5', '4', '3'}
 TARGETS = [  # (path, variable name, fields, filter, short address)
     ('eat/index.html', 'D', HOME_FIELDS, None, False),
-    ('eat/vote/index.html', 'D', GAME_FIELDS, GAME_RATINGS, True),
-    ('eat/mix/index.html', 'D0', GAME_FIELDS, GAME_RATINGS, True),
     ('eat/cut/index.html', 'D', GAME_FIELDS, GAME_RATINGS, True),
     ('eat/admin/index.html', 'D', ADMIN_FIELDS, None, False),
 ]
