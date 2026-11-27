@@ -180,7 +180,7 @@ header{border-bottom:1px solid var(--line)}
  <section class="hero rv">
   <h1>今晚<br>吃<em>什么</em></h1>
   <p id="sub"></p>
-  <div class="cta"><button class="btn k" data-rand>随便来一家</button><a class="btn g" href="/eat/app/#map">地图</a></div>
+  <div class="cta"><button class="btn k" data-rand>随便</button><a class="btn g" href="/eat/app/#map">地图</a></div>
  </section>
 </main>
 <div class="arc" id="arc"></div>
@@ -305,5 +305,47 @@ addEventListener('scroll',()=>$('#tb').classList.toggle('on',scrollY>700),{passi
  document.getElementById('mb').onclick=()=>set(true);dr.querySelector('.dr-bg').onclick=()=>set(false);dr.querySelector('.dr-x').onclick=()=>set(false);
  addEventListener('keydown',e=>{if(e.key==='Escape')set(false)});window.drSet=set})();
 </script>
+<style>
+/* ===== 2026-11-27: 随便 roll + 换一家 ===== */
+/* fan cards use z-index 100 internally; keep them below the sheet */
+.arc{isolation:isolate}
+#sh .pn.rolling .bd h6,#sh .pn.rolling .bd p{display:none}
+#sh .pn.rolling .im{transition:background .08s,color .08s}
+#sh .pn.rolling .x{visibility:hidden}
+#sh .pn.tk h3,#sh .pn.tk .dish{animation:hrt .09s ease-out}
+@keyframes hrt{from{transform:translateY(-40%);opacity:.2}to{transform:none;opacity:1}}
+#sh .pn.pop .im .dish,#sh .pn.pop h3{animation:hpop .42s cubic-bezier(.2,1.4,.4,1) both}
+#sh .pn.pop .bd>*:not(h3){animation:hfade .45s .12s ease-out both}
+@keyframes hpop{from{transform:scale(.86) translateY(6px);opacity:0}to{transform:none;opacity:1}}
+@keyframes hfade{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+#sh .again{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:22px;height:48px;border:1px solid var(--ink,#141414);background:#fff;color:var(--ink,#141414);font:500 15px var(--sans);cursor:pointer;border-radius:999px}
+#sh .again:active{background:#f4f3f1}
+@media(prefers-reduced-motion:reduce){#sh .pn *{animation:none!important}}
+</style>
+<script>
+(function(){
+let recent=[],rolling=false,timer=0;
+const pool=()=>D.filter(x=>+x.r>=4);
+function pick(p){const f=p.filter(x=>!recent.includes(x.n));const q=f.length?f:p;const x=q[Math.floor(Math.random()*q.length)];recent.push(x.n);if(recent.length>30)recent.shift();return x}
+const AGAIN='<button class="again" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5"/></svg>换一家</button>';
+function roll(){
+  if(rolling)return;rolling=true;
+  const p=pool(),fin=pick(p),pn=$('#sh .pn');
+  const RMo=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const steps=RMo?[0]:[45,45,48,52,58,66,76,90,108,130,158,192,235];
+  pn.classList.remove('pop');pn.classList.add('rolling');let k=0;
+  const tick=()=>{
+    if(k<steps.length){let x=p[Math.floor(Math.random()*p.length)];if(p.length>1)while(x===fin)x=p[Math.floor(Math.random()*p.length)];openSheet(x);pn.classList.remove('tk');void pn.offsetWidth;pn.classList.add('tk');timer=setTimeout(tick,steps[k++]);return}
+    pn.classList.remove('rolling','tk');openSheet(fin);pn.querySelector('.bd').insertAdjacentHTML('beforeend',AGAIN);pn.classList.add('pop');pn.scrollTop=0;
+    try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}
+    rolling=false};
+  tick();
+}
+/* take over the old [data-rand] handler */
+addEventListener('click',e=>{if(e.target.closest('[data-rand]')||e.target.closest('#sh .again')){e.stopImmediatePropagation();e.preventDefault();roll()}},true);
+{const o=closeSheet;closeSheet=function(){clearTimeout(timer);rolling=false;$('#sh .pn').classList.remove('rolling','tk','pop');return o.apply(this,arguments)};$('#sh .bg').onclick=closeSheet}
+})();
+</script>
+
 </body>
 </html>

@@ -924,7 +924,7 @@ html body .ctrl{top:118px;right:14px;border:0;box-shadow:0 10px 30px -14px rgba(
 </style>
 </head>
 <body>
-<header><div class="hd"><button class="mb" id="mb" aria-label="menu"><i></i><i></i></button><a class="logo" href="/eat/"><i></i><span id="h1"><span>悉尼<i>吃喝</i></span></span></a><nav class="nav dnav" id="dnav"></nav><div class="hr"><button class="bk" id="rand">随便来一家</button></div></div><button id="menu" hidden></button></header><div id="dr"><div class="dr-bg"></div><aside class="dr-p" aria-label="menu"><div class="dr-h"><a class="logo" href="/eat/"><i></i>悉尼<b>吃喝</b></a><button class="dr-x">关闭</button></div><nav class="dr-n"><a data-v="home" data-x="1" href="/eat/" data-zh="首页|" data-en="Home|"><b>首页</b></a><a data-v="map" href="#map" data-zh="地图|" data-en="Map|"><b>地图</b></a><a data-v="list" href="#list" data-zh="全部|" data-en="All|"><b>全部</b></a><a data-v="spin" href="#spin" data-zh="转一转|" data-en="Spin|"><b>转一转</b></a><a data-v="brawl" href="#brawl" data-zh="大乱斗|" data-en="Brawl|"><b>大乱斗</b></a><a class="g2" data-v="party" href="#party" data-zh="饭局|" data-en="Group|"><b>饭局</b></a><a data-v="vote" data-x="1" href="/eat/vote/" data-zh="举手|" data-en="Hands up|"><b>举手</b></a><a data-v="mix" data-x="1" href="/eat/mix/" data-zh="合口味|" data-en="Taste mix|"><b>合口味</b></a><a data-v="cut" data-x="1" href="/eat/cut/" data-zh="划掉|" data-en="Strike out|"><b>划掉</b></a></nav><div class="dr-f"><span></span><button id="lang" class="lk">EN</button></div></aside></div>
+<header><div class="hd"><button class="mb" id="mb" aria-label="menu"><i></i><i></i></button><a class="logo" href="/eat/"><i></i><span id="h1"><span>悉尼<i>吃喝</i></span></span></a><nav class="nav dnav" id="dnav"></nav><div class="hr"><button class="bk" id="rand">随便</button></div></div><button id="menu" hidden></button></header><div id="dr"><div class="dr-bg"></div><aside class="dr-p" aria-label="menu"><div class="dr-h"><a class="logo" href="/eat/"><i></i>悉尼<b>吃喝</b></a><button class="dr-x">关闭</button></div><nav class="dr-n"><a data-v="home" data-x="1" href="/eat/" data-zh="首页|" data-en="Home|"><b>首页</b></a><a data-v="map" href="#map" data-zh="地图|" data-en="Map|"><b>地图</b></a><a data-v="list" href="#list" data-zh="全部|" data-en="All|"><b>全部</b></a><a data-v="spin" href="#spin" data-zh="转一转|" data-en="Spin|"><b>转一转</b></a><a data-v="brawl" href="#brawl" data-zh="大乱斗|" data-en="Brawl|"><b>大乱斗</b></a><a class="g2" data-v="party" href="#party" data-zh="饭局|" data-en="Group|"><b>饭局</b></a><a data-v="vote" data-x="1" href="/eat/vote/" data-zh="举手|" data-en="Hands up|"><b>举手</b></a><a data-v="mix" data-x="1" href="/eat/mix/" data-zh="合口味|" data-en="Taste mix|"><b>合口味</b></a><a data-v="cut" data-x="1" href="/eat/cut/" data-zh="划掉|" data-en="Strike out|"><b>划掉</b></a></nav><div class="dr-f"><span></span><button id="lang" class="lk">EN</button></div></aside></div>
 
 <div class="filters">
   <div class="row" id="cats"></div>
@@ -1682,7 +1682,7 @@ function XV(){const v=view;$('#xspin').style.display=v==='spin'?'block':'none';$
 document.querySelector('#dr .dr-n').addEventListener('click',e=>{const a=e.target.closest('a[data-v]');if(!a||a.dataset.v==='home'||a.dataset.x)return;e.preventDefault();drSet(false);const v=a.dataset.v;if(v==='party')history.replaceState(null,'','#party');setTimeout(()=>setView(v),180)});
 addEventListener('hashchange',()=>{const h=location.hash.slice(1).split('=')[0];if(['map','list','spin','brawl','party','swipe'].includes(h)&&h!==view)setView(h)});
 {const o=applyLang;applyLang=function(){o.apply(this,arguments);const en=LANG==='en';document.querySelectorAll('#dr .dr-n a').forEach(a=>{const [b,s]=a.dataset[en?'en':'zh'].split('|');a.querySelector('b').textContent=b;const sp=a.querySelector('span');if(sp)sp.textContent=s});
- document.querySelector('#dr .dr-x').textContent=XX().close;const r=$('#rand');if(r)r.textContent=en?'Surprise me':'随便来一家';if(XS.init)xsRender();if($('#xbrawl').innerHTML)xbRender()}}
+ document.querySelector('#dr .dr-x').textContent=XX().close;const r=$('#rand');if(r)r.textContent=en?'Surprise me':'随便';if(XS.init)xsRender();if($('#xbrawl').innerHTML)xbRender()}}
 document.getElementById('rand').onclick=()=>{const c=[];D.forEach((d,i)=>{if(d.r!=='X'&&+d.r>=4&&match(d))c.push(i)});const pool=c.length?c:D.map((d,i)=>i).filter(i=>D[i].r!=='X');open(pool[Math.floor(Math.random()*pool.length)])};
 setTimeout(()=>{try{XV()}catch(e){}},60);
 
@@ -1732,5 +1732,115 @@ function mLegend(){const en=LANG==='en';$('#mlg').innerHTML=[['5',en?'5★':'五
 mLegend();{const o=applyLang;applyLang=function(){o.apply(this,arguments);mLegend()}}
 setTimeout(()=>{try{setVB()}catch(e){}},80);
 </script>
+<style>
+/* ===== 2026-11-27: quieter legend, roomier map, 随便 ===== */
+/* legend: plain small text, no box */
+#mlg{background:none!important;box-shadow:none!important;padding:0!important;gap:9px!important;font:400 10.5px var(--sans)!important;color:var(--sub)!important;opacity:.85;text-shadow:0 0 3px #fff,0 0 3px #fff}
+#mlg i{width:6px!important;height:6px!important}
+#mlg i.k{width:auto!important;height:auto!important;background:#141414!important;color:#fff;font:700 8px/1 var(--sans);font-style:normal;padding:2px 3px}
+@media(max-width:999px){
+ #mlg{top:auto!important;bottom:calc(var(--pkh,124px) + 8px)!important;left:14px!important}
+ /* search and filter share one row */
+ #mqw{top:10px!important;height:42px!important;right:64px!important}
+ #fbar{top:10px!important;left:auto!important;right:14px!important;width:42px;padding:0!important}
+ #fbar .fb.main{width:42px;height:42px!important;padding:0!important;justify-content:center;font-size:0!important;position:relative;gap:0}
+ #fbar .fb.main .bd{position:absolute;top:-6px;right:-6px;font-size:11px!important}
+ html body .ctrl{top:64px!important;right:14px!important}
+ .ctrl button{width:38px!important;height:38px!important;font-size:18px!important}
+}
+@media(min-width:1000px){
+ #mlg{left:24px!important;bottom:26px!important}
+ html body #side{width:400px!important}
+ html body .ctrl{right:420px!important}
+ .jump{right:420px!important;max-width:calc(100% - 420px - 270px)!important;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+ .vhead{padding:12px 0 2px!important}
+ .vhead>div{display:none!important}
+ .vhead button{margin-left:auto}
+}
+/* 随便: roll animation + 换一家 */
+#sc .roll{padding:6px 0 4px;overflow:hidden}
+#sc .roll .rw{overflow:hidden}
+#sc .roll .rk{display:inline-block;font:500 11px var(--sans);letter-spacing:.08em;padding:3px 8px;margin-bottom:10px;transition:background .08s,color .08s}
+#sc .roll .rn{font:900 26px/1.3 var(--zh);color:var(--ink);min-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sc .roll .rm{font:400 13px/1.6 var(--sans);color:var(--sub);margin-top:6px;min-height:1.6em}
+#sc .roll .rn.t{animation:rtk .09s ease-out}
+@keyframes rtk{from{transform:translateY(-55%);opacity:.2}to{transform:none;opacity:1}}
+#sc.pop h3,#sc.pop .rate,#sc.pop .m{animation:rpop .42s cubic-bezier(.2,1.4,.4,1) both}
+#sc.pop .rate{animation-delay:.05s}#sc.pop .m{animation-delay:.09s}
+#sc.pop .body,#sc.pop .must,#sc.pop .go,#sc.pop .again{animation:rfade .45s .14s ease-out both}
+@keyframes rpop{from{transform:scale(.86) translateY(6px);opacity:0}to{transform:none;opacity:1}}
+@keyframes rfade{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+#sc .again{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;height:48px;border:1px solid var(--ink);background:#fff;color:var(--ink);font:500 15px var(--sans);cursor:pointer}
+#sc .again:active{background:var(--g1)}
+#sc .again svg{transition:transform .5s}
+#sc .again:hover svg{transform:rotate(180deg)}
+#rand.spin{pointer-events:none}
+@media(prefers-reduced-motion:reduce){#sc .roll .rn.t,#sc.pop *{animation:none!important}}
+</style>
+<script>
+/* ===== 2026-11-27: 随便 with roll + 换一家, pin stays visible above the sheet ===== */
+(function(){
+const CC={zh:['#fbd9c9','#8a3a1c'],jp:['#d8e8f6','#1d4a73'],kr:['#e5defa','#43308a'],cafe:['#f7e6a3','#6a5410'],bake:['#f7e6a3','#6a5410'],asia:['#d6eedc','#1f5b33'],west:['#f8d5de','#86304a'],bar:['#eceae6','#141414']};
+const CN={zh:['中餐','Chinese'],jp:['日料','Japanese'],kr:['韩餐','Korean'],cafe:['咖啡','Café'],bake:['烘焙甜品','Bakery'],asia:['东南亚','SE Asian'],west:['西餐','Western'],bar:['酒吧','Bar']};
+const en=()=>LANG==='en';
+const rk=()=>en()?'Surprise me':'随便';
+let recent=[],rolling=false,timer=0;
+function pool(){const c=[];D.forEach((d,i)=>{if(d.r!=='X'&&+d.r>=4&&match(d))c.push(i)});return c.length?c:D.map((d,i)=>i).filter(i=>D[i].r!=='X')}
+function pick(p){const fresh=p.filter(i=>!recent.includes(i));const q=fresh.length?fresh:p;const i=q[Math.floor(Math.random()*q.length)];recent.push(i);if(recent.length>Math.min(30,Math.floor(p.length/2)))recent.shift();return i}
+const AGAIN=()=>`<button class="again" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5"/></svg>${en()?'Another one':'换一家'}</button>`;
+function roll(){
+  if(rolling)return;rolling=true;
+  const p=pool(),fin=pick(p),sc=$('#sc');
+  sc.classList.remove('pop');
+  sc.innerHTML='<div class="roll"><span class="rk"></span><div class="rw"><div class="rn"></div></div><div class="rm"></div></div>';
+  $('#sheet').classList.add('on');$('#mask').classList.add('on');$('#sheet').scrollTop=0;
+  const rkE=sc.querySelector('.rk'),rn=sc.querySelector('.rn'),rm=sc.querySelector('.rm');
+  const show=i=>{const d=D[i],c=CC[d.c]||CC.bar;rkE.style.background=c[0];rkE.style.color=c[1];rkE.textContent=(CN[d.c]||['',''])[en()?1:0]||F.t(d);rn.textContent=F.n(d);rn.classList.remove('t');void rn.offsetWidth;rn.classList.add('t');rm.textContent=F.t(d)+' · '+F.a(d);try{hl(i)}catch(e){}};
+  const RMo=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const steps=RMo?[0]:[45,45,48,52,58,66,76,90,108,130,158,192,235];
+  let k=0;
+  const tick=()=>{
+    if(k<steps.length){let j=p[Math.floor(Math.random()*p.length)];if(p.length>1)while(j===fin)j=p[Math.floor(Math.random()*p.length)];show(j);timer=setTimeout(tick,steps[k++]);return}
+    try{hl(null)}catch(e){}
+    open(fin);sc.insertAdjacentHTML('beforeend',AGAIN());sc.classList.add('pop');
+    try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}
+    rolling=false;
+  };
+  tick();
+}
+window.xRoll=roll;
+const rb=$('#rand');rb.textContent=rk();rb.onclick=roll;
+$('#sc').addEventListener('click',e=>{if(e.target.closest('.again'))roll()});
+/* stop a roll when the sheet is closed */
+{const o=close;close=function(){clearTimeout(timer);rolling=false;try{hl(null)}catch(e){}return o.apply(this,arguments)};$('#close').onclick=close;$('#mask').onclick=close}
+/* opening any shop by hand drops the roll styling */
+{const o=open;open=function(i){$('#sc').classList.remove('pop');const d=D[i],was=d&&d.xy&&vb&&inView(d);o.apply(this,arguments);if(was)requestAnimationFrame(()=>keepVisible(+i))}}
+/* if the pin is under the detail sheet, slide the map so it shows */
+function keepVisible(i){try{
+  if(view!=='map'||!vb)return;const g=document.querySelector('#pins [data-i="'+i+'"],#selg [data-i="'+i+'"]');if(!g)return;
+  const R=wrap.getBoundingClientRect(),P=g.getBoundingClientRect(),px=P.left+P.width/2,py=P.top+P.height/2,s=vb.w/R.width;
+  let dx=0,dy=0;
+  if(isDT()){const right=innerWidth-$('#sheet').offsetWidth-40;if(px>right)dx=px-(R.left+(right-R.left)*.5)}
+  else{const top=innerHeight-$('#sheet').offsetHeight-30;if(py>top)dy=py-(R.top+(top-R.top)*.55)}
+  if(dx||dy)animVB({x:vb.x+dx*s,y:vb.y+dy*s,w:vb.w,h:vb.h},500)
+}catch(e){}}
+/* selected pin sits above cluster squares, otherwise a cluster can hide it */
+{const o=clusterize;clusterize=function(){o.apply(this,arguments);try{const C=$('#clus');let S=$('#selg');if(!S){S=document.createElementNS(NS,'g');S.id='selg';C.after(S)}
+  [...S.children].forEach(g=>{if(!g.classList.contains('sel'))$('#pins').appendChild(g)});
+  const g=$('#pins .sel');if(g)S.appendChild(g)}catch(e){}}}
+/* map hidden (spin/brawl opened directly): skip, otherwise pins get scale(Infinity) */
+{const o=setVB;setVB=function(){if(!wrap.getBoundingClientRect().width){window._vbPend=1;return}window._vbPend=0;return o.apply(this,arguments)}}
+{const o=setView;setView=function(){const r=o.apply(this,arguments);if(window._vbPend)requestAnimationFrame(()=>{try{setVB()}catch(e){}});return r}}
+addEventListener('hashchange',()=>{if(window._vbPend)setTimeout(()=>{try{setVB()}catch(e){}},30)});
+/* keep the legend just above the peek strip on phones */
+function pkh(){const p=$('#peek');if(p)document.documentElement.style.setProperty('--pkh',(p.offsetHeight||0)+'px')}
+pkh();addEventListener('resize',pkh);try{new ResizeObserver(pkh).observe($('#peek'))}catch(e){}
+/* legend: 2★ added, cluster swatch shows a number so it is not confused with 3★ */
+mLegend=function(){const E=en();$('#mlg').innerHTML=[['5',E?'5★':'五星'],['4',E?'4★':'四星'],['3',E?'3★':'三星'],['2',E?'2★':'两星']].map(([r,l])=>`<span><i style="background:${CL[r]}"></i>${l}</span>`).join('')+`<span><i class="k">3</i>${E?'Group':'多家'}</span>`;$('#mq').placeholder=E?'Search name, area or dish':'搜索店名、区域或菜'};
+mLegend();
+{const o=applyLang;applyLang=function(){o.apply(this,arguments);const r=$('#rand');if(r)r.textContent=rk();mLegend()}}
+})();
+</script>
+
 </body>
 </html>
