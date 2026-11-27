@@ -458,6 +458,10 @@ header,.hd{background:rgba(247,244,239,.86)!important;backdrop-filter:blur(14px)
 #sh .again{border-radius:14px!important}
 </style>
 <style>
+/* keep the page exactly screen wide: the tilted ticker and the glow reach past the edges on purpose */
+html,body{overflow-x:hidden}
+@supports(overflow:clip){html,body{overflow-x:clip}}
+.hero:before{width:min(560px,100vw)!important;height:min(560px,100vw)!important}
 /* ===== 2026-11-28 A+: grain, hero glow, rotating stamp, ticker, numbered tiles ===== */
 body:after{content:'';position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.07;mix-blend-mode:multiply;
  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
