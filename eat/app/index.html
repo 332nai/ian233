@@ -1960,5 +1960,28 @@ header,.hd{background:rgba(247,244,239,.86)!important;backdrop-filter:blur(14px)
 @media(min-width:700px){#sh .pn{border-radius:28px!important}}
 #sh .again{border-radius:14px!important}
 </style>
+<style>
+/* ===== 2026-11-28 A+: map page touches ===== */
+#rand{display:inline-flex!important;align-items:center;gap:7px;position:relative;overflow:hidden}
+#rand:after{content:'';position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);animation:xsh 3.2s ease-in-out infinite}
+@keyframes xsh{0%,60%{left:-60%}100%{left:130%}}
+#mqw:focus-within{box-shadow:0 0 0 3px rgba(214,52,42,.25),0 10px 30px -12px rgba(60,40,20,.35)!important}
+#list .card{transition:transform .2s cubic-bezier(.3,1.4,.5,1),box-shadow .2s;position:relative;overflow:hidden}
+#list .card:hover,#list .card:active{transform:translateY(-2px);box-shadow:0 18px 34px -18px rgba(60,40,20,.45)}
+#sheet h3{position:relative}
+#sheet .rate{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px!important;background:#fff3ef;margin:4px 0 10px!important}
+#peek .pc{transition:transform .2s}
+#peek .pc:active{transform:scale(.97)}
+@media(prefers-reduced-motion:reduce){#rand:after{animation:none}}
+</style>
+<script>
+/* A+: dice on 随便; list cards get a cuisine colour edge */
+(function(){
+const r=document.getElementById('rand');if(r&&!r.querySelector('svg'))r.insertAdjacentHTML('afterbegin','<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>');
+
+/* keep the dice when the label is rewritten on language change */
+{const o=applyLang;applyLang=function(){o.apply(this,arguments);const b=document.getElementById('rand');if(b&&!b.querySelector('svg')){const t=b.textContent;b.innerHTML='';b.insertAdjacentHTML('afterbegin','<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>');b.append(t)}}}
+})();
+</script>
 </body>
 </html>
