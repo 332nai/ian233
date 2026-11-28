@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>饭搭子 · 悉尼吃喝</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#141414;--sub:#7a7772;--g1:#f4f3f1;--g2:#eceae6;--line:#e4e2de;--red:#d6342a;--serif:"Instrument Serif","Noto Serif SC",serif;--zh:"Noto Serif SC",serif;--sans:"Noto Sans SC",system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;background:#f7f4ef;color:var(--ink);font:15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;min-height:100dvh}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}a{color:inherit;text-decoration:none}
+header{position:sticky;top:0;z-index:30;background:rgba(247,244,239,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.hd{max-width:720px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:12px}
+.bk{width:36px;height:36px;display:grid;place-items:center;border-radius:50%;background:#fff;box-shadow:0 4px 14px -8px rgba(0,0,0,.3)}
+.hd .t{display:flex;align-items:center;gap:10px;flex:1}
+.hd .av{width:34px;height:34px;border-radius:11px;background:#141414;color:#fff;display:grid;place-items:center;font:900 15px var(--zh);position:relative}
+.hd .av:after{content:'';position:absolute;right:-2px;bottom:-2px;width:9px;height:9px;border-radius:50%;background:#2fa36b;border:2px solid #f7f4ef}
+.hd b{font:900 18px var(--zh)}.hd .tag{font:700 10px/1 var(--sans);letter-spacing:.08em;padding:4px 6px;border-radius:6px;background:var(--red);color:#fff}
+.hd .new{font-size:13px;color:var(--sub);padding:6px 4px;display:none}.chatting .hd .new{display:block}
+main{max-width:720px;margin:0 auto;padding:8px 18px 150px}
+.intro{padding:7vh 0 10px;text-align:center}
+.intro .big{width:76px;height:76px;margin:0 auto 18px;border-radius:24px;background:#141414;color:#fff;display:grid;place-items:center;font:900 34px var(--zh);box-shadow:0 18px 40px -18px rgba(0,0,0,.5);animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-3deg)}}
+.intro h1{margin:0;font:900 30px/1.3 var(--zh)}
+.intro p{margin:8px 0 0;color:var(--sub);font-size:14px}
+.intro .now{display:inline-block;margin-top:16px;font-size:12.5px;color:#a3301f;background:#fdeae5;border-radius:999px;padding:4px 12px}
+.sugs{display:flex;flex-direction:column;gap:10px;margin:22px auto 0;max-width:460px}
+.sugs button{text-align:left;background:#fff;border-radius:16px;padding:13px 16px;font-size:14.5px;box-shadow:0 6px 20px -14px rgba(60,40,20,.35);display:flex;justify-content:space-between;align-items:center;gap:10px;animation:sgin .35s ease both}
+.sugs button:after{content:'↗';color:var(--sub);font-size:13px}
+.sugs button:active{transform:scale(.98)}
+.re{display:inline-flex;align-items:center;gap:6px;margin-top:16px;color:var(--sub);font-size:13px;padding:6px}
+.re svg{transition:transform .4s}.re:active svg{transform:rotate(180deg)}
+.chatting .intro{display:none}
+.chat{display:flex;flex-direction:column;gap:14px;padding-top:10px}
+.bub{align-self:flex-end;background:#141414;color:#fff;border-radius:18px 18px 4px 18px;padding:10px 16px;max-width:85%;font-size:15px}
+.ans{font-size:15px;line-height:1.7}
+.dots{display:inline-flex;gap:4px}.dots i{width:6px;height:6px;border-radius:50%;background:var(--sub);animation:dt 1s infinite}.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes dt{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes sgin{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(rgba(247,244,239,0),#f7f4ef 30%)}
+.inp{max-width:690px;margin:0 auto;display:flex;align-items:center;gap:6px;background:#fff;border-radius:18px;padding:6px 6px 6px 8px;box-shadow:0 10px 30px -14px rgba(60,40,20,.4)}
+.inp:focus-within{box-shadow:0 0 0 3px rgba(214,52,42,.18),0 10px 30px -14px rgba(60,40,20,.4)}
+.inp input{flex:1;border:0;background:none;font:16px var(--sans);outline:none;min-width:0;padding:8px 4px}
+.inp #go{width:40px;height:40px;border-radius:13px;background:var(--ink);color:#fff;font-size:18px;display:grid;place-items:center}
+.inp .loc{width:36px;height:36px;border-radius:50%;color:var(--sub);display:grid;place-items:center;flex:none}
+.inp .loc.on{background:#fde9e5;color:var(--red)}
+.ai-say{font-size:15px;line-height:1.75}
+.ai-st{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--sub)}
+.aic{display:flex;gap:12px;background:#fff;border-radius:16px;padding:10px;margin-top:10px;cursor:pointer;transition:transform .15s;box-shadow:0 6px 20px -16px rgba(60,40,20,.4)}
+.aic:active{transform:scale(.98)}
+.aic .im{flex:none;width:84px;min-height:96px;border-radius:12px;padding:8px;display:flex;flex-direction:column;justify-content:space-between}
+.aic .im .st{font-size:10px;letter-spacing:1px}.aic .im .dish{font:900 14px/1.2 var(--zh)}
+.aic .tx{flex:1;min-width:0}.aic .tx b{display:block;font:900 16px/1.3 var(--zh)}
+.aic .tx .m{display:block;font-size:12px;color:var(--sub);margin-top:2px}.aic .tx p{margin:6px 0 0;font-size:14px;line-height:1.65}
+.ai-fu{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ai-fu button{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px}
+/* detail sheet, same as the homepage */
+#sh{position:fixed;inset:0;z-index:60;display:none}#sh.on{display:block}
+#sh .bg{position:absolute;inset:0;background:rgba(20,20,20,.35);backdrop-filter:blur(3px)}
+#sh .pn{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(640px,100%);max-height:88vh;overflow:auto;background:#fffdf9;border-radius:28px 28px 0 0;padding:10px 0 30px;animation:up .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes up{from{transform:translate(-50%,40px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+@media(min-width:700px){#sh .pn{bottom:auto;top:50%;transform:translate(-50%,-50%);border-radius:28px;animation:none}}
+#sh .bd{padding:22px 24px 0}
+#sh .x{position:absolute;top:16px;right:18px;font:500 14px var(--sans);color:var(--sub);z-index:5}
+#sh .pn:has(.xph) .x{background:rgba(255,255,255,.92);padding:5px 10px;top:26px;right:30px}
+#sh h3{margin:6px 56px 8px 0;font:900 27px/1.3 var(--zh)}
+#sh .rate{display:inline-flex;align-items:center;padding:4px 12px;border-radius:999px;background:#fff3ef;color:#d6342a;font:400 19px/1.2 var(--zh);letter-spacing:2px;margin:2px 0 12px}
+#sh .rate.r4{color:#e0703a}#sh .rate.r3{color:#141414}#sh .rate.r2{color:#4f7fb0}#sh .rate.rX{color:#a8a8a8;font-size:14px}
+#sh .m{font:400 14px/1.6 var(--sans);color:var(--sub);padding-bottom:14px;border-bottom:1px solid var(--line)}
+#sh .body,#sh .must{font:400 16px/1.9 var(--zh);margin-top:14px}
+#sh .gmap{display:block;text-align:center;margin:22px 0 6px;padding:13px;background:#d6342a;color:#fff;border-radius:14px;font:400 16px var(--zh)}
+#sh .xph{margin:0 -24px 18px;padding:0 24px}#sh .xph-s{padding:0 24px;margin:0 -24px;scroll-padding:0 24px}#sh .xph-n{right:32px}
+</style>
+</head>
+<body>
+<header><div class="hd"><a class="bk" href="/eat/" aria-label="返回首页"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></a>
+ <div class="t"><div class="av">吃</div><b>饭搭子</b><span class="tag">AI</span></div><button class="new" id="new">新对话</button></div></header>
+<main>
+ <section class="intro">
+  <div class="big">吃</div>
+  <h1>今天想吃点什么？</h1>
+  <p>几个人、在哪、预算、口味，说得越具体越准</p>
+  <span class="now" id="now"></span>
+  <div class="sugs" id="sugs"></div>
+  <button class="re" id="re"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5"/></svg>换一批</button>
+ </section>
+ <div class="chat" id="chat"></div>
+</main>
+<div class="bar"><div class="inp"><button class="loc" id="loc" aria-label="用我的位置"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></button><input id="q" placeholder="几个人、在哪、预算、想吃什么" enterkeyhint="send" maxlength="300"><button id="go" aria-label="发送">↑</button></div></div>
+<div id="sh"><div class="bg"></div><div class="pn"></div></div>
+<style>
+/* ===== photos in the detail sheet ===== */
+.xph{position:relative;margin:2px -20px 14px;padding:0 20px}
+.xph-s{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 20px;margin:0 -20px;scroll-padding:0 20px}
+.xph-s::-webkit-scrollbar{display:none}
+.xph-s button{flex:none;height:190px;padding:0;border:0;background:#eceae6;scroll-snap-align:start;cursor:zoom-in;overflow:hidden}
+.xph-s img{height:100%;width:100%;object-fit:cover;display:block;opacity:0;transition:opacity .3s}
+.xph-s img.ok{opacity:1}
+.xph-n{position:absolute;right:28px;bottom:8px;background:rgba(20,20,20,.72);color:#fff;font:500 11px var(--sans,sans-serif);padding:2px 8px;pointer-events:none}
+#xlb{position:fixed;inset:0;z-index:9999;background:#0d0d0d;display:none;flex-direction:column}
+#xlb.on{display:flex}
+#xlb .s{flex:1;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+#xlb .s::-webkit-scrollbar{display:none}
+#xlb figure{flex:none;width:100%;height:100%;margin:0;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 0 20px}
+#xlb figure img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+#xlb figcaption{color:#ddd;font:400 14px/1.6 var(--sans,sans-serif);padding:10px 20px 0;text-align:center;min-height:1.6em}
+#xlb .t{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:12px 14px calc(12px);color:#fff;font:500 13px var(--sans,sans-serif);z-index:2;background:linear-gradient(#0d0d0d,transparent)}
+#xlb .t button{width:40px;height:40px;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:22px;line-height:1;cursor:pointer}
+#xlb .nv{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:64px;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:22px;cursor:pointer;z-index:2}
+#xlb .nv.p{left:10px}#xlb .nv.n{right:10px}
+@media(hover:none){#xlb .nv{display:none}}
+</style>
+<script>
+/* ===== photos: read only, public. If Supabase is down or paused the sheet just has no photos ===== */
+window.EatPhotos=(function(){
+const U='https://hmipkgllqnyvabcntipb.supabase.co',K='sb_publishable_9tEEaEglzcirAP7ZRu3DCQ_Weczqod8';
+const PUB=p=>`${U}/storage/v1/object/public/photos/${p}`;
+let M=null,pr=null;
+const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function load(){if(pr)return pr;
+  pr=fetch(U+'/rest/v1/photos?select=rid,path,thumb,w,h,caption,sort&order=rid.asc,sort.asc,created_at.asc',{headers:{apikey:K}})
+   .then(r=>r.ok?r.json():[]).catch(()=>[]).then(a=>{M={};(Array.isArray(a)?a:[]).forEach(p=>(M[p.rid]=M[p.rid]||[]).push(p));return M});
+  return pr}
+function strip(rid){const a=(M&&M[rid])||[];if(!a.length)return null;
+  const el=document.createElement('div');el.className='xph';
+  el.innerHTML=`<div class="xph-s">${a.map((p,k)=>{const r=p.w&&p.h?p.w/p.h:1.33;return `<button type="button" data-k="${k}" style="width:${Math.round(Math.min(300,Math.max(140,190*r)))}px" aria-label="photo ${k+1}"><img src="${PUB(p.thumb)}" alt="${E(p.caption||'')}" loading="lazy" onload="this.classList.add('ok')"></button>`}).join('')}</div>${a.length>1?`<span class="xph-n">${a.length}</span>`:''}`;
+  el.addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(b)lb(a,+b.dataset.k)});
+  return el}
+/* put a strip into the sheet once the list is in; ok() says the same shop is still open */
+function into(rid,ok,put){const go=()=>{if(!ok())return;const s=strip(rid);if(s)put(s)};if(M)go();else load().then(go)}
+let L=null;
+function lb(a,k){
+  if(!L){L=document.createElement('div');L.id='xlb';document.body.appendChild(L);
+    addEventListener('keydown',e=>{if(!L.classList.contains('on'))return;if(e.key==='Escape')close();if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1)})}
+  L.innerHTML=`<div class="t"><span class="c"></span><button type="button" class="x" aria-label="close">×</button></div>
+   <div class="s">${a.map(p=>`<figure><img src="${PUB(p.path)}" alt="${E(p.caption||'')}"><figcaption>${E(p.caption||'')}</figcaption></figure>`).join('')}</div>
+   ${a.length>1?'<button type="button" class="nv p" aria-label="prev">‹</button><button type="button" class="nv n" aria-label="next">›</button>':''}`;
+  const s=L.querySelector('.s'),c=L.querySelector('.c');
+  const cur=()=>Math.round(s.scrollLeft/s.clientWidth);
+  const upd=()=>{c.textContent=a.length>1?`${cur()+1} / ${a.length}`:''};
+  s.addEventListener('scroll',upd,{passive:true});
+  L.querySelector('.x').onclick=close;
+  L.querySelectorAll('.nv').forEach(b=>b.onclick=()=>step(b.classList.contains('n')?1:-1));
+  L.classList.add('on');document.documentElement.style.overflow='hidden';
+  s.scrollLeft=k*s.clientWidth;upd();
+  function step(d){s.scrollTo({left:Math.max(0,Math.min(a.length-1,cur()+d))*s.clientWidth,behavior:'smooth'})}
+  L._step=step;
+}
+function step(d){L&&L._step&&L._step(d)}
+function close(){if(!L)return;L.classList.remove('on');L.innerHTML='';document.documentElement.style.overflow=''}
+(window.requestIdleCallback||setTimeout)(()=>load(),{timeout:2500});
+return {load,strip,into,close};
+})();
+</script>
+<script src="/eat/fd-sug.js"></script>
+<script>
+let D=[];
+const $=s=>document.querySelector(s);
+const PAL=[['#fbd9c9','#8a3a1c'],['#d8e8f6','#1d4a73'],['#e5defa','#43308a'],['#f7e6a3','#6a5410'],['#d6eedc','#1f5b33'],['#f8d5de','#86213e'],['#e9e4dc','#3d362c']];
+const GRP=[[/日|寿司|拉面|Omakase|居酒屋|烧鸟/i,1],[/韩/,2],[/火锅|烤|炸串|川|湘|重庆|冒菜|自贡|贵州|麻辣/,0],[/咖啡|Cafe|Brunch|烘焙|可颂|蛋糕|甜|冰淇淋|糖水/i,3],[/越南|泰|马来|印尼|菲律宾|云南/,4],[/意|法|希腊|西餐|Pizza|牛排|澳|墨西哥|土耳其|波斯|汉堡/i,5]];
+const pal=t=>{for(const [re,i] of GRP)if(re.test(t))return PAL[i];return PAL[6]};
+const stars=r=>'★'.repeat(+r)+'<span style="opacity:.25">'+'★'.repeat(5-r)+'</span>';
+const dish=x=>(x.d||x.t||'').split(/[、，,]/)[0].replace(/[（(].*$/,'').slice(0,12);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* ===== ask: keyword parser ===== */
+const CUI=[['日料',/日|寿司|拉面|Omakase|居酒屋|烧鸟|炸猪排/i],['寿司',/寿司|Omakase/i],['拉面',/拉面/],['韩',/韩/],['火锅',/火锅/],['烧烤',/烤|炸串/],['川湘',/川|湘|重庆|冒菜|自贡|贵州/],['辣',/川|湘|重庆|冒菜|自贡|贵州|麻辣|火锅/],['粤',/粤|早茶|茶餐厅|潮|港/],['早茶',/早茶|酒楼/],['面',/面|粉|米线/],['咖啡',/咖啡|Cafe|Brunch/i],['brunch',/Brunch|Cafe/i],['甜品',/甜|蛋糕|冰淇淋|糖水|可颂|烘焙|甜甜圈/],['面包',/烘焙|可颂|面包/],['意大利',/意|Pizza/i],['意',/意|Pizza/i],['法',/法/],['西餐',/西餐|牛排|现代澳|法|意|希腊/],['泰',/泰/],['越南',/越南/],['东南亚',/泰|越南|马来|印尼|菲律宾/],['汉堡',/汉堡/],['炸鸡',/炸鸡|烤鸡/],['东北',/东北/],['云南',/云南/],['台湾',/台湾/],['墨西哥',/墨西哥/],['中东',/波斯|土耳其|黎巴嫩/]];
+const AREAS=[...new Set(D.map(x=>x.a))];
+const CBD=/CBD|唐人街|World Square|Circular Quay|The Rocks|Barangaroo|Darling|Haymarket|Wynyard|Martin Place/i;
+function parse(q){let s=q.trim(),f={cu:[],area:null,max:null,min:null,r:null,txt:[]},lab=[];
+ let m=s.match(/(?:人均)?\s*\$?(\d{2,3})\s*(?:块|刀|元|澳)?\s*(?:以内|以下|内|左右)/);if(m){f.max=+m[1]*(/左右/.test(m[0])?1.25:1);lab.push('≤$'+m[1]);s=s.replace(m[0],' ')}
+ else if((m=s.match(/人均\s*\$?(\d{2,3})/))){f.max=+m[1];lab.push('≤$'+m[1]);s=s.replace(m[0],' ')}
+ if(/便宜|实惠|平价|穷/.test(s)){f.max=f.max||22;lab.push('便宜');s=s.replace(/便宜|实惠|平价/g,' ')}
+ if(/大餐|贵|奢|约会|纪念日|请客/.test(s)){f.min=50;lab.push('值得专程');s=s.replace(/大餐|贵的?|约会|纪念日|请客/g,' ')}
+ if(/五星|最好吃|必吃/.test(s)){f.r=5;lab.push('五星');s=s.replace(/五星|最好吃|必吃/g,' ')}else if(/四星|好吃的?|推荐/.test(s)){f.r=4;lab.push('四星以上');s=s.replace(/四星以上|四星|好吃的?|推荐/g,' ')}
+ if(/\bCBD\b|城里|市中心|市区|唐人街/i.test(s)){f.area=CBD;lab.push('市区');s=s.replace(/CBD|城里|市中心|市区/ig,' ')}
+ else{const a=AREAS.filter(a=>a.length>2).sort((a,b)=>b.length-a.length).find(a=>s.toLowerCase().includes(a.toLowerCase().replace(/,.*$/,'')));if(a){const key=a.replace(/,.*$/,'');f.area=new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i');lab.push(key);s=s.replace(new RegExp(key,'i'),' ')}}
+ for(const [k,re] of CUI)if(s.toLowerCase().includes(k.toLowerCase())){f.cu.push(re);lab.push(k);s=s.replace(new RegExp(k,'ig'),' ')}
+ f.sweet=/咖啡|cafe|brunch|甜|蛋糕|面包|冰淇淋/i.test(q);
+ f.txt=s.replace(/[，,。！？!?、]|想吃|吃|一家|的|有没有|附近|周末|今晚|推荐|找|在|去|哪里|和|还有/g,' ').split(/\s+/).filter(w=>w.length>=2);
+ f.txt.forEach(w=>lab.push('“'+w+'”'));return [f,lab]}
+function search(q){const [f,lab]=parse(q);let r=D.filter(x=>{const blob=x.t+' '+x.n+' '+(x.d||'')+' '+(x.ne||'');
+  if(f.cu.length&&!f.cu.some(re=>re.test(x.t)||re.test(x.n)))return false;
+  if(f.cu.length&&!f.sweet&&/咖啡|Cafe|Brunch|甜|蛋糕|冰淇淋|烘焙|可颂|甜甜圈|糖水/i.test(x.t))return false;
+  if(f.area&&!f.area.test(x.a))return false;if(f.max&&x.p>f.max)return false;if(f.min&&x.p<f.min)return false;if(f.r&&+x.r<f.r)return false;
+  if(f.txt.length&&!f.txt.every(w=>blob.toLowerCase().includes(w.toLowerCase())||(x.i||'').includes(w)||x.a.toLowerCase().includes(w.toLowerCase())))return false;return true});
+ r.sort((a,b)=>b.r-a.r||a.p-b.p);return [r,lab]}
+
+function openSheet(x){if(!x)return;const g='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(x.n.replace(/（.*?）/g,'')+' '+x.a.replace(/（.*?）/g,'')+' Sydney');
+ const pn=$('#sh .pn');pn.innerHTML=`<button class="x" onclick="closeSheet()">关闭</button>
+ <div class="bd"><h3>${esc(x.n)}</h3><div class="rate r${x.r}">${x.r==='X'?'不推荐':stars(+x.r)}</div><div class="m">${esc(x.t)} · ${esc(x.a)}${x.p?' · 人均约 $'+x.p:''}</div>
+ <div class="body">${esc(x.i)}</div>${x.d?`<div class="must">推荐：${esc(x.d)}</div>`:''}<a class="gmap" target="_blank" rel="noopener" href="${g}">在 Google 地图打开</a></div>`;$('#sh').classList.add('on');
+ try{EatPhotos.into(x.id,()=>$('#sh').classList.contains('on')&&$('#sh h3').textContent===x.n&&!pn.querySelector('.xph'),s=>pn.querySelector('.bd').prepend(s))}catch(e){}}
+function closeSheet(){$('#sh').classList.remove('on');try{EatPhotos.close()}catch(e){}}
+$('#sh .bg').onclick=closeSheet;addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+(async function(){
+const FN='https://hmipkgllqnyvabcntipb.supabase.co/functions/v1/ask',KEY='sb_publishable_9tEEaEglzcirAP7ZRu3DCQ_Weczqod8';
+const dataP=fetch('/eat/data.json').then(r=>r.json()).then(a=>{D=a;AREAS.splice(0,AREAS.length,...new Set(D.map(x=>x.a)));return a}).catch(()=>[]);
+let byId=new Map(),turns=[],here=null,busy=false;
+const chat=$('#chat'),inp=$('#q');
+const drawSug=()=>{$('#now').textContent=FD.now;$('#sugs').innerHTML=FD.list().map((s,k)=>`<button style="animation-delay:${k*50}ms">${esc(s)}</button>`).join('')};
+drawSug();FD.onWeather(()=>{if(!turns.length&&!busy)drawSug()});
+$('#re').onclick=drawSug;$('#sugs').onclick=e=>{const b=e.target.closest('button');if(b)ask(b.textContent)};
+$('#new').onclick=()=>{turns=[];chat.innerHTML='';document.body.classList.remove('chatting');drawSug();scrollTo(0,0)};
+function locate(){return new Promise(res=>{if(here)return res(here);if(!navigator.geolocation)return res(null);
+  navigator.geolocation.getCurrentPosition(p=>{here={lat:p.coords.latitude,lon:p.coords.longitude};$('#loc').classList.add('on');res(here)},()=>res(null),{timeout:8000,maximumAge:600000})})}
+$('#loc').onclick=async()=>{if(here){here=null;$('#loc').classList.remove('on');return}await locate()};
+$('#go').onclick=()=>ask(inp.value);inp.onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing)ask(inp.value)};
+chat.addEventListener('click',e=>{const c=e.target.closest('.aic');if(c){openSheet(byId.get(+c.dataset.id));return}const f=e.target.closest('.ai-fu button');if(f)ask(f.textContent)});
+const card=(x,p)=>{const [bg,fg]=pal(x.t);return `<div class="aic" data-id="${x.id}"><div class="im" style="background:${bg};color:${fg}"><span class="st">${stars(+x.r)}</span><span class="dish">${esc(dish(x))}</span></div><div class="tx"><b>${esc(x.n)}</b><span class="m">${esc(x.a.replace(/[（(].*$/,''))}${x.p?' · $'+x.p:''}${p.km!=null?' · '+p.km+' km':''}</span>${p.why?`<p>${esc(p.why)}</p>`:''}</div></div>`};
+const down=el=>el.scrollIntoView({block:'end',behavior:'smooth'});
+async function ask(q){q=(q||'').trim();if(!q||busy)return;busy=true;inp.value='';inp.blur();document.body.classList.add('chatting');
+  const b=document.createElement('div');b.className='bub';b.textContent=q;chat.appendChild(b);
+  const a=document.createElement('div');a.className='ans';a.innerHTML=`<span class="ai-st"><span class="dots"><i></i><i></i><i></i></span><span class="tx">在翻点评</span></span>`;chat.appendChild(a);down(a);
+  const steps=[[2200,'在比较几家候选'],[5500,'在挑最合适的'],[9000,'快好了']].map(([ms,t])=>setTimeout(()=>{const s=a.querySelector('.ai-st .tx');if(s)s.textContent=t},ms));
+  if(/附近|近一点|离我|nearby|near me/i.test(q))await locate();
+  await dataP;byId=new Map(D.map(x=>[x.id,x]));
+  let r=null,err='';
+  try{const ctl=new AbortController();setTimeout(()=>ctl.abort(),30000);
+    const res=await fetch(FN,{method:'POST',signal:ctl.signal,headers:{'content-type':'application/json',apikey:KEY,authorization:'Bearer '+KEY},body:JSON.stringify({q,turns,...(here||{})})});
+    r=await res.json().catch(()=>null);if(!res.ok)err=(r&&r.error)||('http'+res.status)}catch(e){err='net'}
+  steps.forEach(clearTimeout);
+  if(!err&&r){const picks=(r.picks||[]).filter(p=>byId.has(p.id));
+    a.innerHTML=`<div class="ai-say">${esc(r.say||'')}</div>${picks.map(p=>card(byId.get(p.id),p)).join('')}${(r.follow||[]).length?`<div class="ai-fu">${r.follow.map(f=>`<button>${esc(f)}</button>`).join('')}</div>`:''}`;
+    turns.push({q,say:r.say||'',ids:picks.map(p=>p.id)});turns=turns.slice(-3)}
+  else{a.innerHTML=`<div class="ai-say">${/limit/.test(err)?(err==='limit_ip'?'今天问得有点多了，明天再来吧。':'今天大家问得太多，饭搭子下班了，明天再来。'):'饭搭子暂时不在线'}，先按关键词帮你找：</div>`;
+    const [res]=search(q);a.insertAdjacentHTML('beforeend',res.length?res.slice(0,3).map(x=>card(x,{})).join(''):'<div class="ai-say">没找到，区域或人均放宽一点再试。</div>')}
+  a.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:400,easing:'cubic-bezier(.2,.8,.2,1)'});
+  b.scrollIntoView({block:'start',behavior:'smooth'});busy=false}
+const q0=new URLSearchParams(location.search).get('q');if(q0){history.replaceState(null,'',location.pathname);ask(q0)}
+})();
+</script>
+</body>
+</html>
