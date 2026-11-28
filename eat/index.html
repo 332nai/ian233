@@ -236,8 +236,8 @@ buildArc();arcPlay();addEventListener('resize',layArc);
  A.addEventListener('mouseenter',()=>clearInterval(arcT));A.addEventListener('mouseleave',arcPlay)}
 /* ===== sheet ===== */
 function openSheet(x){const [bg,fg]=pal(x.t);$('#sh .pn').innerHTML=`<div class="im" style="background:${bg};color:${fg}"><span class="st" style="color:${fg}">${stars(+x.r)}</span><span class="dish">${esc(dish(x))}</span></div><button class="x" onclick="closeSheet()">×</button>
- <div class="bd"><h3>${esc(x.n)}</h3><div class="chips"><span>${esc(x.t)}</span><span>${esc(x.a)}</span><span>人均 $${x.p}</span>${x.dt?`<span>${x.dt.replaceAll('-','.')}</span>`:''}</div><a class="gmap" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(x.n.replace(/（.*?）/g,'')+' '+x.a.replace(/（.*?）/g,'')+' Sydney')}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Google 地图</a>
- ${x.d?`<h6>推荐</h6><p>${esc(x.d)}</p>`:''}<h6>点评</h6><p>${esc(x.i)}</p></div>`;$('#sh').classList.add('on')}
+ <div class="bd"><h3>${esc(x.n)}</h3><div class="chips"><span>${esc(x.t)}</span><span>${esc(x.a)}</span><span>人均 $${x.p}</span>${x.dt?`<span>${x.dt.replaceAll('-','.')}</span>`:''}</div>
+ ${x.d?`<h6>推荐</h6><p>${esc(x.d)}</p>`:''}<h6>点评</h6><p>${esc(x.i)}</p><a class="gmap" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(x.n.replace(/（.*?）/g,'')+' '+x.a.replace(/（.*?）/g,'')+' Sydney')}">在 Google 地图打开</a></div>`;$('#sh').classList.add('on')}
 function closeSheet(){$('#sh').classList.remove('on')}
 $('#sh .bg').onclick=closeSheet;addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 document.addEventListener('click',e=>{if(e.target.closest('[data-rand]')){const c=D.filter(x=>+x.r>=4);openSheet(c[Math.floor(Math.random()*c.length)])}});
@@ -505,7 +505,7 @@ t.addEventListener('click',e=>{const a=e.target.closest('a[data-k]');if(a)openSh
 </script>
 <style>
 /* ===== AI 美食顾问 (replaces the keyword 问一问) ===== */
-#sh .gmap{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:9px 16px;background:#141414;color:#fff;border-radius:999px!important;font-size:14px;font-weight:600;text-decoration:none}
+#sh .gmap{display:block;text-align:center;margin:22px 0 6px;padding:13px;background:#d6342a;color:#fff;border-radius:14px!important;font:400 16px var(--zh,'Noto Serif SC',serif);text-decoration:none}
 #sh .gmap:active{transform:scale(.97)}
 .panel.ai{min-height:0;padding:20px 18px 18px}
 .ai-hd{display:flex;align-items:center;gap:10px;margin-bottom:4px}
