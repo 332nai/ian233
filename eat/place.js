@@ -1,5 +1,5 @@
-/* Google opening hours and AI review summary in the detail sheet, live from the Supabase function "place".
-   Nothing from Google is kept in the page beyond this visit. If the function is not set up, nothing shows. */
+/* Opening hours and Google AI review summary in the detail sheet, read from the place_map table through the
+   Supabase function "place" (refreshed monthly from Google). If the function is not set up, nothing shows. */
 window.EatPlace=(function(){
 const FN='https://hmipkgllqnyvabcntipb.supabase.co/functions/v1/place',KEY='sb_publishable_9tEEaEglzcirAP7ZRu3DCQ_Weczqod8';
 const H={'content-type':'application/json',apikey:KEY,authorization:'Bearer '+KEY};

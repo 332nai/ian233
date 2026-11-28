@@ -1,6 +1,6 @@
-# Keeps the Google place IDs matched and the coordinates fresh (Google allows coordinates for
-# 30 days at most). Runs weekly; the function only touches rows older than 21 days, so most runs
-# do almost nothing. The log lists doubtful matches and places Google says have closed.
+# Matches each shop to Google and refreshes what is stored (position, status, opening hours,
+# AI review summary). Runs weekly; the function only touches rows older than 28 days, so each
+# shop is refreshed about once a month. The log lists doubtful matches and closed places.
 name: google places sync
 on:
   schedule:

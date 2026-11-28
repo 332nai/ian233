@@ -2,14 +2,14 @@
 // Deploy: Edge Functions > Deploy a new function > Via Editor, name it "place", paste this file,
 // then turn OFF "Enforce JWT verification" for it (the site calls it with the public key only).
 // Secrets: GOOGLE_PLACES_KEY (required). SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are provided by Supabase.
-// Optional: DAY_CAP_DETAILS (live lookups per day per instance, default 60).
 //
-// What is kept, following Google's caching rules: only the place ID (forever) and the coordinates
-// (refreshed every 3 weeks, wiped after 30 days). Opening hours, status and the review summary are
-// fetched live and only held in memory for a few hours to avoid paying twice for the same lookup.
+// Everything is stored in the place_map table and refreshed once a month (opening hours, status,
+// coordinates, AI review summary). Note: Google's terms only allow keeping place IDs long term; the
+// site owner chose to store the rest anyway. Pages and 饭搭子 read from the table, not from Google.
 //
 // POST {op:"sync", limit?:40}        match unmatched places and refresh stale coordinates; returns a report
-// POST {op:"info", ids:[..], full?}  live opening hours (and, with full, Google's AI review summary)
+// POST {op:"info", ids:[..], full?}  opening hours now (and, with full, the weekly hours and AI review summary)
+// POST {op:"all"}                   [[id, open, line], ...] for every matched place
 // POST {op:"coords"}                 [[id, lat, lon], ...] for places with fresh coordinates
 
 const GKEY = Deno.env.get("GOOGLE_PLACES_KEY") ?? "";
@@ -17,12 +17,12 @@ const GURL = Deno.env.get("GOOGLE_PLACES_URL") ?? "https://places.googleapis.com
 const SB_URL = Deno.env.get("SUPABASE_URL") ?? "https://hmipkgllqnyvabcntipb.supabase.co";
 const SB_SVC = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const DATA_URL = Deno.env.get("DATA_URL") ?? "https://ian233.com/eat/data.json";
-const DAY_CAP = Number(Deno.env.get("DAY_CAP_DETAILS") ?? 60);
 const ORIGINS = ["https://ian233.com", "https://www.ian233.com", "http://localhost:8765"];
 const TZ = "Australia/Sydney";
 
 type R = { id: number; n: string; ne?: string; a: string; xy?: [number, number] };
-type Row = { rid: number; place_id: string | null; lat: number | null; lon: number | null; loc_at: string | null; score: number | null };
+type P = { open: { day: number; hour: number; minute: number }; close?: { day: number; hour: number; minute: number } };
+type Row = { rid: number; place_id: string | null; lat: number | null; lon: number | null; status: string | null; periods: P[] | null; week: string[] | null; summary: string | null; disclosure: string | null; reviews_uri: string | null; score: number | null; fetched_at: string | null };
 
 // ---------- data and table ----------
 let DATA: R[] = [], dataAt = 0;
@@ -36,7 +36,7 @@ async function data() {
 }
 const sbh = () => ({ apikey: SB_SVC, authorization: "Bearer " + SB_SVC, "content-type": "application/json" });
 async function rows(): Promise<Row[]> {
-  const r = await fetch(`${SB_URL}/rest/v1/place_map?select=rid,place_id,lat,lon,loc_at,score`, { headers: sbh() });
+  const r = await fetch(`${SB_URL}/rest/v1/place_map?select=*`, { headers: sbh() });
   if (!r.ok) throw new Error("table " + r.status + " " + (await r.text()).slice(0, 200));
   return await r.json();
 }
@@ -85,43 +85,60 @@ async function match(d: R) {
   return best;
 }
 
-// ---------- live info, held in memory only ----------
-const CACHE = new Map<string, { at: number; v: unknown }>();
-const TTL = 6 * 3600_000;
-let day = "", used = 0;
-function budget() { const d = new Date().toISOString().slice(0, 10); if (d !== day) { day = d; used = 0; } return used < DAY_CAP; }
-const hm = (iso?: string) => iso ? new Intl.DateTimeFormat("zh-CN", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(iso)) : "";
-const dayOf = (iso?: string) => {
-  if (!iso) return "";
-  const f = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(d);
-  const t = f(new Date()), x = f(new Date(iso)), tm = f(new Date(Date.now() + 86400_000));
-  return x === t ? "" : x === tm ? "明天 " : new Intl.DateTimeFormat("zh-CN", { timeZone: TZ, weekday: "short" }).format(new Date(iso)) + " ";
-};
-async function info(placeId: string, full: boolean) {
-  const key = placeId + (full ? ":f" : "");
-  const hit = CACHE.get(key);
-  if (hit && Date.now() - hit.at < TTL) return hit.v;
-  if (!budget()) return null;
-  used++;
-  const mask = "businessStatus,currentOpeningHours.openNow,currentOpeningHours.nextOpenTime,currentOpeningHours.nextCloseTime,currentOpeningHours.weekdayDescriptions"
-    + (full ? ",reviewSummary,generativeSummary" : "");
-  const p = await g(`places/${encodeURIComponent(placeId)}`, mask);
-  const h = p.currentOpeningHours;
-  const status = p.businessStatus ?? "";
-  let line = "";
-  if (status === "CLOSED_PERMANENTLY") line = "已永久停业";
-  else if (status === "CLOSED_TEMPORARILY") line = "暂停营业";
-  else if (h?.openNow === true) line = h.nextCloseTime ? `营业中 · ${dayOf(h.nextCloseTime)}${hm(h.nextCloseTime)} 打烊` : "营业中";
-  else if (h?.openNow === false) line = h.nextOpenTime ? `已打烊 · ${dayOf(h.nextOpenTime)}${hm(h.nextOpenTime)} 开门` : "已打烊";
-  const v: Record<string, unknown> = { open: status && status !== "OPERATIONAL" ? false : h?.openNow ?? null, line, week: h?.weekdayDescriptions ?? [], status };
-  if (full) {
-    const rs = p.reviewSummary, gs = p.generativeSummary;
-    v.summary = rs?.text?.text ?? gs?.overview?.text ?? "";
-    v.disclosure = rs?.disclosureText?.text ?? gs?.disclosureText?.text ?? "";
-    v.reviewsUri = rs?.reviewsUri ?? "";
+// ---------- opening hours from the stored periods ----------
+function sydNow() {
+  const p = new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "short", hour: "numeric", minute: "numeric", hourCycle: "h23" }).formatToParts(new Date());
+  const g = (t: string) => p.find((x) => x.type === t)?.value ?? "";
+  const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(g("weekday"));
+  return day * 1440 + Number(g("hour")) * 60 + Number(g("minute"));
+}
+const WEEK = 7 * 1440;
+const pad = (n: number) => String(n).padStart(2, "0");
+const clock = (m: number) => `${pad(Math.floor((m % 1440) / 60))}:${pad(m % 60)}`;
+const DAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+function when(now: number, at: number) { // "" today, "明天 " or "周三 "
+  const d0 = Math.floor(now / 1440), d1 = Math.floor(at / 1440) % 7, diff = (d1 - (d0 % 7) + 7) % 7;
+  return diff === 0 && at - now < 1440 ? "" : diff === 1 ? "明天 " : DAYS[d1] + " ";
+}
+export function openState(r: Pick<Row, "status" | "periods">, now = sydNow()) {
+  if (r.status === "CLOSED_PERMANENTLY") return { open: false, line: "已永久停业" };
+  if (r.status === "CLOSED_TEMPORARILY") return { open: false, line: "暂停营业" };
+  const ps = r.periods ?? [];
+  if (!ps.length) return { open: null, line: "" };
+  if (ps.length === 1 && !ps[0].close) return { open: true, line: "24 小时营业" };
+  let nextOpen = Infinity;
+  for (const p of ps) {
+    const s = p.open.day * 1440 + p.open.hour * 60 + p.open.minute;
+    let e = p.close ? p.close.day * 1440 + p.close.hour * 60 + p.close.minute : s + 1440;
+    if (e <= s) e += WEEK;
+    for (const n of [now, now + WEEK]) if (n >= s && n < e) {
+      const endRel = e - (n - now); // closing time on now's timeline
+      const next = Math.floor(endRel / 1440) > Math.floor(now / 1440) && endRel % 1440 !== 0 ? "次日 " : "";
+      return { open: true, line: `营业中 · ${next}${clock(endRel % WEEK)} 打烊` };
+    }
+    const wait = (s - now + WEEK) % WEEK;
+    if (wait < nextOpen) nextOpen = wait;
   }
-  CACHE.set(key, { at: Date.now(), v });
+  if (nextOpen === Infinity) return { open: false, line: "已打烊" };
+  const at = (now + nextOpen) % WEEK;
+  return { open: false, line: `已打烊 · ${when(now, now + nextOpen)}${clock(at)} 开门` };
+}
+function info(r: Row, full: boolean) {
+  const st = openState(r);
+  const v: Record<string, unknown> = { ...st, status: r.status ?? "" };
+  if (full) Object.assign(v, { week: r.week ?? [], summary: r.summary ?? "", disclosure: r.disclosure ?? "", reviewsUri: r.reviews_uri ?? "" });
   return v;
+}
+// one Google call for everything we keep about a place
+const DETAIL = "id,location,businessStatus,regularOpeningHours.periods,regularOpeningHours.weekdayDescriptions,reviewSummary,generativeSummary";
+function fromDetail(p: any): Partial<Row> {
+  const rs = p.reviewSummary, gs = p.generativeSummary;
+  return {
+    lat: p.location?.latitude ?? null, lon: p.location?.longitude ?? null, status: p.businessStatus ?? null,
+    periods: p.regularOpeningHours?.periods ?? null, week: p.regularOpeningHours?.weekdayDescriptions ?? null,
+    summary: rs?.text?.text ?? gs?.overview?.text ?? null, disclosure: rs?.disclosureText?.text ?? gs?.disclosureText?.text ?? null,
+    reviews_uri: rs?.reviewsUri ?? null, fetched_at: new Date().toISOString(),
+  };
 }
 
 // ---------- http ----------
@@ -143,51 +160,47 @@ export async function handle(req: Request): Promise<Response> {
     const table = await rows();
     const byRid = new Map(table.map((r) => [r.rid, r]));
 
-    if (body.op === "coords") {
-      const fresh = table.filter((r) => r.lat != null && r.loc_at && Date.now() - Date.parse(r.loc_at) < 30 * 86400_000);
-      return out(fresh.map((r) => [r.rid, +r.lat!.toFixed(6), +r.lon!.toFixed(6)]));
-    }
+    if (body.op === "coords") return out(table.filter((r) => r.lat != null).map((r) => [r.rid, +r.lat!.toFixed(6), +r.lon!.toFixed(6)]));
+
+    if (body.op === "all") return out(table.filter((r) => r.place_id).map((r) => { const s = openState(r); return [r.rid, s.open, s.line]; }));
 
     if (body.op === "info") {
-      const ids = [...new Set((body.ids ?? []).map(Number))].slice(0, body.full ? 1 : 8);
+      const ids = [...new Set((body.ids ?? []).map(Number))].slice(0, 20);
       const res: Record<number, unknown> = {};
-      await Promise.all(ids.map(async (id) => {
-        const pid = byRid.get(id)?.place_id;
-        if (!pid) return;
-        try { const v = await info(pid, !!body.full); if (v) res[id] = v; } catch (e) { console.error("info", id, String(e)); }
-      }));
+      for (const id of ids) { const r = byRid.get(id); if (r?.place_id && r.fetched_at) res[id] = info(r, !!body.full); }
       return out(res);
     }
 
     if (body.op === "sync") {
-      // idempotent: only touches places never matched, or whose coordinates are older than 21 days
+      // idempotent: only touches places never fetched, or fetched more than 28 days ago
       const all = await data();
       const limit = Math.min(Number(body.limit ?? 40), 80);
-      const stale = (r?: Row) => !r || !r.loc_at || Date.now() - Date.parse(r.loc_at) > 21 * 86400_000;
+      const stale = (r?: Row) => !r || !r.fetched_at || Date.now() - Date.parse(r.fetched_at) > 28 * 86400_000;
       const todo = all.filter((d) => stale(byRid.get(d.id))).slice(0, limit);
       const report: unknown[] = [], put: Partial<Row>[] = [];
       for (const d of todo) {
         const r = byRid.get(d.id);
         try {
-          if (r?.place_id) {
-            const p = await g(`places/${encodeURIComponent(r.place_id)}`, "location,businessStatus");
-            put.push({ rid: d.id, place_id: r.place_id, lat: p.location?.latitude ?? null, lon: p.location?.longitude ?? null, loc_at: new Date().toISOString(), score: r.score });
-            if (p.businessStatus && p.businessStatus !== "OPERATIONAL") report.push({ id: d.id, n: d.n, status: p.businessStatus });
-          } else {
+          let pid = r?.place_id ?? null, score = r?.score ?? null;
+          if (!pid) {
             const b = await match(d);
-            if (!b) { put.push({ rid: d.id, place_id: null, lat: null, lon: null, loc_at: new Date().toISOString(), score: 0 }); report.push({ id: d.id, n: d.n, miss: true }); continue; }
-            const s = Math.max(0, Math.min(1, b.s));
-            const ok = s >= 0.34;
-            put.push({ rid: d.id, place_id: ok ? b.p.id : null, lat: ok ? b.p.location?.latitude : null, lon: ok ? b.p.location?.longitude : null, loc_at: new Date().toISOString(), score: +s.toFixed(2) });
-            if (!ok || s < 0.6) report.push({ id: d.id, n: d.n, google: b.name, addr: b.p.formattedAddress, score: +s.toFixed(2), kept: ok, place_id: b.p.id });
-            if (ok && b.p.businessStatus && b.p.businessStatus !== "OPERATIONAL") report.push({ id: d.id, n: d.n, status: b.p.businessStatus });
+            const s = b ? Math.max(0, Math.min(1, b.s)) : 0;
+            score = +s.toFixed(2);
+            if (!b || s < 0.34) {
+              put.push({ rid: d.id, place_id: null, score, fetched_at: new Date().toISOString() });
+              report.push(b ? { id: d.id, n: d.n, google: b.name, addr: b.p.formattedAddress, score, kept: false, place_id: b.p.id } : { id: d.id, n: d.n, miss: true });
+              continue;
+            }
+            pid = b.p.id;
+            if (s < 0.6) report.push({ id: d.id, n: d.n, google: b.name, addr: b.p.formattedAddress, score, kept: true });
           }
+          const p = await g(`places/${encodeURIComponent(pid!)}`, DETAIL);
+          const row = { rid: d.id, place_id: pid, score, ...fromDetail(p) };
+          put.push(row);
+          if (row.status && row.status !== "OPERATIONAL") report.push({ id: d.id, n: d.n, status: row.status });
         } catch (e) { report.push({ id: d.id, n: d.n, error: String(e).slice(0, 120) }); }
       }
       await upsert(put);
-      // Google allows coordinates for 30 days at most: wipe any that slipped past
-      const old = table.filter((r) => r.lat != null && r.loc_at && Date.now() - Date.parse(r.loc_at) > 30 * 86400_000 && !todo.some((d) => d.id === r.rid));
-      await upsert(old.map((r) => ({ ...r, lat: null, lon: null })));
       const left = all.filter((d) => stale(byRid.get(d.id))).length - todo.length;
       return out({ done: put.length, left, report });
     }

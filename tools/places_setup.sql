@@ -1,17 +1,29 @@
 -- 悉尼吃喝 Google 地点：在 Supabase 的 SQL Editor 里整段运行一次（可重复运行）
--- Google 条款只允许长期保存地点 ID；经纬度最多保存 30 天，所以 place 函数每三周刷新一次，过期的会被清掉。
--- 营业时间、营业状态、评论摘要不落库，用到时实时查 Google。
+-- 每家店一行：Google 地点 ID、坐标、营业状态、营业时间、AI 评论摘要。place 函数每月刷新一次。
+-- 注意：Google Maps Platform 条款不允许长期保存地点 ID 和坐标以外的内容，这是站长知情后的选择。
 create table if not exists public.place_map (
   rid int primary key,             -- 店的 id（data.json 里的 id）
-  place_id text,                   -- Google 地点 ID，可长期保存
-  lat double precision,            -- Google 坐标，最多保存 30 天
+  place_id text,                   -- Google 地点 ID
+  lat double precision,
   lon double precision,
-  loc_at timestamptz,              -- 坐标是哪天查的
+  status text,                     -- OPERATIONAL / CLOSED_TEMPORARILY / CLOSED_PERMANENTLY
+  periods jsonb,                   -- regularOpeningHours.periods，用来算现在开没开
+  week jsonb,                      -- 每周营业时间文字，周一到周日
+  summary text,                    -- Google AI 评论摘要
+  disclosure text,                 -- 摘要的署名，例如"由 Gemini 总结"
+  reviews_uri text,
   score real,                      -- 店名匹配度，0 到 1，低的需要人工看一眼
-  checked_at timestamptz not null default now()
+  fetched_at timestamptz
 );
+alter table public.place_map add column if not exists status text;
+alter table public.place_map add column if not exists periods jsonb;
+alter table public.place_map add column if not exists week jsonb;
+alter table public.place_map add column if not exists summary text;
+alter table public.place_map add column if not exists disclosure text;
+alter table public.place_map add column if not exists reviews_uri text;
+alter table public.place_map add column if not exists fetched_at timestamptz;
 alter table public.place_map enable row level security;  -- 没有任何策略：只有函数用 service role 读写
-create index if not exists place_map_loc_at on public.place_map (loc_at);
 
--- 想看匹配结果：select * from place_map order by score nulls first limit 50;
--- 某家匹配错了，手动改：update place_map set place_id = '正确的ID', loc_at = null where rid = 123;
+-- 看匹配结果：select rid, score, status, summary from place_map order by score nulls first limit 50;
+-- 某家匹配错了：update place_map set place_id = '正确的ID', fetched_at = null where rid = 123;  下次同步会按新 ID 重查
+-- 已停业的店：select rid, status from place_map where status <> 'OPERATIONAL';

@@ -45,18 +45,18 @@ function km(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLon / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(h));
 }
-// real coordinates from the place_map table (Google, refreshed every 3 weeks); the sketch map position otherwise
+// real coordinates from the place_map table (Google, refreshed monthly); the sketch map position otherwise
 let REAL = new Map<number, { lat: number; lon: number }>(), realAt = 0;
 async function loadReal() {
   if (!SB_SVC || Date.now() - realAt < 3600_000) return;
   realAt = Date.now();
   try {
-    const r = await fetch(`${SB_URL}/rest/v1/place_map?select=rid,lat,lon,loc_at&lat=not.is.null`, { headers: { apikey: SB_SVC, authorization: "Bearer " + SB_SVC } });
-    if (r.ok) REAL = new Map((await r.json()).filter((x: { loc_at: string }) => Date.now() - Date.parse(x.loc_at) < 30 * 86400_000).map((x: { rid: number; lat: number; lon: number }) => [x.rid, { lat: x.lat, lon: x.lon }]));
+    const r = await fetch(`${SB_URL}/rest/v1/place_map?select=rid,lat,lon&lat=not.is.null`, { headers: { apikey: SB_SVC, authorization: "Bearer " + SB_SVC } });
+    if (r.ok) REAL = new Map((await r.json()).map((x: { rid: number; lat: number; lon: number }) => [x.rid, { lat: x.lat, lon: x.lon }]));
   } catch { /* keep the sketch positions */ }
 }
 const pos = (d: R) => REAL.get(d.id) ?? toLL(d.xy!);
-// opening hours, live from the place function (Google); empty when it is not set up
+// opening hours from the place function (stored Google hours); empty when it is not set up
 async function hours(ids: number[]): Promise<Record<number, { open: boolean | null; line: string }>> {
   if (!ids.length) return {};
   try {
@@ -330,7 +330,7 @@ export async function handle(req: Request): Promise<Response> {
     }
     // opening hours: when the question is about now (or it is late), drop places Google says are closed
     const nowQ = !LATER.test(q) && (NOW.test(q) || lateNow());
-    let H = await hours(nowQ ? ids.slice(0, 8) : ids.slice(0, 3));
+    let H = await hours(ids.slice(0, 8));
     if (nowQ) {
       const open = ids.filter((i) => H[i]?.open !== false);
       if (open.length) ids = open;
