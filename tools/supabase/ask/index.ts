@@ -121,6 +121,17 @@ const REGION_WORDS: [string, RegExp][] = [
 ];
 function regionOf(q: string) { return REGION_WORDS.find(([, re]) => re.test(q))?.[0]; }
 
+function fallbackIds(rows: R[], q: string, want?: string) {
+  const pool = rows.filter((d) => d.r !== "X" && (!want || d.rg === want));
+  const words: string[] = ([...(q.toLowerCase().match(/[a-z]{3,}/g) ?? [])] as string[]).concat([...q.replace(/[^\u4e00-\u9fff]/g, "")].map((c, i, a) => c + (a[i + 1] ?? "")).filter((w) => w.length === 2));
+  const stop = new Set(["附近", "什么", "好吃", "吃的", "有什", "么好", "想吃", "一点", "不想", "吃什", "下雨", "雨不", "想走", "走远", "不那", "那么"]);
+  const ws = words.filter((w) => !stop.has(w));
+  const score = (d: R) => { const t = `${d.n} ${d.ne ?? ""} ${d.a} ${d.rg ?? ""} ${d.t} ${d.d ?? ""} ${d.i ?? ""}`.toLowerCase(); return ws.reduce((s, w) => s + (t.includes(w) ? 1 : 0), 0); };
+  const hit = pool.map((d) => ({ d, s: score(d) })).filter((x) => x.s > 0).sort((a, b) => b.s - a.s || (b.d.r > a.d.r ? 1 : -1)).slice(0, 8).map((x) => x.d.id);
+  if (hit.length) return hit;
+  return pool.filter((d) => d.r === "5" || d.r === "4").sort(() => Math.random() - 0.5).slice(0, 8).map((d) => d.id);
+}
+
 const PICK_SYS = `你是悉尼餐厅检索器。下面是全部餐厅目录，每行格式：id|店名|大区|地址|菜系|星级|人均|招牌菜。用户开了定位时，问题后面会附上离他最近的店和距离。
 大区的含义：市区（CBD、唐人街、Haymarket、Darling Harbour）；城南（Surry Hills、Redfern、Zetland、Mascot）；东区（Darlinghurst、Paddington、Potts Point、Bondi）；内西（Inner West：Burwood、Strathfield、Rhodes、Concord、Newtown、Glebe、Marrickville、Five Dock）；西区（Lidcombe、Auburn、Parramatta、Wentworth Point）；北区（Eastwood、Ryde、Epping、Macquarie Park、Carlingford）；北岸（North Shore：Chatswood、North Sydney、Crows Nest、Lane Cove、Hornsby）；山区（Castle Hill、Norwest、Baulkham Hills）；南区（Hurstville、Miranda）。
 用户说了大区或具体区域时，只能选在那里的店，不能用别的区凑数。
@@ -168,19 +179,24 @@ export async function handle(req: Request): Promise<Response> {
     // step 1: pick candidates from the whole catalogue (cached prompt when there is no location)
     const sys1 = [{ type: "text", text: PICK_SYS }, { type: "text", text: catalogue(rows), cache_control: { type: "ephemeral" } }];
     const q1 = here ? `${q}\n\n（离我最近的店，id:距离）${nearest(rows, here)}` : q;
+    const want = regionOf(q);
     const t1 = Date.now();
     const p1 = await claudeJSON(MODEL_PICK, sys1, [...history(turns), { role: "user", content: q1 }], 800);
     // if the reply was not JSON, take any known ids that appear in it
     const raw1: number[] = p1.ids ?? (String(p1._raw ?? "").match(/\d+/g) ?? []);
     let ids: number[] = [...new Set(raw1.map(Number))].filter((i: number) => BY_ID.has(i)).slice(0, 8);
     // if the question names a region, drop candidates from other regions (unless that leaves none)
-    const want = regionOf(q);
     if (want) {
       const kept = ids.filter((i) => BY_ID.get(i)?.rg === want);
       if (kept.length) ids = kept;
       else ids = rows.filter((d) => d.rg === want && d.r !== "X").sort((x, y) => (y.r > x.r ? 1 : -1)).slice(0, 8).map((d) => d.id);
     }
-    if (!ids.length) return out({ say: "没在点评里找到合适的店。换个说法，或者把区域、人均放宽一点试试？", picks: [], follow: [], ms: Date.now() - t0 });
+    // never come back empty: fall back to a keyword match over the reviews, then to the best rated places
+    let note = "";
+    if (!ids.length) {
+      ids = fallbackIds(rows, q, want);
+      if (/附近|近一点|离我|nearby|near me/i.test(q) && !here) note = /[\u4e00-\u9fff]/.test(q) ? "没拿到你的位置，先按口碑推荐几家；点输入框左边的定位按钮，就能按距离推荐。" : "I could not get your location, so here are well rated picks. Tap the pin by the input box for nearby ones.";
+    }
     // step 2: full reviews of the candidates, choose and explain
     const cand = ids.map((i) => BY_ID.get(i)!).map((d) => {
       const dist = here && d.xy ? ` 距离${km(here, toLL(d.xy)).toFixed(1)}km` : "";
@@ -197,7 +213,7 @@ export async function handle(req: Request): Promise<Response> {
       const quote = p.quote && d.i && d.i.includes(String(p.quote).replace(/[「」“”"]/g, "")) ? String(p.quote).replace(/[「」“”"]/g, "") : "";
       return { id: d.id, why: String(p.why ?? ""), quote, tip: String(p.tip ?? ""), km: here && d.xy ? Number(km(here, toLL(d.xy)).toFixed(1)) : undefined };
     });
-    return out({ say: String(p2.say ?? ""), picks, follow: (p2.follow ?? []).slice(0, 2).map(String), ms: Date.now() - t0, ms_pick: t2 - t1 });
+    return out({ say: (note ? note + " " : "") + String(p2.say ?? ""), picks, follow: (p2.follow ?? []).slice(0, 2).map(String), ms: Date.now() - t0, ms_pick: t2 - t1 });
   } catch (e) {
     console.error(e);
     return out({ error: "ai_failed" }, 502);
