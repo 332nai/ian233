@@ -13,6 +13,7 @@
 // POST {op:"coords"}                 [[id, lat, lon], ...] for places with fresh coordinates
 
 const GKEY = Deno.env.get("GOOGLE_PLACES_KEY") ?? "";
+const AKEY = Deno.env.get("ANTHROPIC_API_KEY") ?? ""; // already set for the ask function; used to translate summaries
 const GURL = Deno.env.get("GOOGLE_PLACES_URL") ?? "https://places.googleapis.com/v1";
 const SB_URL = Deno.env.get("SUPABASE_URL") ?? "https://hmipkgllqnyvabcntipb.supabase.co";
 const SB_SVC = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
@@ -86,6 +87,26 @@ async function match(d: R) {
     return { p, name, s: s - (far > 12 ? 0.3 : 0) };
   }).sort((a: any, b: any) => b.s - a.s)[0];
   return best;
+}
+
+// ---------- Google's summaries come back in English: translate them once, when stored ----------
+const hasZh = (t: string) => /[\u4e00-\u9fff]/.test(t);
+async function toZh(texts: string[]): Promise<string[]> {
+  if (!AKEY || !texts.length) return texts;
+  try {
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "x-api-key": AKEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+      body: JSON.stringify({ model: "claude-haiku-5-5", max_tokens: 4000, thinking: { type: "disabled" }, output_config: { effort: "low" },
+        system: "把每条餐厅评论摘要翻译成自然的简体中文，菜名和店名保留原文或常用中文叫法，不要加内容，不要使用破折号。只输出 JSON 字符串数组，顺序和数量与输入一致。",
+        messages: [{ role: "user", content: JSON.stringify(texts) }] }),
+    });
+    if (!r.ok) throw new Error("claude " + r.status);
+    const j = await r.json();
+    const t = (j.content ?? []).map((c: { text?: string }) => c.text ?? "").join("");
+    const a = JSON.parse(t.slice(t.indexOf("["), t.lastIndexOf("]") + 1));
+    return Array.isArray(a) && a.length === texts.length ? a.map((x, i) => String(x || texts[i])) : texts;
+  } catch (e) { console.error("translate", String(e)); return texts; }
 }
 
 // ---------- opening hours from the stored periods ----------
@@ -174,6 +195,15 @@ export async function handle(req: Request): Promise<Response> {
       return out(res);
     }
 
+    if (body.op === "translate") {
+      // turn stored English summaries into Chinese, 30 at a time, without calling Google
+      const en = table.filter((r) => r.summary && !hasZh(r.summary)).slice(0, 30);
+      const zh = await toZh(en.map((r) => r.summary!));
+      const put = en.map((r, i) => ({ ...r, summary: zh[i] })).filter((r, i) => hasZh(r.summary!) && r.summary !== en[i].summary);
+      await upsert(put);
+      return out({ done: put.length, left: table.filter((r) => r.summary && !hasZh(r.summary)).length - put.length });
+    }
+
     if (body.op === "sync") {
       // idempotent: only touches places never fetched, or fetched more than 28 days ago
       const all = await data();
@@ -203,6 +233,9 @@ export async function handle(req: Request): Promise<Response> {
           if (row.status && row.status !== "OPERATIONAL") report.push({ id: d.id, n: d.n, status: row.status });
         } catch (e) { report.push({ id: d.id, n: d.n, error: String(e).slice(0, 120) }); }
       }
+      const en = put.filter((r) => r.summary && !hasZh(r.summary));
+      const zh = await toZh(en.map((r) => r.summary!));
+      en.forEach((r, i) => { r.summary = zh[i]; });
       await upsert(put);
       const left = all.filter((d) => stale(byRid.get(d.id))).length - todo.length;
       return out({ done: put.length, left, report });
