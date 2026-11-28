@@ -506,12 +506,13 @@ t.addEventListener('click',e=>{const a=e.target.closest('a[data-k]');if(a)openSh
 <style>
 /* ===== AI 美食顾问 (replaces the keyword 问一问) ===== */
 .panel.ai{min-height:0;padding:20px 18px 18px}
-.ai-hd{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.ai-hd{display:flex;align-items:center;gap:10px;margin-bottom:4px}
 .ai-hd .av{width:40px;height:40px;border-radius:14px!important;background:#141414;color:#fff;display:grid;place-items:center;font:900 18px var(--zh,'Noto Serif SC',serif);flex:none;position:relative}
 .ai-hd .av:after{content:'';position:absolute;right:-2px;bottom:-2px;width:11px;height:11px;border-radius:50%!important;background:#2fa36b;border:2px solid #fff}
 .ai-hd b{display:block;font:900 18px/1.2 var(--zh,'Noto Serif SC',serif)}
 .ai-hd span{display:block;font-size:12.5px;color:var(--sub)}
 .panel.ai .chat{gap:12px;max-height:none}
+.panel.ai .chat:empty{display:none}
 .panel.ai .bub{align-self:flex-end;max-width:85%}
 .ai-say{font-size:15px;line-height:1.75;color:var(--ink)}
 .ai-st{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--sub)}
@@ -543,10 +544,10 @@ const SUG2=['周五约会，CBD，人均 80，要有氛围','一个人下班想�
 let turns=[],here=null,busy2=false;
 try{io0.disconnect();demoDone=true}catch(e){}
 const P=$('#panel');P.classList.add('ai');
-P.innerHTML=`<div class="ai-hd"><div class="av">吃</div><div><b>AI 美食顾问</b><span>只按老杨吃过、写过的点评回答</span></div></div>
- <div class="chat" id="chat"><div class="ans"><div class="ai-say">说说今天的情况：几个人，在哪一带，预算多少，想吃什么或者什么场合。</div></div></div>
- <div class="inp"><button class="loc" id="loc" aria-label="用我的位置"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></button><input id="q" placeholder="比如：周五和朋友在 Chatswood，人均 50" enterkeyhint="send" maxlength="300"><button id="go" aria-label="发送">↑</button></div>
- <div class="sug">${SUG2.map(s=>`<button>${s}</button>`).join('')}</div><div class="ai-note">回答由 AI 根据点评整理，营业时间请以店家为准</div>`;
+P.innerHTML=`<div class="ai-hd"><div class="av">吃</div><div><b>AI 智能顾问</b></div></div>
+ <div class="chat" id="chat"></div>
+ <div class="inp"><button class="loc" id="loc" aria-label="用我的位置"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></button><input id="q" placeholder="几个人、在哪、预算、想吃什么" enterkeyhint="send" maxlength="300"><button id="go" aria-label="发送">↑</button></div>
+ <div class="sug">${SUG2.map(s=>`<button>${s}</button>`).join('')}</div>`;
 const chat=$('#chat'),inp=$('#q');
 function locate(){return new Promise(res=>{if(here)return res(here);if(!navigator.geolocation)return res(null);
   navigator.geolocation.getCurrentPosition(p=>{here={lat:p.coords.latitude,lon:p.coords.longitude};$('#loc').classList.add('on');res(here)},()=>res(null),{timeout:8000,maximumAge:600000})})}
