@@ -90,6 +90,16 @@ def main():
             if nn - on: print('   added:  ', sorted(nn - on)[:20])
             if not check:
                 open(fp, 'w', encoding='utf8').write(text[:s] + dump(new) + text[e:])
+    # public data file for the AI advisor (Supabase function reads it)
+    DATA_FIELDS = ['id', 'n', 'ne', 'a', 't', 'r', 'p', 'pe', 'd', 'i', 'dt', 'c', 'xy']
+    dj = json.dumps([{f: d[f] for f in DATA_FIELDS if f in d} for d in D], ensure_ascii=False, separators=(',', ':'))
+    dp = os.path.join(repo, 'eat/data.json')
+    old = open(dp, encoding='utf8').read() if os.path.exists(dp) else ''
+    print('%-22s %-3s %4d rows   %s' % ('eat/data.json', '', len(D), 'ok' if old == dj else 'CHANGED'))
+    if old != dj:
+        bad += 1
+        if not check:
+            open(dp, 'w', encoding='utf8').write(dj)
     if check and bad:
         sys.exit(1)
 
