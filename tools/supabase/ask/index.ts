@@ -18,7 +18,7 @@ const SB_URL = Deno.env.get("SUPABASE_URL") ?? "https://hmipkgllqnyvabcntipb.sup
 const SB_KEY = "sb_publishable_9tEEaEglzcirAP7ZRu3DCQ_Weczqod8"; // public key, only used for the ai_gate RPC
 const ORIGINS = ["https://ian233.com", "https://www.ian233.com", "http://localhost:8765"];
 
-type R = { id: number; n: string; ne?: string; a: string; t: string; r: string; p?: number; pe?: number; d?: string; i?: string; dt?: string; c?: string; xy?: [number, number] };
+type R = { id: number; n: string; ne?: string; a: string; rg?: string; t: string; r: string; p?: number; pe?: number; d?: string; i?: string; dt?: string; c?: string; xy?: [number, number] };
 type Turn = { q: string; say?: string; ids?: number[] };
 
 let DATA: R[] = [];
@@ -50,7 +50,7 @@ const short = (s = "", n: number) => (s.length > n ? s.slice(0, n) + "…" : s);
 let CAT = "", CAT_AT = 0;
 function catalogue(rows: R[]) {
   if (CAT_AT !== loadedAt) {
-    CAT = rows.map((d) => `${d.id}|${d.n}|${d.a}|${d.t}|${stars(d.r)}|$${d.p ?? "?"}${d.pe ? "估" : ""}|${short(d.d, 28)}`).join("\n");
+    CAT = rows.map((d) => `${d.id}|${d.n}|${d.rg ?? ""}|${d.a}|${d.t}|${stars(d.r)}|$${d.p ?? "?"}${d.pe ? "估" : ""}|${short(d.d, 28)}`).join("\n");
     CAT_AT = loadedAt;
   }
   return CAT;
@@ -114,19 +114,30 @@ async function sha(s: string) {
   return Array.from(new Uint8Array(b)).slice(0, 8).map((x) => x.toString(16).padStart(2, "0")).join("");
 }
 
-const PICK_SYS = `你是悉尼餐厅检索器。下面是全部餐厅目录，每行格式：id|店名|区域|菜系|星级|人均|招牌菜。用户开了定位时，问题后面会附上离他最近的店和距离。
+const REGION_WORDS: [string, RegExp][] = [
+  ["内西", /内西|inner\s*west/i], ["北岸", /北岸|north\s*shore/i], ["东区", /东区|eastern\s*suburbs/i],
+  ["城南", /城南|inner\s*south/i], ["山区", /山区|the\s*hills|hills\s*district/i], ["南区", /南区|south\s*sydney|southern\s*sydney/i],
+  ["西区", /西区|western\s*sydney/i], ["北区", /北区/], ["市区", /市区|市中心|\bcbd\b|city\s*centre/i],
+];
+function regionOf(q: string) { return REGION_WORDS.find(([, re]) => re.test(q))?.[0]; }
+
+const PICK_SYS = `你是悉尼餐厅检索器。下面是全部餐厅目录，每行格式：id|店名|大区|地址|菜系|星级|人均|招牌菜。用户开了定位时，问题后面会附上离他最近的店和距离。
+大区的含义：市区（CBD、唐人街、Haymarket、Darling Harbour）；城南（Surry Hills、Redfern、Zetland、Mascot）；东区（Darlinghurst、Paddington、Potts Point、Bondi）；内西（Inner West：Burwood、Strathfield、Rhodes、Concord、Newtown、Glebe、Marrickville、Five Dock）；西区（Lidcombe、Auburn、Parramatta、Wentworth Point）；北区（Eastwood、Ryde、Epping、Macquarie Park、Carlingford）；北岸（North Shore：Chatswood、North Sydney、Crows Nest、Lane Cove、Hornsby）；山区（Castle Hill、Norwest、Baulkham Hills）；南区（Hurstville、Miranda）。
+用户说了大区或具体区域时，只能选在那里的店，不能用别的区凑数。
 根据用户最新的需求（结合之前的对话），从目录中选出最多 8 家最可能符合的候选，按匹配度排序。
 规则：只能选目录里存在的 id；默认不选"不推荐"的店，除非用户在问哪些店别去；附上了最近的店且用户提到附近、近一点时，优先从那里面选；尽量照顾区域、人均、菜系、场合这些条件。
 只输出 JSON：{"ids":[整数...],"need":"一句话概括用户需求"}`;
 
-const ANSWER_SYS = `你是「悉尼吃喝」网站的 AI 美食顾问。网站的所有点评都是站长老杨自己去吃过后写的，你的判断只能依据这些点评，不要编造点评里没有的信息（例如营业时间、价格以外的细节）。
+const ANSWER_SYS = `你是「悉尼吃喝」网站的 AI 智能顾问。网站的所有点评都是站长老杨自己去吃过后写的，你的判断只能依据这些点评，不要编造点评里没有的信息（例如营业时间、价格以外的细节）。
 从候选里挑 1 到 3 家最合适的店回答用户。每家给出：
-why：为什么适合这个需求，具体一点，两句话以内；
-quote：从这家店的点评原文里一字不改地摘一句最能说服人的话，不超过 30 个字，必须是原文连续的一段；
-tip：点什么或要注意什么，一句话，可以为空。
+why：为什么适合这个需求，一句话，不超过 35 个字；
+quote：从这家店的点评原文里一字不改地摘一句最能说服人的话，不超过 20 个字，必须是原文连续的一段；
+tip：点什么或要注意什么，不超过 18 个字，没有就留空。
+say：一句开场，不超过 25 个字。
+follow：两条用户接下来可能会说的话，用用户自己的口吻写成要求，例如"便宜一点的"、"换到北岸"、"有没有不用排队的"，每条不超过 12 个字，不要向用户提问。
 如果候选都不太合适，诚实说明，并建议怎么放宽条件。
 语气像一个懂吃的朋友，简洁，不用感叹号堆砌，不要使用破折号。回答语言按消息末尾的要求。
-只输出 JSON：{"say":"一两句开场","picks":[{"id":整数,"why":"","quote":"","tip":""}],"follow":["可以接着问的两个短问题"]}`;
+只输出 JSON：{"say":"","picks":[{"id":整数,"why":"","quote":"","tip":""}],"follow":["",""]}`;
 
 function cors(origin: string | null) {
   const o = origin && ORIGINS.includes(origin) ? origin : ORIGINS[0];
@@ -161,12 +172,19 @@ export async function handle(req: Request): Promise<Response> {
     const p1 = await claudeJSON(MODEL_PICK, sys1, [...history(turns), { role: "user", content: q1 }], 800);
     // if the reply was not JSON, take any known ids that appear in it
     const raw1: number[] = p1.ids ?? (String(p1._raw ?? "").match(/\d+/g) ?? []);
-    const ids: number[] = [...new Set(raw1.map(Number))].filter((i: number) => BY_ID.has(i)).slice(0, 8);
+    let ids: number[] = [...new Set(raw1.map(Number))].filter((i: number) => BY_ID.has(i)).slice(0, 8);
+    // if the question names a region, drop candidates from other regions (unless that leaves none)
+    const want = regionOf(q);
+    if (want) {
+      const kept = ids.filter((i) => BY_ID.get(i)?.rg === want);
+      if (kept.length) ids = kept;
+      else ids = rows.filter((d) => d.rg === want && d.r !== "X").sort((x, y) => (y.r > x.r ? 1 : -1)).slice(0, 8).map((d) => d.id);
+    }
     if (!ids.length) return out({ say: "没在点评里找到合适的店。换个说法，或者把区域、人均放宽一点试试？", picks: [], follow: [], ms: Date.now() - t0 });
     // step 2: full reviews of the candidates, choose and explain
     const cand = ids.map((i) => BY_ID.get(i)!).map((d) => {
       const dist = here && d.xy ? ` 距离${km(here, toLL(d.xy)).toFixed(1)}km` : "";
-      return `[${d.id}] ${d.n}${d.ne && d.ne !== d.n ? ` (${d.ne})` : ""}｜${d.a}｜${d.t}｜${stars(d.r)}｜人均$${d.p ?? "?"}${d.pe ? "(估)" : ""}${dist}\n招牌：${d.d ?? ""}\n点评：${d.i ?? ""}`;
+      return `[${d.id}] ${d.n}${d.ne && d.ne !== d.n ? ` (${d.ne})` : ""}｜${d.rg ?? ""}｜${d.a}｜${d.t}｜${stars(d.r)}｜人均$${d.p ?? "?"}${d.pe ? "(估)" : ""}${dist}\n招牌：${d.d ?? ""}\n点评：${d.i ?? ""}`;
     }).join("\n\n");
     const zh = /[\u4e00-\u9fff]/.test(q);
     const msg = `用户需求：${q}\n（概括：${p1.need ?? ""}）\n\n候选餐厅：\n${cand}\n\n${zh ? "请用中文回答（say、why、tip、follow 都用中文）。" : "Answer in English (say, why, tip, follow in English; keep quote in the original Chinese)."}`;

@@ -91,8 +91,11 @@ def main():
             if not check:
                 open(fp, 'w', encoding='utf8').write(text[:s] + dump(new) + text[e:])
     # public data file for the AI advisor (Supabase function reads it)
-    DATA_FIELDS = ['id', 'n', 'ne', 'a', 't', 'r', 'p', 'pe', 'd', 'i', 'dt', 'c', 'xy']
-    dj = json.dumps([{f: d[f] for f in DATA_FIELDS if f in d} for d in D], ensure_ascii=False, separators=(',', ':'))
+    DATA_FIELDS = ['id', 'n', 'ne', 'a', 'rg', 't', 'r', 'p', 'pe', 'd', 'i', 'dt', 'c', 'xy']
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import regions  # broad region per place, used by the AI advisor
+    tagged = regions.tag([dict(d) for d in D])
+    dj = json.dumps([{f: d[f] for f in DATA_FIELDS if f in d and d[f] is not None} for d in tagged], ensure_ascii=False, separators=(',', ':'))
     dp = os.path.join(repo, 'eat/data.json')
     old = open(dp, encoding='utf8').read() if os.path.exists(dp) else ''
     print('%-22s %-3s %4d rows   %s' % ('eat/data.json', '', len(D), 'ok' if old == dj else 'CHANGED'))
