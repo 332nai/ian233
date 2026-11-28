@@ -42,6 +42,9 @@ async function rows(): Promise<Row[]> {
 }
 async function upsert(list: Partial<Row>[]) {
   if (!list.length) return;
+  // PostgREST wants every row in a batch to have the same keys
+  const keys = ["rid", "place_id", "lat", "lon", "status", "periods", "week", "summary", "disclosure", "reviews_uri", "score", "fetched_at"] as const;
+  list = list.map((r) => Object.fromEntries(keys.map((k) => [k, (r as Record<string, unknown>)[k] ?? null])) as Partial<Row>);
   const r = await fetch(`${SB_URL}/rest/v1/place_map?on_conflict=rid`, { method: "POST", headers: { ...sbh(), prefer: "resolution=merge-duplicates" }, body: JSON.stringify(list) });
   if (!r.ok) throw new Error("upsert " + r.status + " " + (await r.text()).slice(0, 200));
 }
