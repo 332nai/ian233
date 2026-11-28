@@ -38,10 +38,8 @@ function block(v){
   return el}
 /* put the block in once it arrives; ok() says the same shop is still open */
 function into(id,ok,put){get(id).then(v=>{if(!ok())return;const b=block(v);if(b)put(b)})}
-/* point the sheet's map and reviews buttons at the exact Google place once it is known */
+/* point the sheet's map button at the exact Google place once it is known */
 function links(id,root,name){get(id).then(v=>{if(!v||!root||!root.isConnected)return;
-  const rv=v.pid?'https://search.google.com/local/reviews?placeid='+encodeURIComponent(v.pid):v.reviewsUri;
-  const r=root.querySelector('.grev');if(r&&rv)r.href=rv;
   const m=root.querySelector('.gmap,.go');if(m&&v.pid&&name)m.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name)+'&query_place_id='+encodeURIComponent(v.pid)})}
 /* real coordinates for places that have them: [[id, lat, lon], ...] */
 let cp=null;function coords(){if(!cp)cp=fetch(FN,{method:'POST',headers:H,body:JSON.stringify({op:'coords'})}).then(r=>r.ok?r.json():[]).catch(()=>[]);return cp}

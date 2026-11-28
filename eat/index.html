@@ -602,8 +602,9 @@ $('#nws').onclick=e=>{const c=e.target.closest('.nw-c');if(c)openSheet(D.find(x=
 })();
 </script>
 <script src="/eat/place.js"></script>
+<script src="/eat/reviews.js"></script>
 <script>
-{const o=openSheet;openSheet=function(x){const r=o.apply(this,arguments);try{const pn=$('#sh .pn');if(x&&x.id!=null&&!pn.classList.contains('rolling'))EatPlace.into(x.id,()=>$('#sh').classList.contains('on')&&!pn.classList.contains('rolling')&&$('#sh h3')&&$('#sh h3').textContent===x.n&&!pn.querySelector('.gp'),b=>{const m=pn.querySelector('.m');if(m)m.after(b)});if(x&&x.id!=null)EatPlace.links(x.id,pn,x.n.replace(/（.*?）/g,'')+' '+x.a.replace(/（.*?）/g,''))}catch(e){}return r}}
+{const o=openSheet;openSheet=function(x){const r=o.apply(this,arguments);try{const pn=$('#sh .pn');if(x&&x.id!=null&&!pn.classList.contains('rolling'))EatPlace.into(x.id,()=>$('#sh').classList.contains('on')&&!pn.classList.contains('rolling')&&$('#sh h3')&&$('#sh h3').textContent===x.n&&!pn.querySelector('.gp'),b=>{const m=pn.querySelector('.m');if(m)m.after(b)});if(x&&x.id!=null&&!pn.classList.contains('rolling')){EatPlace.links(x.id,pn,x.n.replace(/（.*?）/g,'')+' '+x.a.replace(/（.*?）/g,''));EatReviews.attach(x.id,pn.querySelector('.bd'),x.n,()=>$('#sh').classList.contains('on')&&$('#sh h3')&&$('#sh h3').textContent===x.n)}}catch(e){}return r}}
 </script>
 </body>
 </html>
