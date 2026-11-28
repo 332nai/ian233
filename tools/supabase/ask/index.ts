@@ -266,6 +266,11 @@ export async function handle(req: Request): Promise<Response> {
     const want = c?.region;
     let q1 = here ? `${q}\n\n（离我最近的店，id:距离）${nearest(rows, here)}` : q;
     if (c?.pool.length) q1 = `${q}\n\n（符合${[c.place, c.region, c.fam].filter(Boolean).join("、") || "附近"}条件的店，只能从这里面选${c.anchor ? "，id:距离" : ""}）${c.pool.map((d) => c.anchor ? `${d.id}:${c.dist.get(d.id)!.toFixed(1)}km` : d.id).join(" ")}`;
+    // follow-ups bring new places: anything already shown is out, unless the question points back at it
+    const shown = new Set(turns.flatMap((t) => (t.ids ?? []).map(Number)));
+    const backRef = /刚才|上面|这几家|那几家|第[一二三123]家|前面|哪一家|对比|比较/.test(q) || [...shown].some((i) => { const d = BY_ID.get(i); return d && (q.includes(d.n.slice(0, 4)) || (d.ne && q.toLowerCase().includes(d.ne.toLowerCase().slice(0, 6)))); });
+    const fresh = (i: number) => backRef || !shown.has(i);
+    if (shown.size && !backRef) q1 += `\n\n（已经推荐过的店，这次不要再选：${[...shown].join(" ")}）`;
     const at = attrsOf(q);
     for (const a of at) {
       const base = c?.pool.length ? c.pool : rows.filter((d) => d.r !== "X");
@@ -286,12 +291,14 @@ export async function handle(req: Request): Promise<Response> {
         ids = ids.concat(extra).slice(0, 6);
       }
     }
+    ids = ids.filter(fresh);
+    if (c?.pool.length && ids.length < 3) ids = ids.concat([...c.pool].sort((a, b) => rate(b) - rate(a)).map((d) => d.id).filter((i) => fresh(i) && !ids.includes(i))).slice(0, 6);
     // a review that says the opposite (queues, crowds) rules a place out
     for (const a of at) if (a.no) { const kept = ids.filter((i) => !evidence(BY_ID.get(i)!, a).no); if (kept.length) ids = kept; }
     // never come back empty: fall back to a keyword match over the reviews, then to the best rated places
     let note = "";
     if (!ids.length) {
-      ids = fallbackIds(rows, q, want);
+      ids = fallbackIds(rows.filter((d) => fresh(d.id)), q, want);
       if (NEAR.test(q) && !here && !c?.place) note = /[\u4e00-\u9fff]/.test(q) ? "没拿到你的位置，先按口碑推荐几家；点输入框左边的定位按钮，就能按距离推荐。" : "I could not get your location, so here are well rated picks. Tap the pin by the input box for nearby ones.";
     }
     // step 2: full reviews of the candidates, choose and explain
