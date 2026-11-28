@@ -9,6 +9,9 @@ const API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const API_URL = Deno.env.get("ANTHROPIC_URL") ?? "https://api.anthropic.com/v1/messages";
 const MODEL_PICK = Deno.env.get("MODEL_PICK") ?? "claude-haiku-5-5";
 const MODEL_ANSWER = Deno.env.get("MODEL_ANSWER") ?? "claude-haiku-5-5";
+// Haiku 5.5 thinks by default; this task does not need it, and thinking adds seconds
+const EFFORT = Deno.env.get("EFFORT") ?? "low";
+const THINKING = Deno.env.get("THINKING") ?? "disabled";
 const DAY_CAP = Number(Deno.env.get("DAY_CAP") ?? 400);
 const IP_CAP = Number(Deno.env.get("IP_CAP") ?? 40);
 const SB_URL = Deno.env.get("SUPABASE_URL") ?? "https://hmipkgllqnyvabcntipb.supabase.co";
@@ -62,16 +65,26 @@ async function claude(model: string, system: unknown, messages: unknown[], max: 
   const r = await fetch(API_URL, {
     method: "POST",
     headers: { "x-api-key": API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-    body: JSON.stringify({ model, max_tokens: max, system, messages }),
+    body: JSON.stringify({ model, max_tokens: max, system, messages, thinking: { type: THINKING }, output_config: { effort: EFFORT } }),
   });
   if (!r.ok) throw new Error("claude " + r.status + " " + (await r.text()).slice(0, 300));
   const j = await r.json();
-  return (j.content ?? []).map((c: { text?: string }) => c.text ?? "").join("");
+  const text = (j.content ?? []).filter((c: { type?: string }) => c.type === "text").map((c: { text?: string }) => c.text ?? "").join("");
+  if (j.stop_reason && j.stop_reason !== "end_turn") console.warn("stop_reason", j.stop_reason, JSON.stringify(j.usage ?? {}));
+  return text;
+}
+// ask, and if the reply has no parsable JSON, ask once more saying so
+async function claudeJSON(model: string, system: unknown, messages: { role: string; content: string }[], max: number) {
+  let text = await claude(model, system, messages, max);
+  try { return json(text); } catch { console.error("not json, retrying:", text.slice(0, 600)); }
+  text = await claude(model, system, [...messages, { role: "assistant", content: text.slice(0, 2000) || "…" }, { role: "user", content: "请只输出一个 JSON 对象，不要任何其他文字。" }], max);
+  try { return json(text); } catch { console.error("still not json:", text.slice(0, 600)); return { _raw: text }; }
 }
 function json(text: string) {
-  const a = text.indexOf("{"), b = text.lastIndexOf("}");
+  const t = text.replace(/```(?:json)?/g, "");
+  const a = t.indexOf("{"), b = t.lastIndexOf("}");
   if (a < 0 || b < a) throw new Error("no json");
-  return JSON.parse(text.slice(a, b + 1));
+  return JSON.parse(t.slice(a, b + 1));
 }
 
 function history(turns: Turn[]) {
@@ -112,7 +125,7 @@ why：为什么适合这个需求，具体一点，两句话以内；
 quote：从这家店的点评原文里一字不改地摘一句最能说服人的话，不超过 30 个字，必须是原文连续的一段；
 tip：点什么或要注意什么，一句话，可以为空。
 如果候选都不太合适，诚实说明，并建议怎么放宽条件。
-语气像一个懂吃的朋友，简洁，不用感叹号堆砌，不要使用破折号。用户用英文提问就用英文回答（quote 仍保持原文）。
+语气像一个懂吃的朋友，简洁，不用感叹号堆砌，不要使用破折号。回答语言按消息末尾的要求。
 只输出 JSON：{"say":"一两句开场","picks":[{"id":整数,"why":"","quote":"","tip":""}],"follow":["可以接着问的两个短问题"]}`;
 
 function cors(origin: string | null) {
@@ -144,22 +157,29 @@ export async function handle(req: Request): Promise<Response> {
     // step 1: pick candidates from the whole catalogue (cached prompt when there is no location)
     const sys1 = [{ type: "text", text: PICK_SYS }, { type: "text", text: catalogue(rows), cache_control: { type: "ephemeral" } }];
     const q1 = here ? `${q}\n\n（离我最近的店，id:距离）${nearest(rows, here)}` : q;
-    const p1 = json(await claude(MODEL_PICK, sys1, [...history(turns), { role: "user", content: q1 }], 300));
-    const ids: number[] = (p1.ids ?? []).map(Number).filter((i: number) => BY_ID.has(i)).slice(0, 8);
+    const t1 = Date.now();
+    const p1 = await claudeJSON(MODEL_PICK, sys1, [...history(turns), { role: "user", content: q1 }], 800);
+    // if the reply was not JSON, take any known ids that appear in it
+    const raw1: number[] = p1.ids ?? (String(p1._raw ?? "").match(/\d+/g) ?? []);
+    const ids: number[] = [...new Set(raw1.map(Number))].filter((i: number) => BY_ID.has(i)).slice(0, 8);
     if (!ids.length) return out({ say: "没在点评里找到合适的店。换个说法，或者把区域、人均放宽一点试试？", picks: [], follow: [], ms: Date.now() - t0 });
     // step 2: full reviews of the candidates, choose and explain
     const cand = ids.map((i) => BY_ID.get(i)!).map((d) => {
       const dist = here && d.xy ? ` 距离${km(here, toLL(d.xy)).toFixed(1)}km` : "";
       return `[${d.id}] ${d.n}${d.ne && d.ne !== d.n ? ` (${d.ne})` : ""}｜${d.a}｜${d.t}｜${stars(d.r)}｜人均$${d.p ?? "?"}${d.pe ? "(估)" : ""}${dist}\n招牌：${d.d ?? ""}\n点评：${d.i ?? ""}`;
     }).join("\n\n");
-    const msg = `用户需求：${q}\n（概括：${p1.need ?? ""}）\n\n候选餐厅：\n${cand}`;
-    const p2 = json(await claude(MODEL_ANSWER, ANSWER_SYS, [...history(turns), { role: "user", content: msg }], 900));
+    const zh = /[\u4e00-\u9fff]/.test(q);
+    const msg = `用户需求：${q}\n（概括：${p1.need ?? ""}）\n\n候选餐厅：\n${cand}\n\n${zh ? "请用中文回答（say、why、tip、follow 都用中文）。" : "Answer in English (say, why, tip, follow in English; keep quote in the original Chinese)."}`;
+    const t2 = Date.now();
+    let p2 = await claudeJSON(MODEL_ANSWER, ANSWER_SYS, [...history(turns), { role: "user", content: msg }], 2000);
+    // last resort: show the top candidates with the opening of each review
+    if (p2._raw !== undefined) p2 = { say: "按你的条件，这几家最接近：", picks: ids.slice(0, 3).map((i) => ({ id: i, why: short(BY_ID.get(i)?.i, 60), quote: "", tip: "" })), follow: [] };
     const picks = (p2.picks ?? []).filter((p: { id: number }) => ids.includes(Number(p.id))).slice(0, 3).map((p: { id: number; why?: string; quote?: string; tip?: string }) => {
       const d = BY_ID.get(Number(p.id))!;
       const quote = p.quote && d.i && d.i.includes(String(p.quote).replace(/[「」“”"]/g, "")) ? String(p.quote).replace(/[「」“”"]/g, "") : "";
       return { id: d.id, why: String(p.why ?? ""), quote, tip: String(p.tip ?? ""), km: here && d.xy ? Number(km(here, toLL(d.xy)).toFixed(1)) : undefined };
     });
-    return out({ say: String(p2.say ?? ""), picks, follow: (p2.follow ?? []).slice(0, 2).map(String), ms: Date.now() - t0 });
+    return out({ say: String(p2.say ?? ""), picks, follow: (p2.follow ?? []).slice(0, 2).map(String), ms: Date.now() - t0, ms_pick: t2 - t1 });
   } catch (e) {
     console.error(e);
     return out({ error: "ai_failed" }, 502);
