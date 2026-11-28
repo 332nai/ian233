@@ -15,6 +15,8 @@ const THINKING = Deno.env.get("THINKING") ?? "disabled";
 const DAY_CAP = Number(Deno.env.get("DAY_CAP") ?? 400);
 const IP_CAP = Number(Deno.env.get("IP_CAP") ?? 40);
 const SB_URL = Deno.env.get("SUPABASE_URL") ?? "https://hmipkgllqnyvabcntipb.supabase.co";
+const SB_SVC = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const PLACE_FN = Deno.env.get("PLACE_FN") ?? `${SB_URL}/functions/v1/place`;
 const SB_KEY = "sb_publishable_9tEEaEglzcirAP7ZRu3DCQ_Weczqod8"; // public key, only used for the ai_gate RPC
 const ORIGINS = ["https://ian233.com", "https://www.ian233.com", "http://localhost:8765"];
 
@@ -43,6 +45,29 @@ function km(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLon / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(h));
 }
+// real coordinates from the place_map table (Google, refreshed every 3 weeks); the sketch map position otherwise
+let REAL = new Map<number, { lat: number; lon: number }>(), realAt = 0;
+async function loadReal() {
+  if (!SB_SVC || Date.now() - realAt < 3600_000) return;
+  realAt = Date.now();
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/place_map?select=rid,lat,lon,loc_at&lat=not.is.null`, { headers: { apikey: SB_SVC, authorization: "Bearer " + SB_SVC } });
+    if (r.ok) REAL = new Map((await r.json()).filter((x: { loc_at: string }) => Date.now() - Date.parse(x.loc_at) < 30 * 86400_000).map((x: { rid: number; lat: number; lon: number }) => [x.rid, { lat: x.lat, lon: x.lon }]));
+  } catch { /* keep the sketch positions */ }
+}
+const pos = (d: R) => REAL.get(d.id) ?? toLL(d.xy!);
+// opening hours, live from the place function (Google); empty when it is not set up
+async function hours(ids: number[]): Promise<Record<number, { open: boolean | null; line: string }>> {
+  if (!ids.length) return {};
+  try {
+    const r = await fetch(PLACE_FN, { method: "POST", headers: { "content-type": "application/json", origin: "https://ian233.com" }, body: JSON.stringify({ op: "info", ids }), signal: AbortSignal.timeout(4000) });
+    return r.ok ? await r.json() : {};
+  } catch { return {}; }
+}
+const NOW = /现在|今晚|宵夜|夜宵|马上|一会|还开|还在营业|开着|附近|nearby|now|tonight/i;
+const LATER = /明天|周末|下次|改天|下周|明早|明晚|tomorrow|weekend/i;
+function lateNow() { const h = Number(new Intl.DateTimeFormat("en-AU", { timeZone: "Australia/Sydney", hour: "numeric", hourCycle: "h23" }).format(new Date())); return h >= 20 || h < 6; }
+
 const stars = (r: string) => (r === "X" ? "不推荐" : r + "星");
 const short = (s = "", n: number) => (s.length > n ? s.slice(0, n) + "…" : s);
 
@@ -57,7 +82,7 @@ function catalogue(rows: R[]) {
 }
 // with a location, list the 40 nearest places in the question instead of changing the cached catalogue
 function nearest(rows: R[], here: { lat: number; lon: number }) {
-  return rows.filter((d) => d.xy && d.r !== "X").map((d) => ({ id: d.id, k: km(here, toLL(d.xy!)) }))
+  return rows.filter((d) => d.xy && d.r !== "X").map((d) => ({ id: d.id, k: km(here, pos(d)) }))
     .sort((a, b) => a.k - b.k).slice(0, 40).map((x) => `${x.id}:${x.k.toFixed(1)}km`).join(" ");
 }
 
@@ -171,7 +196,7 @@ function placeOf(rows: R[], q: string) {
 }
 function centroid(rows: R[], place: string) {
   const re = new RegExp(`(^|[^a-z])${place.toLowerCase()}([^a-z]|$)`);
-  const pts = rows.filter((d) => d.xy && re.test(d.a.toLowerCase())).map((d) => toLL(d.xy!));
+  const pts = rows.filter((d) => d.xy && re.test(d.a.toLowerCase())).map((d) => pos(d));
   if (!pts.length) return undefined;
   return { lat: pts.reduce((s, p) => s + p.lat, 0) / pts.length, lon: pts.reduce((s, p) => s + p.lon, 0) / pts.length };
 }
@@ -190,7 +215,7 @@ export function constraints(rows: R[], q: string, turns: Turn[], here?: { lat: n
   const dist = new Map<number, number>();
   if (anchor) {
     pool = pool.filter((d) => d.xy);
-    for (const d of pool) dist.set(d.id, km(anchor, toLL(d.xy!)));
+    for (const d of pool) dist.set(d.id, km(anchor, pos(d)));
     pool.sort((a, b) => dist.get(a.id)! - dist.get(b.id)!);
     let r = 4; while (r < 15 && pool.filter((d) => dist.get(d.id)! <= r).length < 6) r += 3;
     pool = pool.filter((d) => dist.get(d.id)! <= r).slice(0, 40);
@@ -229,6 +254,7 @@ quote：从这家店的点评原文里一字不改地摘一句最能说服人的
 tip：点什么或要注意什么，不超过 18 个字，没有就留空。
 say：一句开场，不超过 25 个字。
 follow：两条用户接下来可能会说的话，用用户自己的口吻写成要求，例如"便宜一点的"、"换到北岸"、"有没有不用排队的"，每条不超过 12 个字，不要向用户提问。
+候选后面如果写了"营业中"或"已打烊"，那是 Google 实时的营业状态：用户问现在去吃时不要推荐已打烊的店；可以在 tip 里提一句几点打烊。
 用户要求的条件（安静、氛围、带娃、能订位、停车、排队等）只有点评原文明确写到才算满足，不要从别的话推断，例如"不用排队"不等于安静，"人均不高"不等于人少。候选后面标了【条件】的，按标注判断：标"点评没写"的店，why 里不能说它满足这个条件；标"点评相反"的店不要推荐。如果没有一家点评明确写到，就在 say 里直说点评没写到这一点，再按其他条件推荐，并提醒用户自己留意。
 如果候选都不太合适，诚实说明，并建议怎么放宽条件。
 语气像一个懂吃的朋友，简洁，不用感叹号堆砌，不要使用破折号。回答语言按消息末尾的要求。
@@ -258,6 +284,7 @@ export async function handle(req: Request): Promise<Response> {
   const t0 = Date.now();
   try {
     const rows = await data();
+    await loadReal();
     const here = typeof body.lat === "number" && typeof body.lon === "number" ? { lat: body.lat, lon: body.lon } : undefined;
     const turns = Array.isArray(body.turns) ? body.turns : [];
     // step 1: pick candidates from the whole catalogue (cached prompt when there is no location)
@@ -301,10 +328,18 @@ export async function handle(req: Request): Promise<Response> {
       ids = fallbackIds(rows.filter((d) => fresh(d.id)), q, want);
       if (NEAR.test(q) && !here && !c?.place) note = /[\u4e00-\u9fff]/.test(q) ? "没拿到你的位置，先按口碑推荐几家；点输入框左边的定位按钮，就能按距离推荐。" : "I could not get your location, so here are well rated picks. Tap the pin by the input box for nearby ones.";
     }
+    // opening hours: when the question is about now (or it is late), drop places Google says are closed
+    const nowQ = !LATER.test(q) && (NOW.test(q) || lateNow());
+    let H = await hours(nowQ ? ids.slice(0, 8) : ids.slice(0, 3));
+    if (nowQ) {
+      const open = ids.filter((i) => H[i]?.open !== false);
+      if (open.length) ids = open;
+      else if (Object.keys(H).length) note = (note ? note + " " : "") + (/[\u4e00-\u9fff]/.test(q) ? "符合条件的店现在都打烊了，下面是营业时间最合适的几家。" : "Everything that fits is closed right now; these are the best for later.");
+    }
     // step 2: full reviews of the candidates, choose and explain
     const cand = ids.map((i) => BY_ID.get(i)!).map((d) => {
-      const dist = here && d.xy ? ` 距离你${km(here, toLL(d.xy)).toFixed(1)}km` : c?.place && c.dist.has(d.id) ? ` 离${c.place}${c.dist.get(d.id)!.toFixed(1)}km` : "";
-      return `[${d.id}] ${d.n}${d.ne && d.ne !== d.n ? ` (${d.ne})` : ""}｜${d.rg ?? ""}｜${d.a}｜${d.t}｜${stars(d.r)}｜人均$${d.p ?? "?"}${d.pe ? "(估)" : ""}${dist}\n招牌：${d.d ?? ""}\n点评：${d.i ?? ""}${at.map((a) => { const e = evidence(d, a); return `\n【${a.name}】${e.no ? `点评相反：…${e.no}…` : e.yes ? `点评提到：…${e.yes}…` : "点评没写"}`; }).join("")}`;
+      const dist = here && d.xy ? ` 距离你${km(here, pos(d)).toFixed(1)}km` : c?.place && c.dist.has(d.id) ? ` 离${c.place}${c.dist.get(d.id)!.toFixed(1)}km` : "";
+      return `[${d.id}] ${d.n}${d.ne && d.ne !== d.n ? ` (${d.ne})` : ""}｜${d.rg ?? ""}｜${d.a}｜${d.t}｜${stars(d.r)}｜人均$${d.p ?? "?"}${d.pe ? "(估)" : ""}${dist}${H[d.id]?.line ? `｜${H[d.id].line}` : ""}\n招牌：${d.d ?? ""}\n点评：${d.i ?? ""}${at.map((a) => { const e = evidence(d, a); return `\n【${a.name}】${e.no ? `点评相反：…${e.no}…` : e.yes ? `点评提到：…${e.yes}…` : "点评没写"}`; }).join("")}`;
     }).join("\n\n");
     const zh = /[\u4e00-\u9fff]/.test(q);
     const mustL = c ? [c.place && `在 ${c.place} 附近`, c.region && `在${c.region}`, c.fam && `只要${c.fam}`].filter(Boolean) : [];
@@ -317,8 +352,10 @@ export async function handle(req: Request): Promise<Response> {
     const picks = (p2.picks ?? []).filter((p: { id: number }) => ids.includes(Number(p.id))).slice(0, 3).map((p: { id: number; why?: string; quote?: string; tip?: string }) => {
       const d = BY_ID.get(Number(p.id))!;
       const quote = p.quote && d.i && d.i.includes(String(p.quote).replace(/[「」“”"]/g, "")) ? String(p.quote).replace(/[「」“”"]/g, "") : "";
-      return { id: d.id, why: String(p.why ?? ""), quote, tip: String(p.tip ?? ""), km: here && d.xy ? Number(km(here, toLL(d.xy)).toFixed(1)) : undefined };
+      return { id: d.id, why: String(p.why ?? ""), quote, tip: String(p.tip ?? ""), km: here && d.xy ? Number(km(here, pos(d)).toFixed(1)) : undefined, hours: H[d.id]?.line || undefined };
     });
+    const miss = picks.filter((p: { id: number; hours?: string }) => !p.hours).map((p: { id: number }) => p.id);
+    if (miss.length) { const H2 = await hours(miss); for (const p of picks as { id: number; hours?: string }[]) if (!p.hours && H2[p.id]?.line) p.hours = H2[p.id].line; }
     return out({ say: (note ? note + " " : "") + String(p2.say ?? ""), picks, follow: (p2.follow ?? []).slice(0, 2).map(String), ms: Date.now() - t0, ms_pick: t2 - t1 });
   } catch (e) {
     console.error(e);

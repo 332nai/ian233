@@ -56,6 +56,7 @@ main{max-width:720px;margin:0 auto;padding:8px 18px 150px}
 .aic .im .st{font-size:10px;letter-spacing:1px}.aic .im .dish{font:900 14px/1.2 var(--zh)}
 .aic .tx{flex:1;min-width:0}.aic .tx b{display:block;font:900 16px/1.3 var(--zh)}
 .aic .tx .m{display:block;font-size:12px;color:var(--sub);margin-top:2px}.aic .tx p{margin:6px 0 0;font-size:14px;line-height:1.65}
+.aic .tx .hr{display:inline-block;margin-top:5px;font-size:12px;padding:1px 8px;border-radius:999px;background:#eef7f1;color:#1f7a4d}.aic .tx .hr.off{background:#fdecea;color:#b02a21}
 .ai-fu{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .ai-fu button{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px}
 /* detail sheet, same as the homepage */
@@ -157,6 +158,7 @@ return {load,strip,into,close};
 })();
 </script>
 <script src="/eat/fd-sug.js"></script>
+<script src="/eat/place.js"></script>
 <script>
 let D=[];
 const $=s=>document.querySelector(s);
@@ -193,6 +195,7 @@ function openSheet(x){if(!x)return;const g='https://www.google.com/maps/search/?
  const pn=$('#sh .pn');pn.innerHTML=`<button class="x" onclick="closeSheet()">关闭</button>
  <div class="bd"><h3>${esc(x.n)}</h3><div class="rate r${x.r}">${x.r==='X'?'不推荐':stars(+x.r)}</div><div class="m">${esc(x.t)} · ${esc(x.a)}${x.p?' · 人均约 $'+x.p:''}</div>
  <div class="body">${esc(x.i)}</div>${x.d?`<div class="must">推荐：${esc(x.d)}</div>`:''}<a class="gmap" target="_blank" rel="noopener" href="${g}">在 Google 地图打开</a></div>`;$('#sh').classList.add('on');
+ try{EatPlace.into(x.id,()=>$('#sh').classList.contains('on')&&$('#sh h3').textContent===x.n&&!pn.querySelector('.gp'),b=>{const m=pn.querySelector('.m');if(m)m.after(b)})}catch(e){}
  try{EatPhotos.into(x.id,()=>$('#sh').classList.contains('on')&&$('#sh h3').textContent===x.n&&!pn.querySelector('.xph'),s=>pn.querySelector('.bd').prepend(s))}catch(e){}}
 function closeSheet(){$('#sh').classList.remove('on');try{EatPhotos.close()}catch(e){}}
 $('#sh .bg').onclick=closeSheet;addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
@@ -210,7 +213,7 @@ function locate(){return new Promise(res=>{if(here)return res(here);if(!navigato
 $('#loc').onclick=async()=>{if(here){here=null;$('#loc').classList.remove('on');return}await locate()};
 $('#go').onclick=()=>ask(inp.value);inp.onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing)ask(inp.value)};
 chat.addEventListener('click',e=>{const c=e.target.closest('.aic');if(c){openSheet(byId.get(+c.dataset.id));return}const f=e.target.closest('.ai-fu button');if(f)ask(f.textContent)});
-const card=(x,p)=>{const [bg,fg]=pal(x.t);return `<div class="aic" data-id="${x.id}"><div class="im" style="background:${bg};color:${fg}"><span class="st">${stars(+x.r)}</span><span class="dish">${esc(dish(x))}</span></div><div class="tx"><b>${esc(x.n)}</b><span class="m">${esc(x.a.replace(/[（(].*$/,''))}${x.p?' · $'+x.p:''}${p.km!=null?' · '+p.km+' km':''}</span>${p.why?`<p>${esc(p.why)}</p>`:''}</div></div>`};
+const card=(x,p)=>{const [bg,fg]=pal(x.t);return `<div class="aic" data-id="${x.id}"><div class="im" style="background:${bg};color:${fg}"><span class="st">${stars(+x.r)}</span><span class="dish">${esc(dish(x))}</span></div><div class="tx"><b>${esc(x.n)}</b><span class="m">${esc(x.a.replace(/[（(].*$/,''))}${x.p?' · $'+x.p:''}${p.km!=null?' · '+p.km+' km':''}</span>${p.hours?`<span class="hr ${/营业中/.test(p.hours)?'on':'off'}">${esc(p.hours)}</span>`:''}${p.why?`<p>${esc(p.why)}</p>`:''}</div></div>`};
 const down=el=>el.scrollIntoView({block:'end',behavior:'smooth'});
 async function ask(q){q=(q||'').trim();if(!q||busy)return;busy=true;inp.value='';inp.blur();document.body.classList.add('chatting');
   const b=document.createElement('div');b.className='bub';b.textContent=q;chat.appendChild(b);

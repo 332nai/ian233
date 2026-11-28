@@ -1,0 +1,23 @@
+# Keeps the Google place IDs matched and the coordinates fresh (Google allows coordinates for
+# 30 days at most). Runs weekly; the function only touches rows older than 21 days, so most runs
+# do almost nothing. The log lists doubtful matches and places Google says have closed.
+name: google places sync
+on:
+  schedule:
+    - cron: '17 3 * * 1'
+  workflow_dispatch:
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: sync
+        run: |
+          for i in $(seq 1 12); do
+            out=$(curl -s -m 150 -X POST 'https://hmipkgllqnyvabcntipb.supabase.co/functions/v1/place' \
+              -H 'apikey: sb_publishable_9tEEaEglzcirAP7ZRu3DCQ_Weczqod8' \
+              -H 'authorization: Bearer sb_publishable_9tEEaEglzcirAP7ZRu3DCQ_Weczqod8' \
+              -H 'content-type: application/json' -d '{"op":"sync","limit":60}')
+            echo "$out" | python3 -c "import json,sys;d=json.load(sys.stdin);print('done',d.get('done'),'left',d.get('left'),d.get('error',''));[print(json.dumps(r,ensure_ascii=False)) for r in d.get('report',[])]"
+            left=$(echo "$out" | python3 -c "import json,sys;print(json.load(sys.stdin).get('left',0))")
+            [ "$left" = "0" ] && break
+          done

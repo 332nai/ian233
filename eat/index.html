@@ -600,5 +600,9 @@ $('#nws').innerHTML=nw.map(x=>{const [bg,fg]=pal(x.t);return `<button class="nw-
 $('#nws').onclick=e=>{const c=e.target.closest('.nw-c');if(c)openSheet(D.find(x=>x.n===c.dataset.n))};
 })();
 </script>
+<script src="/eat/place.js"></script>
+<script>
+{const o=openSheet;openSheet=function(x){const r=o.apply(this,arguments);try{const pn=$('#sh .pn');if(x&&x.id!=null&&!pn.classList.contains('rolling'))EatPlace.into(x.id,()=>$('#sh').classList.contains('on')&&!pn.classList.contains('rolling')&&$('#sh h3')&&$('#sh h3').textContent===x.n&&!pn.querySelector('.gp'),b=>{const m=pn.querySelector('.m');if(m)m.after(b)})}catch(e){}return r}}
+</script>
 </body>
 </html>

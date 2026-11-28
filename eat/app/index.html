@@ -1983,5 +1983,14 @@ const r=document.getElementById('rand');if(r&&!r.querySelector('svg'))r.insertAd
 {const o=applyLang;applyLang=function(){o.apply(this,arguments);const b=document.getElementById('rand');if(b&&!b.querySelector('svg')){const t=b.textContent;b.innerHTML='';b.insertAdjacentHTML('afterbegin','<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>');b.append(t)}}}
 })();
 </script>
+<script src="/eat/place.js"></script>
+<script>
+/* Google opening hours and review summary under the meta line of the detail sheet */
+{const o=open;open=function(i){const r=o.apply(this,arguments);const d=D[i];try{if(d&&d.id!=null)EatPlace.into(d.id,()=>window._openI===i&&$('#sheet').classList.contains('on')&&!$('#sc .gp'),b=>{const m=$('#sc .m');if(m)m.after(b)})}catch(e){}return r}}
+/* real positions: move a pin to Google's coordinates when they are within about 3 km of the sketch position */
+try{EatPlace.coords().then(a=>{if(!Array.isArray(a)||!a.length)return;const by=new Map(D.map(d=>[d.id,d]));let n=0;
+ for(const [id,lat,lon] of a){const d=by.get(id);if(!d||!d.xy)continue;const x=(lon-150.93)*1000/.38,y=(-33.69-lat)*1140.7/.36;if(Math.hypot(x-d.xy[0],y-d.xy[1])<85){d.xy=[+x.toFixed(1),+y.toFixed(1)];n++}}
+ if(n){try{setVB();render()}catch(e){}}})}catch(e){}
+</script>
 </body>
 </html>
