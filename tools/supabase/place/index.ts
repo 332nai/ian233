@@ -149,7 +149,7 @@ export function openState(r: Pick<Row, "status" | "periods">, now = sydNow()) {
 }
 function info(r: Row, full: boolean) {
   const st = openState(r);
-  const v: Record<string, unknown> = { ...st, status: r.status ?? "" };
+  const v: Record<string, unknown> = { ...st, status: r.status ?? "", pid: r.place_id };
   if (full) Object.assign(v, { week: r.week ?? [], summary: r.summary ?? "", disclosure: r.disclosure ?? "", reviewsUri: r.reviews_uri ?? "" });
   return v;
 }

@@ -18,7 +18,14 @@ const css=document.createElement('style');css.textContent=`
 .gp-sum{margin-top:14px;padding:12px 14px;background:#f6f3ee;border-radius:14px!important}
 .gp-sum h6{margin:0 0 4px!important;font:600 12px var(--sans,sans-serif)!important;letter-spacing:.08em;color:var(--sub,#7a7772)}
 .gp-sum p{margin:0!important;font:400 14.5px/1.75 var(--zh,'Noto Serif SC',serif)!important;color:#141414}
-.gp-sum small{display:block;margin-top:6px;font-size:11.5px;color:var(--sub,#7a7772)}.gp-sum small a{color:inherit!important;text-decoration:underline}
+
+.acts{position:sticky;bottom:0;z-index:4;display:flex;gap:8px;margin:20px -24px 0;padding:14px 24px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(rgba(255,253,249,0),#fffdf9 16px)}
+#sc .acts{margin-left:-20px;margin-right:-20px;padding-left:20px;padding-right:20px}
+.acts>*{flex:1;min-width:0;margin:0!important;height:48px;display:flex!important;align-items:center;justify-content:center;gap:6px;padding:0 6px!important;border-radius:14px!important;font:500 14.5px var(--sans,system-ui,sans-serif)!important;white-space:nowrap;letter-spacing:-.01em;text-decoration:none!important;width:auto!important}
+.acts .gmap,.acts .go{background:#d6342a!important;color:#fff!important;border:0!important}
+.acts .grev{background:#141414;color:#fff}
+.acts .again{background:#fff!important;color:#141414!important;border:1px solid #141414!important}
+.acts svg{flex:none}
 `;document.head.appendChild(css);
 function block(v){
   if(!v||(!v.line&&!v.summary))return null;
@@ -26,12 +33,17 @@ function block(v){
   const today=(new Date(new Date().toLocaleString('en-US',{timeZone:'Australia/Sydney'})).getDay()+6)%7;
   const cls=v.open===true?'on':v.open===false?'off':'';
   el.innerHTML=(v.line?`<div class="gp-s ${cls}"><i></i><b>${E(v.line)}</b>${(v.week||[]).length?'<button type="button">每周营业时间</button>':''}</div><ul hidden>${(v.week||[]).map((w,k)=>`<li${k===today?' class="t"':''}>${E(w)}</li>`).join('')}</ul>`:'')
-   +(v.summary?`<div class="gp-sum"><h6>GOOGLE 评论摘要</h6><p>${E(v.summary)}</p><small>${E(v.disclosure||'由 Google 根据用户评论生成')}${v.reviewsUri?` · <a href="${E(v.reviewsUri)}" target="_blank" rel="noopener">看 Google 评论</a>`:''}</small></div>`:'');
+   +(v.summary?`<div class="gp-sum"><h6>GOOGLE 评论摘要</h6><p>${E(v.summary)}</p></div>`:'');
   const b=el.querySelector('.gp-s button');if(b)b.onclick=()=>{const u=el.querySelector('ul');u.hidden=!u.hidden;b.textContent=u.hidden?'每周营业时间':'收起'};
   return el}
 /* put the block in once it arrives; ok() says the same shop is still open */
 function into(id,ok,put){get(id).then(v=>{if(!ok())return;const b=block(v);if(b)put(b)})}
+/* point the sheet's map and reviews buttons at the exact Google place once it is known */
+function links(id,root,name){get(id).then(v=>{if(!v||!root||!root.isConnected)return;
+  const rv=v.pid?'https://search.google.com/local/reviews?placeid='+encodeURIComponent(v.pid):v.reviewsUri;
+  const r=root.querySelector('.grev');if(r&&rv)r.href=rv;
+  const m=root.querySelector('.gmap,.go');if(m&&v.pid&&name)m.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name)+'&query_place_id='+encodeURIComponent(v.pid)})}
 /* real coordinates for places that have them: [[id, lat, lon], ...] */
 let cp=null;function coords(){if(!cp)cp=fetch(FN,{method:'POST',headers:H,body:JSON.stringify({op:'coords'})}).then(r=>r.ok?r.json():[]).catch(()=>[]);return cp}
-return {get,into,coords};
+return {get,into,links,coords};
 })();
