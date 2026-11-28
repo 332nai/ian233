@@ -25,7 +25,7 @@ let DATA: R[] = [];
 let BY_ID = new Map<number, R>();
 let loadedAt = 0;
 
-async function data(): Promise<R[]> {
+export async function data(): Promise<R[]> {
   if (!DATA.length || Date.now() - loadedAt > 3600_000) {
     const r = await fetch(DATA_URL, { headers: { "cache-control": "no-cache" } });
     if (!r.ok) throw new Error("data " + r.status);
@@ -132,6 +132,89 @@ function fallbackIds(rows: R[], q: string, want?: string) {
   return pool.filter((d) => d.r === "5" || d.r === "4").sort(() => Math.random() - 0.5).slice(0, 8).map((d) => d.id);
 }
 
+// cuisine family of a place's type label, so "中餐" never returns Japanese BBQ
+const FAM_CN = /中餐|中式|中西|粤|川|湘|潮|港式|台式|台湾|东北|上海|本帮|江浙|北京|山东|云南|贵州|新疆|兰州|西北|陕西|重庆|自贡|福建|泉州|南京|长沙|江西|延边|沧州|烧腊|早茶|点心|小笼|生煎|饺|馄饨|包子|麻辣|冒菜|火锅|炸串|糖水|鸭货|卤味|肠粉|砂锅|米线|小炒|家常|茶餐厅|酒楼|大排档|广东汤|盐焗鸡|牛肉面|手工面|拌面|木桶鱼|石锅鱼|红烧|锅贴|小面|面馆|烤串|米粉|羊肉粉|中式|茶馆/;
+export function famOfType(t: string) {
+  if (/中东|土耳其|黎巴嫩|波斯/.test(t)) return "其他";
+  if (/韩|釜山/.test(t)) return "韩餐";
+  if (/日式|日料|日本/.test(t)) return "日料";
+  if (FAM_CN.test(t)) return "中餐";
+  if (/寿司|Omakase|居酒屋|铁板烧|饭团|刺身|丼|抹茶|寿喜烧|蕨饼|大福/i.test(t)) return "日料";
+  if (/越南|泰|马来|印尼|菲律宾|南洋|东南亚/.test(t)) return "东南亚";
+  if (/咖啡|Cafe|烘焙|蛋糕|甜品|冰淇淋|Gelato|可颂|贝果|奶茶|甜甜圈|巧克力|饼干|蝴蝶饼|Acai|果汁|肉桂卷|柠檬茶/i.test(t)) return "甜品咖啡";
+  if (/酒吧|Pub|酒馆/i.test(t)) return "酒吧";
+  return "西餐";
+}
+const FAM_WORDS: [string, RegExp][] = [
+  ["中餐", /中餐|中国菜|中式|中菜|中国餐|chinese/i], ["日料", /日料|日本菜|日餐|日本料理|japanese/i],
+  ["韩餐", /韩餐|韩国菜|韩料|韩式料理|korean/i], ["西餐", /西餐|western/i], ["东南亚", /东南亚|south\s*east\s*asian/i],
+];
+const famOf = (q: string) => FAM_WORDS.find(([, re]) => re.test(q))?.[0];
+const NEAR = /附近|近一点|离我|周边|旁边|nearby|near me/i;
+
+// suburbs and landmarks named in the addresses; a question naming one is anchored there
+const PLACE_ALIAS: Record<string, string> = { "唐人街": "Haymarket", "宝活": "Burwood", "博伍德": "Burwood", "车士活": "Chatswood", "伊士活": "Eastwood", "依士活": "Eastwood", "好市围": "Hurstville", "罗兹": "Rhodes", "史卓菲": "Strathfield", "艾平": "Epping", "康科德": "Concord" };
+let PLACES: string[] = [], PLACES_AT = -1;
+function places(rows: R[]) {
+  if (PLACES_AT !== loadedAt) {
+    const set = new Set<string>();
+    for (const d of rows) for (const p of d.a.split(/[（）(),，/·、]/)) { const x = p.trim(); if (/^[A-Z][A-Za-z' ]{3,}$/.test(x) && !/ (St|Rd|Ave)$/.test(x)) set.add(x); }
+    PLACES = [...set].sort((a, b) => b.length - a.length);
+    PLACES_AT = loadedAt;
+  }
+  return PLACES;
+}
+function placeOf(rows: R[], q: string) {
+  for (const [k, v] of Object.entries(PLACE_ALIAS)) if (q.includes(k)) return v;
+  const low = q.toLowerCase();
+  return places(rows).find((p) => new RegExp(`(^|[^a-z])${p.toLowerCase()}([^a-z]|$)`).test(low));
+}
+function centroid(rows: R[], place: string) {
+  const re = new RegExp(`(^|[^a-z])${place.toLowerCase()}([^a-z]|$)`);
+  const pts = rows.filter((d) => d.xy && re.test(d.a.toLowerCase())).map((d) => toLL(d.xy!));
+  if (!pts.length) return undefined;
+  return { lat: pts.reduce((s, p) => s + p.lat, 0) / pts.length, lon: pts.reduce((s, p) => s + p.lon, 0) / pts.length };
+}
+const rate = (d: R) => (d.r === "X" ? 0 : parseFloat(d.r) || 0);
+
+// hard constraints read from the question, or carried over from the last turns
+export function constraints(rows: R[], q: string, turns: Turn[], here?: { lat: number; lon: number }) {
+  const qs = [q, ...turns.slice(-3).map((t) => t.q ?? "").reverse()];
+  let place: string | undefined, region: string | undefined, near = false;
+  for (const s of qs) { const p = placeOf(rows, s), r = regionOf(s), n = NEAR.test(s); if (p || r || n) { place = p; region = p ? undefined : r; near = n; break; } }
+  let fam: string | undefined;
+  for (const s of qs) { const f = famOf(s); if (f) { fam = f; break; } }
+  const anchor = place ? centroid(rows, place) : near && here ? here : undefined;
+  if (!anchor && !region && !fam) return undefined;
+  let pool = rows.filter((d) => d.r !== "X" && (!fam || famOfType(d.t) === fam) && (!region || d.rg === region));
+  const dist = new Map<number, number>();
+  if (anchor) {
+    pool = pool.filter((d) => d.xy);
+    for (const d of pool) dist.set(d.id, km(anchor, toLL(d.xy!)));
+    pool.sort((a, b) => dist.get(a.id)! - dist.get(b.id)!);
+    let r = 4; while (r < 15 && pool.filter((d) => dist.get(d.id)! <= r).length < 6) r += 3;
+    pool = pool.filter((d) => dist.get(d.id)! <= r).slice(0, 40);
+  }
+  return { place, region, fam, anchor, pool, dist, near };
+}
+
+// things only the review text can tell (quiet, mood, kids, booking, parking, queues);
+// the model must not guess them from unrelated lines such as "不用排队"
+const ATTRS: { name: string; q: RegExp; yes: RegExp; no?: RegExp }[] = [
+  { name: "安静", q: /安静|清静|不吵|人少|聊天|谈事|说话/, yes: /安静|清静|不吵|人少|私密|包间|包厢|节奏舒服/, no: /(?<!不用|不|无需)排队|热闹|吵|嘈杂|拥挤|拼桌|很火|人气|爆满|坐满/ },
+  { name: "氛围", q: /氛围|约会|浪漫|情调|纪念日/, yes: /氛围|浪漫|灯光|烛光|约会|情调|景色|海景|夜景/ },
+  { name: "带娃或宽敞", q: /带娃|小孩|孩子|宝宝|宽敞|婴儿车|一家/, yes: /宽敞|带娃|小孩|儿童|宝宝|一家老小|场地大|空间大/ },
+  { name: "能订位", q: /订位|预订|预约|book/i, yes: /订位|预约|预订|book|reservation/i, no: /不接受预订|不能订|不订位|不接受预约|walk.?in/i },
+  { name: "好停车", q: /停车|开车去|parking/i, yes: /停车|车位|parking/i },
+  { name: "不用排队", q: /不用排队|不排队|不想排队|不等位/, yes: /不用排队|不排队|人少|不用等/, no: /(?<!不用|不|无需)排队|等位|等餐约|要等/ },
+];
+export function attrsOf(q: string) { return ATTRS.filter((a) => a.q.test(q)); }
+export function evidence(d: R, a: { yes: RegExp; no?: RegExp }) {
+  const t = d.i ?? "";
+  const cut = (re: RegExp) => { const m = re.exec(t); return m ? t.slice(Math.max(0, m.index - 12), m.index + 16) : ""; };
+  return { no: a.no ? cut(a.no) : "", yes: cut(a.yes) };
+}
+
 const PICK_SYS = `你是悉尼餐厅检索器。下面是全部餐厅目录，每行格式：id|店名|大区|地址|菜系|星级|人均|招牌菜。用户开了定位时，问题后面会附上离他最近的店和距离。
 大区的含义：市区（CBD、唐人街、Haymarket、Darling Harbour）；城南（Surry Hills、Redfern、Zetland、Mascot）；东区（Darlinghurst、Paddington、Potts Point、Bondi）；内西（Inner West：Burwood、Strathfield、Rhodes、Concord、Newtown、Glebe、Marrickville、Five Dock）；西区（Lidcombe、Auburn、Parramatta、Wentworth Point）；北区（Eastwood、Ryde、Epping、Macquarie Park、Carlingford）；北岸（North Shore：Chatswood、North Sydney、Crows Nest、Lane Cove、Hornsby）；山区（Castle Hill、Norwest、Baulkham Hills）；南区（Hurstville、Miranda）。
 用户说了大区或具体区域时，只能选在那里的店，不能用别的区凑数。
@@ -146,6 +229,7 @@ quote：从这家店的点评原文里一字不改地摘一句最能说服人的
 tip：点什么或要注意什么，不超过 18 个字，没有就留空。
 say：一句开场，不超过 25 个字。
 follow：两条用户接下来可能会说的话，用用户自己的口吻写成要求，例如"便宜一点的"、"换到北岸"、"有没有不用排队的"，每条不超过 12 个字，不要向用户提问。
+用户要求的条件（安静、氛围、带娃、能订位、停车、排队等）只有点评原文明确写到才算满足，不要从别的话推断，例如"不用排队"不等于安静，"人均不高"不等于人少。候选后面标了【条件】的，按标注判断：标"点评没写"的店，why 里不能说它满足这个条件；标"点评相反"的店不要推荐。如果没有一家点评明确写到，就在 say 里直说点评没写到这一点，再按其他条件推荐，并提醒用户自己留意。
 如果候选都不太合适，诚实说明，并建议怎么放宽条件。
 语气像一个懂吃的朋友，简洁，不用感叹号堆砌，不要使用破折号。回答语言按消息末尾的要求。
 只输出 JSON：{"say":"","picks":[{"id":整数,"why":"","quote":"","tip":""}],"follow":["",""]}`;
@@ -178,32 +262,47 @@ export async function handle(req: Request): Promise<Response> {
     const turns = Array.isArray(body.turns) ? body.turns : [];
     // step 1: pick candidates from the whole catalogue (cached prompt when there is no location)
     const sys1 = [{ type: "text", text: PICK_SYS }, { type: "text", text: catalogue(rows), cache_control: { type: "ephemeral" } }];
-    const q1 = here ? `${q}\n\n（离我最近的店，id:距离）${nearest(rows, here)}` : q;
-    const want = regionOf(q);
+    const c = constraints(rows, q, turns, here);
+    const want = c?.region;
+    let q1 = here ? `${q}\n\n（离我最近的店，id:距离）${nearest(rows, here)}` : q;
+    if (c?.pool.length) q1 = `${q}\n\n（符合${[c.place, c.region, c.fam].filter(Boolean).join("、") || "附近"}条件的店，只能从这里面选${c.anchor ? "，id:距离" : ""}）${c.pool.map((d) => c.anchor ? `${d.id}:${c.dist.get(d.id)!.toFixed(1)}km` : d.id).join(" ")}`;
+    const at = attrsOf(q);
+    for (const a of at) {
+      const base = c?.pool.length ? c.pool : rows.filter((d) => d.r !== "X");
+      const yes = base.filter((d) => { const e = evidence(d, a); return e.yes && !e.no; }).map((d) => d.id);
+      q1 += `\n\n（"${a.name}"只能看点评原文：点评明确提到的店 ${yes.length ? yes.slice(0, 30).join(" ") : "没有"}；其余店点评没写，不能当作满足）`;
+    }
     const t1 = Date.now();
     const p1 = await claudeJSON(MODEL_PICK, sys1, [...history(turns), { role: "user", content: q1 }], 800);
     // if the reply was not JSON, take any known ids that appear in it
     const raw1: number[] = p1.ids ?? (String(p1._raw ?? "").match(/\d+/g) ?? []);
     let ids: number[] = [...new Set(raw1.map(Number))].filter((i: number) => BY_ID.has(i)).slice(0, 8);
-    // if the question names a region, drop candidates from other regions (unless that leaves none)
-    if (want) {
-      const kept = ids.filter((i) => BY_ID.get(i)?.rg === want);
-      if (kept.length) ids = kept;
-      else ids = rows.filter((d) => d.rg === want && d.r !== "X").sort((x, y) => (y.r > x.r ? 1 : -1)).slice(0, 8).map((d) => d.id);
+    // place, region and cuisine are hard limits: drop anything outside, top up from the pool
+    if (c?.pool.length) {
+      const ok = new Set(c.pool.map((d) => d.id));
+      ids = ids.filter((i) => ok.has(i));
+      if (ids.length < 3) {
+        const extra = [...c.pool].sort((a, b) => rate(b) - rate(a) || (c.dist.get(a.id) ?? 0) - (c.dist.get(b.id) ?? 0)).map((d) => d.id).filter((i) => !ids.includes(i));
+        ids = ids.concat(extra).slice(0, 6);
+      }
     }
+    // a review that says the opposite (queues, crowds) rules a place out
+    for (const a of at) if (a.no) { const kept = ids.filter((i) => !evidence(BY_ID.get(i)!, a).no); if (kept.length) ids = kept; }
     // never come back empty: fall back to a keyword match over the reviews, then to the best rated places
     let note = "";
     if (!ids.length) {
       ids = fallbackIds(rows, q, want);
-      if (/附近|近一点|离我|nearby|near me/i.test(q) && !here) note = /[\u4e00-\u9fff]/.test(q) ? "没拿到你的位置，先按口碑推荐几家；点输入框左边的定位按钮，就能按距离推荐。" : "I could not get your location, so here are well rated picks. Tap the pin by the input box for nearby ones.";
+      if (NEAR.test(q) && !here && !c?.place) note = /[\u4e00-\u9fff]/.test(q) ? "没拿到你的位置，先按口碑推荐几家；点输入框左边的定位按钮，就能按距离推荐。" : "I could not get your location, so here are well rated picks. Tap the pin by the input box for nearby ones.";
     }
     // step 2: full reviews of the candidates, choose and explain
     const cand = ids.map((i) => BY_ID.get(i)!).map((d) => {
-      const dist = here && d.xy ? ` 距离${km(here, toLL(d.xy)).toFixed(1)}km` : "";
-      return `[${d.id}] ${d.n}${d.ne && d.ne !== d.n ? ` (${d.ne})` : ""}｜${d.rg ?? ""}｜${d.a}｜${d.t}｜${stars(d.r)}｜人均$${d.p ?? "?"}${d.pe ? "(估)" : ""}${dist}\n招牌：${d.d ?? ""}\n点评：${d.i ?? ""}`;
+      const dist = here && d.xy ? ` 距离你${km(here, toLL(d.xy)).toFixed(1)}km` : c?.place && c.dist.has(d.id) ? ` 离${c.place}${c.dist.get(d.id)!.toFixed(1)}km` : "";
+      return `[${d.id}] ${d.n}${d.ne && d.ne !== d.n ? ` (${d.ne})` : ""}｜${d.rg ?? ""}｜${d.a}｜${d.t}｜${stars(d.r)}｜人均$${d.p ?? "?"}${d.pe ? "(估)" : ""}${dist}\n招牌：${d.d ?? ""}\n点评：${d.i ?? ""}${at.map((a) => { const e = evidence(d, a); return `\n【${a.name}】${e.no ? `点评相反：…${e.no}…` : e.yes ? `点评提到：…${e.yes}…` : "点评没写"}`; }).join("")}`;
     }).join("\n\n");
     const zh = /[\u4e00-\u9fff]/.test(q);
-    const msg = `用户需求：${q}\n（概括：${p1.need ?? ""}）\n\n候选餐厅：\n${cand}\n\n${zh ? "请用中文回答（say、why、tip、follow 都用中文）。" : "Answer in English (say, why, tip, follow in English; keep quote in the original Chinese)."}`;
+    const mustL = c ? [c.place && `在 ${c.place} 附近`, c.region && `在${c.region}`, c.fam && `只要${c.fam}`].filter(Boolean) : [];
+    const must = mustL.length ? `\n硬性条件：${mustL.join("，")}。候选已按条件筛好。` : "";
+    const msg = `用户需求：${q}${must}\n（概括：${p1.need ?? ""}）\n\n候选餐厅：\n${cand}\n\n${zh ? "请用中文回答（say、why、tip、follow 都用中文）。" : "Answer in English (say, why, tip, follow in English; keep quote in the original Chinese)."}`;
     const t2 = Date.now();
     let p2 = await claudeJSON(MODEL_ANSWER, ANSWER_SYS, [...history(turns), { role: "user", content: msg }], 2000);
     // last resort: show the top candidates with the opening of each review
@@ -220,4 +319,4 @@ export async function handle(req: Request): Promise<Response> {
   }
 }
 
-Deno.serve(handle);
+if (import.meta.main) Deno.serve(handle);
