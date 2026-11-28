@@ -235,9 +235,10 @@ buildArc();arcPlay();addEventListener('resize',layArc);
  A.addEventListener('click',e=>{if(moved){e.preventDefault();moved=false;return}const c=e.target.closest('.cd');if(c)openSheet(D[+c.dataset.i])});
  A.addEventListener('mouseenter',()=>clearInterval(arcT));A.addEventListener('mouseleave',arcPlay)}
 /* ===== sheet ===== */
-function openSheet(x){const [bg,fg]=pal(x.t);$('#sh .pn').innerHTML=`<div class="im" style="background:${bg};color:${fg}"><span class="st" style="color:${fg}">${stars(+x.r)}</span><span class="dish">${esc(dish(x))}</span></div><button class="x" onclick="closeSheet()">×</button>
- <div class="bd"><h3>${esc(x.n)}</h3><div class="chips"><span>${esc(x.t)}</span><span>${esc(x.a)}</span><span>人均 $${x.p}</span>${x.dt?`<span>${x.dt.replaceAll('-','.')}</span>`:''}</div>
- ${x.d?`<h6>推荐</h6><p>${esc(x.d)}</p>`:''}<h6>点评</h6><p>${esc(x.i)}</p><a class="gmap" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(x.n.replace(/（.*?）/g,'')+' '+x.a.replace(/（.*?）/g,'')+' Sydney')}">在 Google 地图打开</a></div>`;$('#sh').classList.add('on')}
+function openSheet(x){const g='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(x.n.replace(/（.*?）/g,'')+' '+x.a.replace(/（.*?）/g,'')+' Sydney');
+ $('#sh .pn').innerHTML=`<button class="x" onclick="closeSheet()">关闭</button>
+ <div class="bd"><h3>${esc(x.n)}</h3><div class="rate r${x.r}">${x.r==='X'?'不推荐':stars(+x.r)}</div><div class="m">${esc(x.t)} · ${esc(x.a)}${x.p?' · 人均约 $'+x.p:''}</div>
+ <div class="body">${esc(x.i)}</div>${x.d?`<div class="must">推荐：${esc(x.d)}</div>`:''}<a class="gmap" target="_blank" rel="noopener" href="${g}">在 Google 地图打开</a></div>`;$('#sh').classList.add('on')}
 function closeSheet(){$('#sh').classList.remove('on')}
 $('#sh .bg').onclick=closeSheet;addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 document.addEventListener('click',e=>{if(e.target.closest('[data-rand]')){const c=D.filter(x=>+x.r>=4);openSheet(c[Math.floor(Math.random()*c.length)])}});
@@ -306,7 +307,7 @@ addEventListener('scroll',()=>$('#tb').classList.toggle('on',scrollY>700),{passi
 /* ===== 2026-11-27: 随便 roll + 换一家 ===== */
 /* fan cards use z-index 100 internally; keep them below the sheet */
 .arc{isolation:isolate}
-#sh .pn.rolling .bd h6,#sh .pn.rolling .bd p{display:none}
+#sh .pn.rolling .bd .body,#sh .pn.rolling .bd .must,#sh .pn.rolling .bd .gmap{display:none}
 #sh .pn.rolling .im{transition:background .08s,color .08s}
 #sh .pn.rolling .x{visibility:hidden}
 #sh .pn.tk h3,#sh .pn.tk .dish{animation:hrt .09s ease-out}
@@ -507,6 +508,16 @@ t.addEventListener('click',e=>{const a=e.target.closest('a[data-k]');if(a)openSh
 /* ===== AI 美食顾问 (replaces the keyword 问一问) ===== */
 #sh .gmap{display:block;text-align:center;margin:22px 0 6px;padding:13px;background:#d6342a;color:#fff;border-radius:14px!important;font:400 16px var(--zh,'Noto Serif SC',serif);text-decoration:none}
 #sh .gmap:active{transform:scale(.97)}
+#sh .pn{background:#fffdf9!important;padding-top:10px!important}
+#sh .bd{padding:22px 24px 0}
+#sh .x{position:absolute;top:16px;right:18px;width:auto;height:auto;border-radius:0!important;background:none;font:500 14px var(--sans,system-ui);color:var(--sub);z-index:5}
+#sh .pn:has(.xph) .x{background:rgba(255,255,255,.92);padding:5px 10px;top:26px;right:30px}
+#sh h3{margin:6px 56px 8px 0;font:900 27px/1.3 var(--zh,'Noto Serif SC',serif)}
+#sh .rate{display:inline-flex;align-items:center;padding:4px 12px;border-radius:999px!important;background:#fff3ef;color:#d6342a;font:400 19px/1.2 var(--zh,serif);letter-spacing:2px;margin:2px 0 12px}
+#sh .rate.r4{color:#e0703a}#sh .rate.r3{color:#141414}#sh .rate.r2{color:#4f7fb0}#sh .rate.rX{color:#a8a8a8;font-size:14px}
+#sh .m{font:400 14px/1.6 var(--sans,system-ui);color:var(--sub);padding-bottom:14px;border-bottom:1px solid var(--line)}
+#sh .body,#sh .must{font:400 16px/1.9 var(--zh,'Noto Serif SC',serif);color:var(--ink);margin-top:14px}
+
 .panel.ai{min-height:0;padding:20px 18px 18px}
 .ai-hd{display:flex;align-items:center;gap:10px;margin-bottom:4px}
 .ai-hd .av{width:40px;height:40px;border-radius:14px!important;background:#141414;color:#fff;display:grid;place-items:center;font:900 18px var(--zh,'Noto Serif SC',serif);flex:none;position:relative}
